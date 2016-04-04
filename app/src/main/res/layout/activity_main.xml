@@ -41,9 +41,8 @@
         android:orientation="vertical"
         app:bbn_backgroundColorPrimary="@color/colorPrimary"
         app:bbn_backgroundColorPrimaryInverted="@color/colorAccent"
-        app:bbn_entries="@menu/bottombar_menu_5items"
+        app:bbn_entries="@menu/bottombar_menu_4items"
         app:bbn_invertedColorInactive="@android:color/white"
-        app:bbn_inverted_theme="false"
-        app:bbn_shifting="true" />
+        app:bbn_inverted_theme="false" />
 
 </android.support.design.widget.CoordinatorLayout>

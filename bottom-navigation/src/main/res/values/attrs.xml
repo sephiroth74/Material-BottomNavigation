@@ -8,7 +8,6 @@
         <attr name="bbn_backgroundColorPrimary" format="color" />
         <attr name="bbn_backgroundColorPrimaryInverted" format="color" />
         <attr name="bbn_entries" format="reference" />
-        <attr name="bbn_shifting" format="boolean" />
 
         <!-- when using the invertedTheme, this is the default icon/text color -->
         <attr name="bbn_invertedColorInactive" format="color" />

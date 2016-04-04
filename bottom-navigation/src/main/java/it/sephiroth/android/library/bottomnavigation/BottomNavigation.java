@@ -81,7 +81,6 @@ public class BottomNavigation extends FrameLayout {
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
         invertedTheme = array.getBoolean(R.styleable.BottomNavigation_bbn_inverted_theme, false);
-        shifting = array.getBoolean(R.styleable.BottomNavigation_bbn_shifting, false);
 
         inactiveItemInvertedColor = array.getColor(
             R.styleable.BottomNavigation_bbn_invertedColorInactive,
@@ -97,7 +96,6 @@ public class BottomNavigation extends FrameLayout {
 
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
         entries = MenuParser.inflateMenu(context, menuResId);
-
         array.recycle();
 
         Log.v(TAG, "invertedTheme: " + invertedTheme);
@@ -162,6 +160,7 @@ public class BottomNavigation extends FrameLayout {
         marginLayoutParams.bottomMargin = -bottomInset;
 
         if (null != entries) {
+            initializeContainer();
             initializeItems();
             entries = null;
         }
@@ -175,15 +174,15 @@ public class BottomNavigation extends FrameLayout {
         if (null == itemsContainer) {
             setPadding(0, shadowHeight, 0, 0);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, defaultHeight);
-            //            params.topMargin = shadowHeight;
-
             backgroundOverlay = new View(getContext());
             backgroundOverlay.setLayoutParams(params);
             addView(backgroundOverlay);
+        }
+    }
 
-            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, defaultHeight);
-            //            params.topMargin = shadowHeight;
-
+    private void initializeContainer() {
+        if (null == itemsContainer) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, defaultHeight);
             itemsContainer = new ShiftingLayout(getContext());
             itemsContainer.setLayoutParams(params);
             addView(itemsContainer);
@@ -192,10 +191,13 @@ public class BottomNavigation extends FrameLayout {
 
     private void initializeItems() {
         Log.i(TAG, "initializeItems: " + entries.length);
+        final float density = getResources().getDisplayMetrics().density;
+        final int screenWidth = getWidth();
 
-        float density = getResources().getDisplayMetrics().density;
-        Log.v(TAG, "screenWidth: " + getWidth());
+        shifting = entries.length > 3;
         Log.v(TAG, "density: " + density);
+        Log.v(TAG, "screenWidth: " + screenWidth);
+        Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
 
         int maxActiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 168);
         int minActiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 96);
@@ -207,10 +209,17 @@ public class BottomNavigation extends FrameLayout {
         int itemWidthMax;
 
         final int totalWidth = maxInactiveItemWidth * (entries.length - 1) + maxActiveItemWidth;
-        if (totalWidth > getWidth()) {
-            float ratio = (float) getWidth() / totalWidth;
-            itemWidthMin = (int) (maxInactiveItemWidth * ratio);
+        Log.v(TAG, "totalWidth: " + totalWidth);
+        Log.v(TAG, "totalWidth(dp): " + totalWidth / density);
+
+        if (totalWidth > screenWidth) {
+            float ratio = (float) screenWidth / totalWidth;
+            itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);
             itemWidthMax = (int) (maxActiveItemWidth * ratio);
+
+            if (itemWidthMin * (entries.length - 1) + itemWidthMax > screenWidth) {
+                itemWidthMax = screenWidth - (itemWidthMin * (entries.length - 1)); // minActiveItemWidth?
+            }
         } else {
             itemWidthMax = maxActiveItemWidth;
             itemWidthMin = maxInactiveItemWidth;
@@ -222,8 +231,8 @@ public class BottomNavigation extends FrameLayout {
         Log.v(TAG, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
         Log.v(TAG, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
 
-        Log.v(TAG, "itemWidth(px): " + itemWidthMin + ", " + itemWidthMax);
-        Log.v(TAG, "itemWidth(dp): " + itemWidthMin / density + ", " + itemWidthMax / density);
+        Log.v(TAG, "itemWidth: " + itemWidthMin + ", " + itemWidthMax);
+        Log.v(TAG, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
 
         if (shifting) {
             ((ShiftingLayout) itemsContainer).setTotalSize(itemWidthMin, itemWidthMax);
