@@ -29,6 +29,8 @@ import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
  */
 public class MiscUtils {
 
+    private static final String TAG = MiscUtils.class.getSimpleName();
+
     public static int getDimensionPixelSize(final Context context, final int dp) {
         return (int) (context.getResources().getDisplayMetrics().density * dp);
     }
@@ -101,10 +103,16 @@ public class MiscUtils {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
+            Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
+            if (null != currentAnimator) {
+                currentAnimator.cancel();
+            }
+
             final float startRadius = 10;
             final float finalRadius = centerX > navigation.getWidth() / 2 ? centerX : navigation.getWidth() - centerX;
             animator =
                 ViewAnimationUtils.createCircularReveal(backgroundOverlay, centerX, centerY, startRadius, finalRadius);
+            backgroundOverlay.setTag(R.id.bbn_backgroundOverlay_animator, animator);
         } else {
             ViewCompat.setAlpha(backgroundOverlay, 0);
             animator = ViewCompat.animate(backgroundOverlay).alpha(1);
@@ -115,19 +123,23 @@ public class MiscUtils {
 
         if (ViewPropertyAnimatorCompat.class.isInstance(animator)) {
             ((ViewPropertyAnimatorCompat) animator).setListener(new ViewPropertyAnimatorListener() {
+                boolean cancelled;
+
                 @Override
                 public void onAnimationStart(final View view) { }
 
                 @Override
                 public void onAnimationEnd(final View view) {
-                    onAnimationCancel(view);
+                    if (!cancelled) {
+                        backgroundDrawable.setColor(newColor);
+                        backgroundOverlay.setVisibility(View.INVISIBLE);
+                        ViewCompat.setAlpha(backgroundOverlay, 1);
+                    }
                 }
 
                 @Override
                 public void onAnimationCancel(final View view) {
-                    backgroundDrawable.setColor(newColor);
-                    backgroundOverlay.setVisibility(View.INVISIBLE);
-                    ViewCompat.setAlpha(backgroundOverlay, 1);
+                    cancelled = true;
                 }
             })
                 .setDuration(duration)
@@ -137,19 +149,23 @@ public class MiscUtils {
             animator1.setDuration(duration);
             animator1.setInterpolator(new DecelerateInterpolator());
             animator1.addListener(new Animator.AnimatorListener() {
+                boolean cancelled;
+
                 @Override
                 public void onAnimationStart(final Animator animation) { }
 
                 @Override
                 public void onAnimationEnd(final Animator animation) {
-                    onAnimationCancel(animation);
+                    if (!cancelled) {
+                        backgroundDrawable.setColor(newColor);
+                        backgroundOverlay.setVisibility(View.INVISIBLE);
+                        ViewCompat.setAlpha(backgroundOverlay, 1);
+                    }
                 }
 
                 @Override
                 public void onAnimationCancel(final Animator animation) {
-                    backgroundDrawable.setColor(newColor);
-                    backgroundOverlay.setVisibility(View.INVISIBLE);
-                    ViewCompat.setAlpha(backgroundOverlay, 1);
+                    cancelled = true;
                 }
 
                 @Override
