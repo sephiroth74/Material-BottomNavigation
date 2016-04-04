@@ -5,7 +5,7 @@
         android:id="@+id/bbn_item1"
         android:color="@color/colorPrimary"
         android:icon="@android:drawable/ic_dialog_map"
-        android:title="Map" />
+        android:title="Movies &amp; TV" />
     <item
         android:id="@+id/bbn_item2"
         android:color="#ff666699"

@@ -214,8 +214,16 @@ public class BottomNavigation extends FrameLayout {
 
         if (totalWidth > screenWidth) {
             float ratio = (float) screenWidth / totalWidth;
+            ratio = (float) ((double) Math.round(ratio * 10d) / 10d) + 0.05f;
+            Log.v(TAG, "ratio: " + ratio);
+
             itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);
             itemWidthMax = (int) (maxActiveItemWidth * ratio);
+
+            Log.d(TAG, "computing sizes...");
+            Log.v(TAG, "itemWidthMin(dp): " + itemWidthMin / density);
+            Log.v(TAG, "itemWidthMax(dp): " + itemWidthMax / density);
+            Log.v(TAG, "total items size(dp): " + (itemWidthMin * (entries.length - 1) + itemWidthMax) / density);
 
             if (itemWidthMin * (entries.length - 1) + itemWidthMax > screenWidth) {
                 itemWidthMax = screenWidth - (itemWidthMin * (entries.length - 1)); // minActiveItemWidth?
