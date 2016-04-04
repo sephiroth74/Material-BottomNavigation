@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:height="@dimen/bbn_top_shadow_height"
+        android:drawable="@drawable/bbn_top_shadow"
+        android:top="0dp" />
+    <item
+        android:id="@+id/bbn_background"
+        android:drawable="@android:color/holo_blue_bright"
+        android:top="@dimen/bbn_top_shadow_height" />
+</layer-list>

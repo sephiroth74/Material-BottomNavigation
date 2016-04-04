@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bbn_shifting_item_ripple_color">#33FFFFFF</color>
+
+    <color name="bbn_item_inverted_color_inactive">#FF888888</color>
+</resources>

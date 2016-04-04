@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/bbn_shifting_item_ripple_color"
+    android:radius="@dimen/bbn_shifting_item_ripple_radius">
+
+    <item
+        android:id="@android:id/mask"
+        android:drawable="@android:color/black" />
+
+</ripple>

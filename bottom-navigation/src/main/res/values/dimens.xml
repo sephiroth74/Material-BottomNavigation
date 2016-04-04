@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- default BottomNavigation height -->
+    <dimen name="bbn_bottom_navigation_height">56dp</dimen>
+
+    <!-- default BottomNavigation elevation -->
+    <dimen name="bbn_elevation">8dp</dimen>
+
+    <!-- top shadow size -->
+    <dimen name="bbn_top_shadow_height">8dp</dimen>
+
+    <!-- shiftin item dimensions -->
+    <dimen name="bbn_shifting_item_padding_bottom_active">10dp</dimen>
+    <dimen name="bbn_shifting_item_padding_bottom_inactive">16dp</dimen>
+    <dimen name="bbn_shifting_item_padding_top">6dp</dimen>
+    <dimen name="bbn_shifting_item_text_padding_top">6dp</dimen>
+    <dimen name="bbn_shifting_item_icon_size">24dp</dimen>
+    <dimen name="bbn_shifting_text_size">14sp</dimen>
+    <dimen name="bbn_shifting_item_ripple_radius">48dp</dimen>
+</resources>

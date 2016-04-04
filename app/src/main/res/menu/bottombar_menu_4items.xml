@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bb_menu_recents"
+        android:color="#FF4081"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="Map" />
+
+    <item
+        android:id="@+id/bb_menu_favorites"
+        android:color="#5D4037"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="Camera" />
+
+    <item
+        android:id="@+id/bb_menu_nearby"
+        android:color="#7B1FA2"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Gallery" />
+
+    <item
+        android:id="@+id/bb_menu_random"
+        android:color="#006699"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="Compass" />
+</menu>
