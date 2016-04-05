@@ -192,6 +192,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             view.setItem(item);
             view.setLayoutParams(params);
             view.setClickable(true);
+            view.setTypeface(parent.typeface);
             final int finalI = i;
             view.setOnClickListener(new OnClickListener() {
                 @Override

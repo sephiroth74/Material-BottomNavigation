@@ -8,12 +8,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import java.lang.ref.SoftReference;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
@@ -43,6 +47,9 @@ public class BottomNavigationShiftingItemView extends View {
     private final int colorInactive;
     private final int rippleColor;
     private final ArgbEvaluator evaluator;
+    private boolean textDirty;
+    private float textX;
+    private int textY;
 
     public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
         super(parent.getContext());
@@ -78,6 +85,7 @@ public class BottomNavigationShiftingItemView extends View {
         }
 
         this.textPaint.setAlpha(expanded ? 255 : 0);
+        this.textDirty = true;
     }
 
     void setItem(BottomNavigationItem item) {
@@ -88,16 +96,16 @@ public class BottomNavigationShiftingItemView extends View {
         this.setId(item.getId());
         this.setBackground(drawable);
         this.setEnabled(item.isEnabled());
+    }
+
+    private void measureText() {
+        Log.i(TAG, "measureText");
         this.textWidth = textPaint.measureText(item.getTitle());
+        this.textY = getHeight() - paddingBottomActive;
     }
 
     public BottomNavigationItem getItem() {
         return item;
-    }
-
-    @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public void setExpanded(final boolean expanded, int newSize) {
@@ -178,10 +186,27 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     @Override
+    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        if (textDirty) {
+            measureText();
+            textDirty = false;
+        }
+
+        this.textX = (getWidth() - textWidth) / 2;
+    }
+
+    @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         icon.draw(canvas);
-        canvas.drawText(item.getTitle(), (getWidth() - textWidth) / 2, getHeight() - paddingBottomActive, textPaint);
+        canvas.drawText(
+            item.getTitle(),
+            textX,
+            textY,
+            textPaint
+        );
     }
 
     @SuppressWarnings ("unused")
@@ -195,5 +220,19 @@ public class BottomNavigationShiftingItemView extends View {
     public void setCenterY(int value) {
         centerY = value;
         ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    public void setTypeface(final SoftReference<Typeface> typeface) {
+        if (null != typeface) {
+            Typeface tf = typeface.get();
+            if (null != tf) {
+                textPaint.setTypeface(tf);
+            } else {
+                textPaint.setTypeface(Typeface.DEFAULT);
+            }
+
+            textDirty = true;
+            requestLayout();
+        }
     }
 }

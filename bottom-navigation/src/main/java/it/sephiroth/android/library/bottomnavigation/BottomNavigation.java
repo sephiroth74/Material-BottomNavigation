@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
@@ -17,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import java.lang.ref.SoftReference;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
@@ -74,6 +77,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     int rippleColor;
 
+    SoftReference<Typeface> typeface;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -97,6 +102,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private void initialize(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         final Activity activity = (Activity) context;
         systembarTint = new SystemBarTintManager(activity);
+
+        typeface = new SoftReference<>(Typeface.DEFAULT);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
         invertedTheme = array.getBoolean(R.styleable.BottomNavigation_bbn_inverted_theme, false);
@@ -283,4 +290,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
+    public void setDefaultTypeface(final Typeface typeface) {
+        Log.i(TAG, "setDefaultTypeface: " + typeface);
+        this.typeface = new SoftReference<>(typeface);
+    }
 }

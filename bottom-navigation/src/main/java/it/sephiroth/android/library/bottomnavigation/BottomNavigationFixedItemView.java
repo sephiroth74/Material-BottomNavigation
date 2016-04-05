@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import java.lang.ref.SoftReference;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
@@ -55,6 +58,7 @@ public class BottomNavigationFixedItemView extends View {
     private int centerX;
     private float textX;
     private float textY;
+    private boolean textDirty;
 
     public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded) {
         super(parent.getContext());
@@ -160,11 +164,18 @@ public class BottomNavigationFixedItemView extends View {
             int w = right - left;
             centerX = (w - iconSize) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
+
+        }
+
+        if (textDirty || changed) {
             measureText();
+            textDirty = false;
         }
     }
 
     private void measureText() {
+        Log.i(TAG, "measureText");
+
         final int width = getWidth();
         final int height = getHeight();
 
@@ -244,5 +255,19 @@ public class BottomNavigationFixedItemView extends View {
     @SuppressWarnings ("unused")
     public float getIconTranslation() {
         return iconTranslation;
+    }
+
+    public void setTypeface(final SoftReference<Typeface> typeface) {
+        if (null != typeface) {
+            Typeface tf = typeface.get();
+            if (null != tf) {
+                textPaint.setTypeface(tf);
+            } else {
+                textPaint.setTypeface(Typeface.DEFAULT);
+            }
+
+            textDirty = true;
+            requestLayout();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.annotation.TargetApi;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -17,6 +18,8 @@ import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends AppCompatActivity implements View.OnLayoutChangeListener {
 
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLayoutChan
     private boolean mTranslucentStatusSet;
     private SystemBarTintManager mSystemBarTint;
     private Toolbar mToolbar;
+    private BottomNavigation mBottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLayoutChan
             params = (ViewGroup.MarginLayoutParams) mToolbar.getLayoutParams();
             params.topMargin = statusbarHeight;
         }
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        mBottomNavigation.setDefaultTypeface(typeface);
+    }
+
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
     }
 
     public SystemBarTintManager getSystemBarTint() {
