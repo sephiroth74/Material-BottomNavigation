@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -38,21 +39,20 @@ public class BottomNavigationShiftingItemView extends View {
     private BottomNavigationItem item;
     private Drawable icon;
     private int centerY;
+    private final float maxAlpha;
     private final float minAlpha;
     private final Interpolator interpolator = new DecelerateInterpolator();
     private final Paint textPaint;
     private float textWidth;
     private long animationDuration;
-    private final boolean invertedTheme;
     private final int colorActive;
-    private final int colorInactive;
     private final int rippleColor;
     private final ArgbEvaluator evaluator;
     private boolean textDirty;
     private float textX;
     private int textY;
 
-    public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
+    public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded) {
         super(parent.getContext());
 
         animationDuration = getResources().getInteger(R.integer.bbn_shifting_item_animation_duration);
@@ -65,27 +65,31 @@ public class BottomNavigationShiftingItemView extends View {
 
         this.evaluator = new ArgbEvaluator();
 
-        this.colorActive = parent.backgroundColorPrimary;
-        this.colorInactive = parent.inactiveItemInvertedColor;
+        this.colorActive = parent.shiftingItemColorActive;
         this.rippleColor = parent.rippleColor;
 
-        this.invertedTheme = invertedTheme;
-        this.minAlpha = getResources().getFraction(R.fraction.bbn_item_shifting_inactive_alpha, 1, 1);
+        log(TAG, Log.INFO, "colorActive: %x", colorActive);
+
+        this.maxAlpha = (float) Color.alpha(colorActive) / 255f;
+        this.minAlpha = parent.shiftingItemAlphaInactive;
+
+        log(TAG, Log.VERBOSE, "maxAlpha: %g", this.maxAlpha);
+        log(TAG, Log.VERBOSE, "minAlpha: %g", this.minAlpha);
+
         this.expanded = expanded;
         this.centerY = expanded ? paddingTop : paddingBottomInactive;
 
         this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        this.textPaint.setColor(Color.WHITE);
         this.textPaint.setHinting(Paint.HINTING_ON);
         this.textPaint.setLinearText(true);
         this.textPaint.setSubpixelText(true);
         this.textPaint.setTextSize(textSize);
+        this.textPaint.setColor(colorActive);
 
-        if (invertedTheme) {
-            this.textPaint.setColor(expanded ? colorActive : colorInactive);
+        if (!expanded) {
+            this.textPaint.setAlpha(0);
         }
 
-        this.textPaint.setAlpha(expanded ? 255 : 0);
         this.textDirty = true;
     }
 
@@ -113,7 +117,7 @@ public class BottomNavigationShiftingItemView extends View {
         this.expanded = expanded;
 
         final AnimatorSet set = new AnimatorSet();
-        set.setDuration(animationDuration * 10);
+        set.setDuration(animationDuration * 2);
         set.setInterpolator(interpolator);
         final ValueAnimator animator1 = ValueAnimator.ofInt(getLayoutParams().width, newSize);
         final ValueAnimator animator2 = ObjectAnimator.ofInt(this, "centerY", expanded ? paddingBottomInactive : paddingTop,
@@ -128,23 +132,12 @@ public class BottomNavigationShiftingItemView extends View {
                 final float fraction = animation.getAnimatedFraction();
 
                 if (expanded) {
-                    if (!invertedTheme) {
-                        icon.setAlpha((int) ((minAlpha + (fraction * (1.0 - minAlpha))) * 255));
-                    } else {
-                        icon.setColorFilter(
-                            (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
-                        textPaint.setColor((Integer) evaluator.evaluate(fraction, 0, colorActive));
-                    }
-                    textPaint.setAlpha((int) (fraction * 255));
+                    icon.setAlpha((int) ((minAlpha + (fraction * (maxAlpha - minAlpha))) * 255));
+                    textPaint.setAlpha((int) (((fraction * (maxAlpha))) * 255));
                 } else {
-                    if (!invertedTheme) {
-                        float alpha = 1.0F - fraction;
-                        icon.setAlpha((int) ((minAlpha + (alpha * (1.0 - minAlpha))) * 255));
-                    } else {
-                        icon.setColorFilter(
-                            (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
-                    }
-                    textPaint.setAlpha((int) ((1.0 - fraction) * 255));
+                    float alpha = 1.0F - fraction;
+                    icon.setAlpha((int) ((minAlpha + (alpha * (maxAlpha - minAlpha))) * 255));
+                    textPaint.setAlpha((int) (((alpha * (maxAlpha))) * 255));
                 }
             }
         });
@@ -165,24 +158,11 @@ public class BottomNavigationShiftingItemView extends View {
         if (null == this.icon) {
             this.icon = item.getIcon(getContext());
             icon.setBounds(0, 0, iconSize, iconSize);
-            if (invertedTheme) {
-                if (expanded) {
-                    icon.setColorFilter(colorActive, PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    icon.setColorFilter(colorInactive, PorterDuff.Mode.SRC_ATOP);
-                }
-            } else {
-                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            }
-
-            if (!expanded) {
-                if (!invertedTheme) {
-                    icon.setAlpha((int) (minAlpha * 255));
-                }
-            }
+            icon.setColorFilter(colorActive, PorterDuff.Mode.SRC_ATOP);
+            icon.setAlpha((int) (expanded ? maxAlpha * 255 : minAlpha * 255));
         }
 
-        if (textDirty || changed) {
+        if (textDirty) {
             measureText();
             textDirty = false;
         }

@@ -186,7 +186,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             }
 
             BottomNavigationShiftingItemView view =
-                new BottomNavigationShiftingItemView(parent, i == selectedIndex, parent.isInvertedTheme());
+                new BottomNavigationShiftingItemView(parent, i == selectedIndex);
             view.setItem(item);
             view.setLayoutParams(params);
             view.setClickable(true);

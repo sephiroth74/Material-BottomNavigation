@@ -2,11 +2,18 @@
 <resources>
     <declare-styleable name="BottomNavigation">
 
-        <!-- inverted theme if true the default background color will be white -->
-        <attr name="bbn_inverted_theme" format="boolean" />
+        <!-- default background color in shifting mode -->
+        <attr name="bbn_shifting_backgroundColor" format="color" />
 
-        <attr name="bbn_backgroundColorPrimary" format="color" />
-        <attr name="bbn_backgroundColorPrimaryInverted" format="color" />
+        <!-- shifting mode, inactive icon alpha (0..1) -->
+        <attr name="bbn_shiftingItemInactiveAlpha" format="float" />
+
+        <!-- shifting mode, active icon/text color -->
+        <attr name="bbn_shiftingItemColorActive" format="color" />
+
+        <!-- default background color in fixed mode -->
+        <attr name="bbn_fixed_backgroundColor" format="color" />
+
         <attr name="bbn_entries" format="reference" />
 
         <!-- when using the invertedTheme, this is the default icon/text color -->

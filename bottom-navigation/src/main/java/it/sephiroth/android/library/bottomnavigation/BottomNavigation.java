@@ -24,6 +24,7 @@ import java.lang.ref.SoftReference;
 import it.sephiroth.android.library.bottonnavigation.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by alessandro on 4/2/16.
@@ -33,7 +34,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     private int bottomInset;
     private int defaultHeight;
-    private boolean invertedTheme;
 
     private int shadowHeight;
 
@@ -44,13 +44,16 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     /** true if translucent navigation is on */
     private boolean hasTransucentNavigation;
-    int backgroundColorPrimary;
-    int backgroundColorPrimaryInverted;
 
     /**
-     * inactive item color, when using the invertedTheme
+     * Default background color in the 'shifting' mode
      */
-    int inactiveItemInvertedColor;
+    int shiftingBackgroundColorPrimary;
+
+    /**
+     * Default background color in the 'fixed' mode
+     */
+    int fixedBackgroundColorPrimary;
 
     private BottomNavigationItem[] tmpEntries;
     private BottomNavigationItem[] items;
@@ -71,6 +74,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * in the fixed style
      */
     int fixedItemColorActive;
+
+    /**
+     * Icon/Text color for the active items
+     * in the shifting mode
+     */
+    int shiftingItemColorActive;
+
+    /**
+     * Icon alpha for the inactive items
+     * in the shifting mode
+     */
+    float shiftingItemAlphaInactive;
 
     /**
      * Item background selector
@@ -106,12 +121,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         typeface = new SoftReference<>(Typeface.DEFAULT);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
-        invertedTheme = array.getBoolean(R.styleable.BottomNavigation_bbn_inverted_theme, false);
-
-        inactiveItemInvertedColor = array.getColor(
-            R.styleable.BottomNavigation_bbn_invertedColorInactive,
-            ContextCompat.getColor(context, R.color.bbn_item_inverted_color_inactive)
-        );
 
         fixedItemColorInactive = array.getColor(
             R.styleable.BottomNavigation_bbn_fixedItemColorInactive,
@@ -123,27 +132,32 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             MiscUtils.getColor(context, android.R.attr.colorForeground)
         );
 
-        backgroundColorPrimary = array
-            .getColor(R.styleable.BottomNavigation_bbn_backgroundColorPrimary, MiscUtils.getColor(context, R.attr.colorPrimary));
-
-        backgroundColorPrimaryInverted = array.getColor(
-            R.styleable.BottomNavigation_bbn_backgroundColorPrimaryInverted,
-            ContextCompat.getColor(context, android.R.color.white)
+        shiftingItemColorActive = array.getColor(
+            R.styleable.BottomNavigation_bbn_shiftingItemColorActive,
+            MiscUtils.getColor(context, android.R.attr.colorForegroundInverse)
         );
 
-        rippleColor = array.getColor(R.styleable.BottomNavigation_bbn_rippleColor, backgroundColorPrimary);
+        shiftingItemAlphaInactive = array.getFloat(
+            R.styleable.BottomNavigation_bbn_shiftingItemInactiveAlpha,
+            getResources().getFraction(R.fraction.bbn_item_shifting_inactive_alpha, 1, 1)
+        );
+
+        shiftingBackgroundColorPrimary = array
+            .getColor(R.styleable.BottomNavigation_bbn_shifting_backgroundColor, MiscUtils.getColor(context, R.attr.colorPrimary));
+
+        fixedBackgroundColorPrimary = array.getColor(
+            R.styleable.BottomNavigation_bbn_fixed_backgroundColor,
+            MiscUtils.getColor(getContext(), android.R.attr.windowBackground)
+        );
+
+        rippleColor = array.getColor(R.styleable.BottomNavigation_bbn_rippleColor, shiftingBackgroundColorPrimary);
 
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
         BottomNavigationItem[] entries = MenuParser.inflateMenu(context, menuResId);
         array.recycle();
 
-        Log.v(TAG, "invertedTheme: " + invertedTheme);
-        Log.v(TAG, String.format("backgroundColorPrimary: #%x", backgroundColorPrimary));
-        Log.v(TAG, String.format("backgroundColorPrimaryInverted: #%x", backgroundColorPrimaryInverted));
-
         LayerDrawable layerDrawable = (LayerDrawable) ContextCompat.getDrawable(context, R.drawable.bbn_background);
         backgroundDrawable = (ColorDrawable) layerDrawable.findDrawableByLayerId(R.id.bbn_background);
-        //backgroundDrawable.setColor(invertedTheme ? backgroundColorPrimaryInverted : backgroundColorPrimary);
 
         // replace the background color
         setBackground(layerDrawable);
@@ -233,12 +247,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initializeUI() {
-        if (shifting) {
-            backgroundDrawable.setColor(invertedTheme ? backgroundColorPrimaryInverted : backgroundColorPrimary);
-        } else {
-            int color = MiscUtils.getColor(getContext(), android.R.attr.windowBackground);
-            backgroundDrawable.setColor(color);
-        }
+        log(TAG, Log.INFO, "initializeUI");
+
+        log(TAG, Log.VERBOSE, "shiftingBackgroundColorPrimary: %x", shiftingBackgroundColorPrimary);
+        log(TAG, Log.VERBOSE, "fixedBackgroundColorPrimary: %x", fixedBackgroundColorPrimary);
+        backgroundDrawable.setColor(shifting ? shiftingBackgroundColorPrimary : fixedBackgroundColorPrimary);
     }
 
     private void initializeContainer() {
@@ -262,13 +275,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         itemsContainer.populate(tmpEntries);
         itemsContainer.setOnItemClickListener(this);
 
-        if (!isInvertedTheme() && items[defaultSelectedIndex].hasColor()) {
+        if (items[defaultSelectedIndex].hasColor()) {
             backgroundDrawable.setColor(items[defaultSelectedIndex].getColor());
         }
-    }
-
-    public boolean isInvertedTheme() {
-        return invertedTheme;
     }
 
     @Override
@@ -278,7 +287,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         final BottomNavigationItem item = items[index];
 
-        if (!isInvertedTheme() && item.hasColor()) {
+        if (item.hasColor()) {
             MiscUtils.animate(
                 this,
                 view,
