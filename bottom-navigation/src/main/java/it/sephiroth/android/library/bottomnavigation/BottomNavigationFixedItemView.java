@@ -179,21 +179,11 @@ public class BottomNavigationFixedItemView extends View {
         final int width = getWidth();
         final int height = getHeight();
 
-        Log.v(TAG, "width: " + width);
-        Log.v(TAG, "height: " + height);
-
         textWidth = textPaint.measureText(item.getTitle());
-        Log.v(TAG, "textWidth: " + textWidth);
-
         textX = paddingHorizontal + (((width - paddingHorizontal * 2) - textWidth) / 2);
         textY = height - paddingBottom;
         textCenterX = width / 2;
         textCenterY = height - paddingBottom;
-
-        Log.v(TAG, "textX: " + textX);
-        Log.v(TAG, "textY: " + textY);
-        Log.v(TAG, "textCenterX: " + textCenterX);
-        Log.v(TAG, "textCenterY: " + textCenterY);
     }
 
     @Override
