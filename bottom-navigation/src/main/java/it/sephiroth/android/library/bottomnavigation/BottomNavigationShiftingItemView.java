@@ -102,6 +102,7 @@ public class BottomNavigationShiftingItemView extends View {
         Log.i(TAG, "measureText");
         this.textWidth = textPaint.measureText(item.getTitle());
         this.textY = getHeight() - paddingBottomActive;
+        this.textX = (getWidth() - textWidth) / 2;
     }
 
     public BottomNavigationItem getItem() {
@@ -109,6 +110,7 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     public void setExpanded(final boolean expanded, int newSize) {
+        Log.i(TAG, "setExpanded(" + expanded + ", " + newSize + ")");
         this.expanded = expanded;
 
         final AnimatorSet set = new AnimatorSet();
@@ -122,6 +124,8 @@ public class BottomNavigationShiftingItemView extends View {
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(final ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate(" + animation.getAnimatedFraction() + ")");
+
                 getLayoutParams().width = (int) animation.getAnimatedValue();
 
                 final float fraction = animation.getAnimatedFraction();
@@ -145,7 +149,6 @@ public class BottomNavigationShiftingItemView extends View {
                     }
                     textPaint.setAlpha((int) ((1.0 - fraction) * 255));
                 }
-
                 requestLayout();
             }
         });
@@ -155,8 +158,15 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     @Override
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+
+        Log.i(TAG, "onLayout(" + changed + ")");
 
         if (null == this.icon) {
             this.icon = item.getIcon(getContext());
@@ -182,19 +192,8 @@ public class BottomNavigationShiftingItemView extends View {
             int w = right - left;
             int centerX = (w - iconSize) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
-        }
-    }
-
-    @Override
-    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        if (textDirty) {
             measureText();
-            textDirty = false;
         }
-
-        this.textX = (getWidth() - textWidth) / 2;
     }
 
     @Override
