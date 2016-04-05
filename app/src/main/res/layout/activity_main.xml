@@ -40,6 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        app:bbn_entries="@menu/bottombar_menu_3items_no_background" />
+        app:bbn_entries="@menu/bottombar_menu_5items" />
 
 </android.support.design.widget.CoordinatorLayout>

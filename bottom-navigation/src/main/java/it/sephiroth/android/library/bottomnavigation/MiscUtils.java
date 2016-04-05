@@ -14,11 +14,13 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 
+import it.sephiroth.android.library.bottonnavigation.BuildConfig;
 import it.sephiroth.android.library.bottonnavigation.R;
 
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
@@ -173,6 +175,12 @@ public class MiscUtils {
             });
 
             animator1.start();
+        }
+    }
+
+    public static void log(final String tag, final int level, String message, Object... arguments) {
+        if (BuildConfig.DEBUG) {
+            Log.println(level, tag, String.format(message, arguments));
         }
     }
 }
