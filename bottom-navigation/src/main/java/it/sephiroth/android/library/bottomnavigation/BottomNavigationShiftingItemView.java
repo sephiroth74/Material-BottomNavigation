@@ -11,8 +11,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -20,6 +18,9 @@ import android.view.animation.Interpolator;
 import java.lang.ref.SoftReference;
 
 import it.sephiroth.android.library.bottonnavigation.R;
+
+import static android.util.Log.INFO;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -99,10 +100,8 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     private void measureText() {
-        Log.i(TAG, "measureText");
+        log(TAG, INFO, "measureText");
         this.textWidth = textPaint.measureText(item.getTitle());
-        this.textY = getHeight() - paddingBottomActive;
-        this.textX = (getWidth() - textWidth) / 2;
     }
 
     public BottomNavigationItem getItem() {
@@ -110,7 +109,7 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     public void setExpanded(final boolean expanded, int newSize) {
-        Log.i(TAG, "setExpanded(" + expanded + ", " + newSize + ")");
+        log(TAG, INFO, "setExpanded(%b, %d)", expanded, newSize);
         this.expanded = expanded;
 
         final AnimatorSet set = new AnimatorSet();
@@ -124,8 +123,6 @@ public class BottomNavigationShiftingItemView extends View {
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(final ValueAnimator animation) {
-                Log.d(TAG, "onAnimationUpdate(" + animation.getAnimatedFraction() + ")");
-
                 getLayoutParams().width = (int) animation.getAnimatedValue();
 
                 final float fraction = animation.getAnimatedFraction();
@@ -149,7 +146,6 @@ public class BottomNavigationShiftingItemView extends View {
                     }
                     textPaint.setAlpha((int) ((1.0 - fraction) * 255));
                 }
-                requestLayout();
             }
         });
 
@@ -165,8 +161,6 @@ public class BottomNavigationShiftingItemView extends View {
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
-        Log.i(TAG, "onLayout(" + changed + ")");
 
         if (null == this.icon) {
             this.icon = item.getIcon(getContext());
@@ -188,11 +182,18 @@ public class BottomNavigationShiftingItemView extends View {
             }
         }
 
+        if (textDirty || changed) {
+            measureText();
+            textDirty = false;
+        }
+
         if (changed) {
             int w = right - left;
+            int h = bottom - top;
             int centerX = (w - iconSize) / 2;
+            this.textY = h - paddingBottomActive;
+            this.textX = (w - textWidth) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
-            measureText();
         }
     }
 
@@ -218,7 +219,7 @@ public class BottomNavigationShiftingItemView extends View {
     @proguard.annotation.Keep
     public void setCenterY(int value) {
         centerY = value;
-        ViewCompat.postInvalidateOnAnimation(this);
+        requestLayout();
     }
 
     public void setTypeface(final SoftReference<Typeface> typeface) {

@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 
-import it.sephiroth.android.library.bottonnavigation.BuildConfig;
 import it.sephiroth.android.library.bottonnavigation.R;
 
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
@@ -30,8 +29,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
  * Created by alessandro on 4/2/16.
  */
 public class MiscUtils {
-
-    private static final String TAG = MiscUtils.class.getSimpleName();
+    private static final boolean DEBUG = true;
 
     public static int getDimensionPixelSize(final Context context, final int dp) {
         return (int) (context.getResources().getDisplayMetrics().density * dp);
@@ -179,7 +177,7 @@ public class MiscUtils {
     }
 
     public static void log(final String tag, final int level, String message, Object... arguments) {
-        if (BuildConfig.DEBUG) {
+        if (DEBUG) {
             Log.println(level, tag, String.format(message, arguments));
         }
     }

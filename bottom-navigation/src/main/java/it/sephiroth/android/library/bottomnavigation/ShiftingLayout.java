@@ -39,8 +39,6 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
-        Log.i(TAG, "onLayout(" + changed + ")");
-
         if (!hasFrame || getChildCount() == 0) {
             return;
         }
