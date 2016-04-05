@@ -69,7 +69,7 @@ public class BottomNavigationFixedItemView extends View {
 
         this.evaluator = new ArgbEvaluator();
 
-        this.colorActive = parent.backgroundColorPrimary;
+        this.colorActive = parent.backgroundColorPrimaryInverted;
         this.colorInactive = parent.inactiveItemInvertedColor;
 
         this.invertedTheme = invertedTheme;
@@ -84,10 +84,7 @@ public class BottomNavigationFixedItemView extends View {
         this.textPaint.setLinearText(true);
         this.textPaint.setSubpixelText(true);
         this.textPaint.setTextSize(expanded ? textSizeActive : textSizeInactive);
-
-        if (invertedTheme) {
-            this.textPaint.setColor(expanded ? colorActive : colorInactive);
-        }
+        this.textPaint.setColor(expanded ? colorActive : colorInactive);
     }
 
     void setItem(BottomNavigationItem item) {
@@ -152,16 +149,8 @@ public class BottomNavigationFixedItemView extends View {
 
         if (null == this.icon) {
             this.icon = item.getIcon(getContext());
-            icon.setBounds(0, 0, iconSize, iconSize);
-            if (invertedTheme) {
-                if (expanded) {
-                    icon.setColorFilter(colorActive, PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    icon.setColorFilter(colorInactive, PorterDuff.Mode.SRC_ATOP);
-                }
-            } else {
-                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            }
+            this.icon.setColorFilter(expanded ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
+            this.icon.setBounds(0, 0, iconSize, iconSize);
         }
 
         if (changed) {
