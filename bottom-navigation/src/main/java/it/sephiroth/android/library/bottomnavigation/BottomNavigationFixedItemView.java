@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,24 +17,19 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import it.sephiroth.android.library.bottonnavigation.R;
+import proguard.annotation.Keep;
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
  * Project: MaterialBottomNavigation
  */
-public class BottomNavigationShiftingItemView extends View {
-    private static final String TAG = BottomNavigationShiftingItemView.class.getSimpleName();
-    private final int paddingTop;
-    private final int paddingBottomActive;
-    private final int textPaddingTop;
+public class BottomNavigationFixedItemView extends View {
+    private static final String TAG = BottomNavigationFixedItemView.class.getSimpleName();
     private final int iconSize;
-    private final int paddingBottomInactive;
-    private final int textSize;
     private boolean expanded;
     private BottomNavigationItem item;
     private Drawable icon;
     private int centerY;
-    private final float minAlpha;
     private final Interpolator interpolator = new DecelerateInterpolator();
     private final Paint textPaint;
     private float textWidth;
@@ -43,16 +39,33 @@ public class BottomNavigationShiftingItemView extends View {
     private final int colorInactive;
     private final ArgbEvaluator evaluator;
 
-    public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
+    private final int paddingTopActive;
+    private final int paddingTopInactive;
+    private final int paddingBottom;
+    private final int paddingHorizontal;
+    private final int textSizeActive;
+    private final int textSizeInactive;
+
+    private static final float TEXT_SCALE_ACTIVE = 1.1666666667f;
+    private float canvasTextScale;
+    private float iconTranslation;
+    private int textCenterX;
+    private int textCenterY;
+    private int centerX;
+
+    public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
         super(parent.getContext());
 
-        animationDuration = getResources().getInteger(R.integer.bbn_shifting_item_animation_duration);
-        paddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top);
-        paddingBottomActive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active);
-        paddingBottomInactive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive);
-        iconSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size);
-        textPaddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_text_padding_top);
-        textSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_text_size);
+        final Resources res = getResources();
+        animationDuration = res.getInteger(R.integer.bbn_shifting_item_animation_duration);
+
+        paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
+        paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
+        paddingBottom = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom);
+        paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal);
+        textSizeActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_active);
+        textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive);
+        iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size);
 
         this.evaluator = new ArgbEvaluator();
 
@@ -60,26 +73,24 @@ public class BottomNavigationShiftingItemView extends View {
         this.colorInactive = parent.inactiveItemInvertedColor;
 
         this.invertedTheme = invertedTheme;
-        this.minAlpha = getResources().getFraction(R.fraction.bbn_item_shifting_inactive_alpha, 1, 1);
         this.expanded = expanded;
-        this.centerY = expanded ? paddingTop : paddingBottomInactive;
+        this.centerY = expanded ? paddingTopActive : paddingTopInactive;
+        this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
+        this.iconTranslation = expanded ? 0 : (paddingTopInactive - paddingTopActive);
 
         this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.textPaint.setColor(Color.WHITE);
         this.textPaint.setHinting(Paint.HINTING_ON);
         this.textPaint.setLinearText(true);
         this.textPaint.setSubpixelText(true);
-        this.textPaint.setTextSize(textSize);
+        this.textPaint.setTextSize(expanded ? textSizeActive : textSizeInactive);
 
         if (invertedTheme) {
             this.textPaint.setColor(expanded ? colorActive : colorInactive);
         }
-
-        this.textPaint.setAlpha(expanded ? 255 : 0);
     }
 
     void setItem(BottomNavigationItem item) {
-
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
         if (invertedTheme) {
             MiscUtils.setDrawableColor(drawable, colorActive);
@@ -101,47 +112,35 @@ public class BottomNavigationShiftingItemView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    public void setExpanded(final boolean expanded, int newSize) {
+    public void setExpanded(final boolean expanded) {
         this.expanded = expanded;
 
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(animationDuration);
         set.setInterpolator(interpolator);
-        final ValueAnimator animator1 = ValueAnimator.ofInt(getLayoutParams().width, newSize);
-        final ValueAnimator animator2 = ObjectAnimator.ofInt(this, "centerY", expanded ? paddingBottomInactive : paddingTop,
-            expanded ? paddingTop : paddingBottomInactive
-        );
+
+        final ValueAnimator animator1 = ObjectAnimator.ofFloat(this, "textScale", expanded ? TEXT_SCALE_ACTIVE : 1);
 
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(final ValueAnimator animation) {
-                getLayoutParams().width = (int) animation.getAnimatedValue();
-
                 final float fraction = animation.getAnimatedFraction();
 
                 if (expanded) {
-                    if (!invertedTheme) {
-                        icon.setAlpha((int) ((minAlpha + (fraction * (1.0 - minAlpha))) * 255));
-                        textPaint.setAlpha((int) (fraction * 255));
-                    } else {
-                        icon.setColorFilter(
-                            (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
-                        textPaint.setColor((Integer) evaluator.evaluate(fraction, 0, colorActive));
-                    }
+                    icon.setColorFilter(
+                        (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
+                    textPaint.setColor((Integer) evaluator.evaluate(fraction, colorInactive, colorActive));
                 } else {
-                    if (!invertedTheme) {
-                        float alpha = 1.0F - fraction;
-                        icon.setAlpha((int) ((minAlpha + (alpha * (1.0 - minAlpha))) * 255));
-                    } else {
-                        icon.setColorFilter(
-                            (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
-                    }
-                    textPaint.setAlpha((int) ((1.0 - fraction) * 255));
-                }
 
-                requestLayout();
+                    icon.setColorFilter(
+                        (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
+                    textPaint.setColor((Integer) evaluator.evaluate(fraction, colorActive, colorInactive));
+                }
             }
         });
+
+        final ValueAnimator animator2 =
+            ObjectAnimator.ofFloat(this, "iconTranslation", expanded ? 0 : (paddingTopInactive - paddingTopActive));
 
         set.playTogether(animator1, animator2);
         set.start();
@@ -163,38 +162,76 @@ public class BottomNavigationShiftingItemView extends View {
             } else {
                 icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
             }
-
-            if (!expanded) {
-                if (!invertedTheme) {
-                    icon.setAlpha((int) (minAlpha * 255));
-                }
-            }
         }
 
         if (changed) {
             int w = right - left;
-            int centerX = (w - iconSize) / 2;
+            centerX = (w - iconSize) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
+
+            textCenterX = getWidth() / 2;
+            textCenterY = getHeight() - paddingBottom;
         }
     }
 
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
+
+        canvas.save();
+        canvas.translate(0, iconTranslation);
         icon.draw(canvas);
-        canvas.drawText(item.getTitle(), (getWidth() - textWidth) / 2, getHeight() - paddingBottomActive, textPaint);
+        canvas.restore();
+
+        canvas.save();
+        canvas.scale(canvasTextScale, canvasTextScale, textCenterX, textCenterY);
+
+        canvas.drawText(
+            item.getTitle(),
+            ((getWidth()) - textWidth) / 2,
+            getHeight() - paddingBottom,
+            textPaint
+        );
+
+        canvas.restore();
     }
 
     @SuppressWarnings ("unused")
-    @proguard.annotation.Keep
+    @Keep
     public int getCenterY() {
         return centerY;
     }
 
     @SuppressWarnings ("unused")
-    @proguard.annotation.Keep
+    @Keep
     public void setCenterY(int value) {
         centerY = value;
         ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    @SuppressWarnings ("unused")
+    @Keep
+    public void setTextScale(final float value) {
+        canvasTextScale = value;
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    @SuppressWarnings ("unused")
+    @Keep
+    public float getTextScale() {
+        return canvasTextScale;
+    }
+
+    @Keep
+    @SuppressWarnings ("unused")
+    public void setIconTranslation(final float iconTranslation) {
+        this.iconTranslation = iconTranslation;
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    @Keep
+    @SuppressWarnings ("unused")
+    public float getIconTranslation() {
+        return iconTranslation;
     }
 }

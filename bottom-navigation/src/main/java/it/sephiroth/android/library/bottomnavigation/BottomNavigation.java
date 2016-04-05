@@ -13,7 +13,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -21,10 +20,12 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 /**
  * Created by alessandro on 4/2/16.
  */
-public class BottomNavigation extends FrameLayout {
+public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     private int bottomInset;
@@ -35,7 +36,7 @@ public class BottomNavigation extends FrameLayout {
 
     private SystemBarTintManager systembarTint;
 
-    private ViewGroup itemsContainer;
+    private ItemsLayoutContainer itemsContainer;
     private View backgroundOverlay;
 
     /** true if translucent navigation is on */
@@ -48,7 +49,8 @@ public class BottomNavigation extends FrameLayout {
      */
     int inactiveItemInvertedColor;
 
-    private BottomNavigationItem[] entries;
+    private BottomNavigationItem[] tmpEntries;
+    private BottomNavigationItem[] items;
 
     private boolean shifting;
     private int defaultSelectedIndex = 0;
@@ -95,7 +97,7 @@ public class BottomNavigation extends FrameLayout {
         );
 
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
-        entries = MenuParser.inflateMenu(context, menuResId);
+        BottomNavigationItem[] entries = MenuParser.inflateMenu(context, menuResId);
         array.recycle();
 
         Log.v(TAG, "invertedTheme: " + invertedTheme);
@@ -129,6 +131,8 @@ public class BottomNavigation extends FrameLayout {
 
         Log.v(TAG, "bottomInset: " + bottomInset + ", " + systembarTint.getConfig().hasNavigtionBar() + ", " + systembarTint
             .getConfig().isNavigationAtBottom());
+
+        setItems(entries);
     }
 
     @Override
@@ -159,10 +163,11 @@ public class BottomNavigation extends FrameLayout {
         MarginLayoutParams marginLayoutParams = (MarginLayoutParams) getLayoutParams();
         marginLayoutParams.bottomMargin = -bottomInset;
 
-        if (null != entries) {
+        if (null != tmpEntries) {
+            shifting = tmpEntries.length > 3;
             initializeContainer();
             initializeItems();
-            entries = null;
+            tmpEntries = null;
         }
     }
 
@@ -173,117 +178,67 @@ public class BottomNavigation extends FrameLayout {
 
         if (null == itemsContainer) {
             setPadding(0, shadowHeight, 0, 0);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, defaultHeight);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
             backgroundOverlay = new View(getContext());
             backgroundOverlay.setLayoutParams(params);
             addView(backgroundOverlay);
         }
     }
 
+    public void setItems(BottomNavigationItem[] entries) {
+        Log.i(TAG, "setItems");
+
+        tmpEntries = entries;
+        items = entries;
+        requestLayout();
+    }
+
     private void initializeContainer() {
         if (null == itemsContainer) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, defaultHeight);
-            itemsContainer = new ShiftingLayout(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, defaultHeight);
+
+            if (shifting) {
+                itemsContainer = new ShiftingLayout(getContext());
+            } else {
+                itemsContainer = new FixedLayout(getContext());
+            }
             itemsContainer.setLayoutParams(params);
-            addView(itemsContainer);
+            addView((View) itemsContainer);
         }
     }
 
     private void initializeItems() {
-        Log.i(TAG, "initializeItems: " + entries.length);
-        final float density = getResources().getDisplayMetrics().density;
-        final int screenWidth = getWidth();
+        Log.i(TAG, "initializeItems: " + tmpEntries.length);
 
-        shifting = entries.length > 3;
-        Log.v(TAG, "density: " + density);
-        Log.v(TAG, "screenWidth: " + screenWidth);
-        Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
+        itemsContainer.setSelectedIndex(defaultSelectedIndex);
+        itemsContainer.populate(tmpEntries);
+        itemsContainer.setOnItemClickListener(this);
 
-        int maxActiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 168);
-        int minActiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 96);
-
-        int maxInactiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 96);
-        int minInactiveItemWidth = MiscUtils.getDimensionPixelSize(getContext(), 64);
-
-        int itemWidthMin;
-        int itemWidthMax;
-
-        final int totalWidth = maxInactiveItemWidth * (entries.length - 1) + maxActiveItemWidth;
-        Log.v(TAG, "totalWidth: " + totalWidth);
-        Log.v(TAG, "totalWidth(dp): " + totalWidth / density);
-
-        if (totalWidth > screenWidth) {
-            float ratio = (float) screenWidth / totalWidth;
-            ratio = (float) ((double) Math.round(ratio * 10d) / 10d) + 0.05f;
-            Log.v(TAG, "ratio: " + ratio);
-
-            itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);
-            itemWidthMax = (int) (maxActiveItemWidth * ratio);
-
-            Log.d(TAG, "computing sizes...");
-            Log.v(TAG, "itemWidthMin(dp): " + itemWidthMin / density);
-            Log.v(TAG, "itemWidthMax(dp): " + itemWidthMax / density);
-            Log.v(TAG, "total items size(dp): " + (itemWidthMin * (entries.length - 1) + itemWidthMax) / density);
-
-            if (itemWidthMin * (entries.length - 1) + itemWidthMax > screenWidth) {
-                itemWidthMax = screenWidth - (itemWidthMin * (entries.length - 1)); // minActiveItemWidth?
-            }
-        } else {
-            itemWidthMax = maxActiveItemWidth;
-            itemWidthMin = maxInactiveItemWidth;
+        if (!isInvertedTheme() && tmpEntries[defaultSelectedIndex].hasColor()) {
+            backgroundDrawable.setColor(tmpEntries[defaultSelectedIndex].getColor());
         }
+    }
 
-        Log.v(TAG, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
-        Log.v(TAG, "inactive size: " + maxInactiveItemWidth + ", " + minInactiveItemWidth);
+    public boolean isInvertedTheme() {
+        return invertedTheme;
+    }
 
-        Log.v(TAG, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
-        Log.v(TAG, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
+    @Override
+    public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index) {
+        Log.i(TAG, "onItemClick: " + index);
+        parent.setSelectedIndex(index);
 
-        Log.v(TAG, "itemWidth: " + itemWidthMin + ", " + itemWidthMax);
-        Log.v(TAG, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
+        final BottomNavigationItem item = items[index];
 
-        if (shifting) {
-            ((ShiftingLayout) itemsContainer).setTotalSize(itemWidthMin, itemWidthMax);
-            ((ShiftingLayout) itemsContainer).setSelectedChild(defaultSelectedIndex);
-        }
-
-        for (int i = 0; i < entries.length; i++) {
-            final BottomNavigationItem item = entries[i];
-            Log.d(TAG, "item: " + item);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidthMin, defaultHeight);
-
-            if (i == defaultSelectedIndex) {
-                params.width = itemWidthMax;
-                if (!invertedTheme && item.hasColor()) {
-                    backgroundDrawable.setColor(item.getColor());
-                }
-            }
-
-            BottomNavigationShiftingItemView view =
-                new BottomNavigationShiftingItemView(this, i == defaultSelectedIndex, invertedTheme);
-            view.setItem(item);
-            view.setLayoutParams(params);
-            view.setIsShifting(shifting);
-            view.setClickable(true);
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    int index = itemsContainer.indexOfChild(v);
-                    ((ShiftingLayout) itemsContainer).setSelectedChild(index);
-
-                    if (!invertedTheme && item.hasColor()) {
-                        MiscUtils.animate(BottomNavigation.this, v,
-                            backgroundOverlay,
-                            backgroundDrawable,
-                            item.getColor(),
-                            backgroundColorAnimation
-                        );
-                    }
-
-                }
-            });
-            itemsContainer.addView(view);
+        if (!isInvertedTheme() && item.hasColor()) {
+            MiscUtils.animate(
+                this,
+                view,
+                backgroundOverlay,
+                backgroundDrawable,
+                item.getColor(),
+                backgroundColorAnimation
+            );
         }
     }
 

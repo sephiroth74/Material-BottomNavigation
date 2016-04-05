@@ -2,21 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bb_menu_recents"
-        android:color="#FF4081"
+        android:id="@+id/bbn_item1"
+        android:color="@color/colorPrimary"
         android:icon="@android:drawable/ic_dialog_map"
-        android:title="Map" />
-
+        android:title="Movies &amp; TV" />
     <item
-        android:id="@+id/bb_menu_favorites"
-        android:color="#5D4037"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="Camera" />
-
+        android:id="@+id/bbn_item2"
+        android:color="#ff666699"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Info" />
     <item
-        android:id="@+id/bb_menu_nearby"
-        android:color="#7B1FA2"
-        android:icon="@android:drawable/ic_menu_gallery"
-        android:title="Gallery" />
+        android:id="@+id/bbn_item3"
+        android:color="#ff660066"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="Dialer" />
 
 </menu>
