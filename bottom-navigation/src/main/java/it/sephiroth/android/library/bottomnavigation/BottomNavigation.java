@@ -57,6 +57,23 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private ColorDrawable backgroundDrawable;
     private long backgroundColorAnimation;
 
+    /**
+     * Icon/Text color for the inactive items
+     * in the fixed style
+     */
+    int fixedItemColorInactive;
+
+    /**
+     * Icon/text color for the active items
+     * in the fixed style
+     */
+    int fixedItemColorActive;
+
+    /**
+     * Item background selector
+     */
+    int rippleColor;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -89,12 +106,25 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             ContextCompat.getColor(context, R.color.bbn_item_inverted_color_inactive)
         );
 
+        fixedItemColorInactive = array.getColor(
+            R.styleable.BottomNavigation_bbn_fixedItemColorInactive,
+            ContextCompat.getColor(context, R.color.bbn_item_fixed_color_inactive)
+        );
+
+        fixedItemColorActive = array.getColor(
+            R.styleable.BottomNavigation_bbn_fixedItemColorActive,
+            MiscUtils.getColor(context, android.R.attr.colorForeground)
+        );
+
         backgroundColorPrimary = array
             .getColor(R.styleable.BottomNavigation_bbn_backgroundColorPrimary, MiscUtils.getColor(context, R.attr.colorPrimary));
+
         backgroundColorPrimaryInverted = array.getColor(
             R.styleable.BottomNavigation_bbn_backgroundColorPrimaryInverted,
             ContextCompat.getColor(context, android.R.color.white)
         );
+
+        rippleColor = array.getColor(R.styleable.BottomNavigation_bbn_rippleColor, backgroundColorPrimary);
 
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
         BottomNavigationItem[] entries = MenuParser.inflateMenu(context, menuResId);
@@ -106,7 +136,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         LayerDrawable layerDrawable = (LayerDrawable) ContextCompat.getDrawable(context, R.drawable.bbn_background);
         backgroundDrawable = (ColorDrawable) layerDrawable.findDrawableByLayerId(R.id.bbn_background);
-        backgroundDrawable.setColor(invertedTheme ? backgroundColorPrimaryInverted : backgroundColorPrimary);
+        //backgroundDrawable.setColor(invertedTheme ? backgroundColorPrimaryInverted : backgroundColorPrimary);
 
         // replace the background color
         setBackground(layerDrawable);
@@ -122,8 +152,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         // check if the botton navigation is translucent
         hasTransucentNavigation = MiscUtils.hasTranslucentNavigation(activity);
 
-        if (hasTransucentNavigation && systembarTint.getConfig().isNavigationAtBottom() && systembarTint.getConfig()
-            .hasNavigtionBar()) {
+        if (hasTransucentNavigation
+            && systembarTint.getConfig().isNavigationAtBottom()
+            && systembarTint.getConfig().hasNavigtionBar()) {
             bottomInset = systembarTint.getConfig().getNavigationBarHeight();
         } else {
             bottomInset = 0;
@@ -165,6 +196,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         if (null != tmpEntries) {
             shifting = tmpEntries.length > 3;
+            initializeUI();
             initializeContainer();
             initializeItems();
             tmpEntries = null;
@@ -193,6 +225,15 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         requestLayout();
     }
 
+    private void initializeUI() {
+        if (shifting) {
+            backgroundDrawable.setColor(invertedTheme ? backgroundColorPrimaryInverted : backgroundColorPrimary);
+        } else {
+            int color = MiscUtils.getColor(getContext(), android.R.attr.windowBackground);
+            backgroundDrawable.setColor(color);
+        }
+    }
+
     private void initializeContainer() {
         if (null == itemsContainer) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, defaultHeight);
@@ -214,8 +255,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         itemsContainer.populate(tmpEntries);
         itemsContainer.setOnItemClickListener(this);
 
-        if (!isInvertedTheme() && tmpEntries[defaultSelectedIndex].hasColor()) {
-            backgroundDrawable.setColor(tmpEntries[defaultSelectedIndex].getColor());
+        if (!isInvertedTheme() && items[defaultSelectedIndex].hasColor()) {
+            backgroundDrawable.setColor(items[defaultSelectedIndex].getColor());
         }
     }
 

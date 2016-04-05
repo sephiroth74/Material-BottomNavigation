@@ -4,22 +4,22 @@
     <item
         android:id="@+id/bbn_item1"
         android:color="@color/colorPrimary"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="Movies &amp; TV" />
+        android:icon="@drawable/ic_cloud_off_white_24dp"
+        android:title="Cloud Sync" />
     <item
         android:id="@+id/bbn_item2"
-        android:color="#ff666699"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="Info" />
+        android:color="@android:color/holo_green_dark"
+        android:icon="@drawable/ic_cast_connected_white_24dp"
+        android:title="Chromecast" />
     <item
         android:id="@+id/bbn_item3"
-        android:color="#ff660066"
-        android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="Dialer" />
+        android:color="@android:color/holo_orange_dark"
+        android:icon="@drawable/ic_mail_white_24dp"
+        android:title="Mail" />
     <item
-        android:id="@+id/bbn_item4"
+        android:id="@+id/action4"
         android:color="#FF5252"
-        android:icon="@android:drawable/ic_popup_disk_full"
-        android:title="Disk" />
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="List" />
 
 </menu>

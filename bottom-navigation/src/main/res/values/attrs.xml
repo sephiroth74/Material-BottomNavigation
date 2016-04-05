@@ -12,6 +12,14 @@
         <!-- when using the invertedTheme, this is the default icon/text color -->
         <attr name="bbn_invertedColorInactive" format="color" />
 
+        <!-- fixed theme, inactive icon & text color -->
+        <attr name="bbn_fixedItemColorInactive" format="color" />
+        <!-- fixed theme, active icon & text color -->
+        <attr name="bbn_fixedItemColorActive" format="color" />
+
+        <!-- ripple selector color -->
+        <attr name="bbn_rippleColor" format="color" />
+
     </declare-styleable>
 
     <!-- Base attributes that are available to all Item objects. -->

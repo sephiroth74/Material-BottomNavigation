@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bb_menu_recents"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="Map" />
+        android:id="@+id/action1"
+        android:icon="@drawable/ic_cloud_off_white_24dp"
+        android:title="Cloud Sync" />
     <item
-        android:id="@+id/bb_menu_favorites"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="Camera" />
+        android:id="@+id/action2"
+        android:icon="@drawable/ic_cast_connected_white_24dp"
+        android:title="Chromecast" />
     <item
-        android:id="@+id/bb_menu_nearby"
-        android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="Gallery" />
+        android:id="@+id/action3"
+        android:icon="@drawable/ic_mail_white_24dp"
+        android:title="Mail" />
     <item
-        android:id="@+id/bb_menu_friends"
-        android:icon="@android:drawable/ic_popup_disk_full"
-        android:title="Calendar" />
+        android:id="@+id/action4"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="List" />
     <item
-        android:id="@+id/bb_menu_food"
-        android:icon="@android:drawable/ic_popup_reminder"
-        android:title="Search" />
+        android:id="@+id/action5"
+        android:icon="@drawable/ic_add_circle_white_24dp"
+        android:title="Add New" />
 </menu>

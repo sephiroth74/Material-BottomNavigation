@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
@@ -160,7 +161,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(proposedWidth, getHeight());
 
             BottomNavigationFixedItemView view =
-                new BottomNavigationFixedItemView(parent, i == selectedIndex, parent.isInvertedTheme());
+                new BottomNavigationFixedItemView(parent, i == selectedIndex);
             view.setItem(item);
             view.setLayoutParams(params);
             view.setClickable(true);
@@ -171,6 +172,13 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
                     if (null != listener) {
                         listener.onItemClick(FixedLayout.this, v, finalI);
                     }
+                }
+            });
+            view.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(final View v) {
+                    Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
             addView(view);

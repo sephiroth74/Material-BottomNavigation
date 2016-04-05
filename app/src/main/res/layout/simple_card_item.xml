@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:background="@drawable/card_background"
+    android:elevation="2dp"
+    android:padding="8dp"
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
     app:cardMaxElevation="6dp"
     app:cardPreventCornerOverlap="false"
-    android:layout_margin="0dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
 
@@ -21,15 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            android:textAppearance="?android:attr/textAppearance" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="2"
             android:layout_marginTop="4dp"
+            android:lines="2"
             android:text="Description\nDescription line 2"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</RelativeLayout>

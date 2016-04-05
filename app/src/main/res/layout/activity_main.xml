@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        app:bbn_entries="@menu/bottombar_menu_3items" />
+        app:bbn_entries="@menu/bottombar_menu_4items" />
 
 </android.support.design.widget.CoordinatorLayout>

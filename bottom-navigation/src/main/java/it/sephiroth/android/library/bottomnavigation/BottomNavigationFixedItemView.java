@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -34,9 +35,9 @@ public class BottomNavigationFixedItemView extends View {
     private final Paint textPaint;
     private float textWidth;
     private long animationDuration;
-    private final boolean invertedTheme;
     private final int colorActive;
     private final int colorInactive;
+    private final int rippleColor;
     private final ArgbEvaluator evaluator;
 
     private final int paddingTopActive;
@@ -52,8 +53,10 @@ public class BottomNavigationFixedItemView extends View {
     private int textCenterX;
     private int textCenterY;
     private int centerX;
+    private float textX;
+    private float textY;
 
-    public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
+    public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded) {
         super(parent.getContext());
 
         final Resources res = getResources();
@@ -69,10 +72,10 @@ public class BottomNavigationFixedItemView extends View {
 
         this.evaluator = new ArgbEvaluator();
 
-        this.colorActive = parent.backgroundColorPrimaryInverted;
-        this.colorInactive = parent.inactiveItemInvertedColor;
+        this.colorActive = parent.fixedItemColorActive;
+        this.colorInactive = parent.fixedItemColorInactive;
+        this.rippleColor = parent.rippleColor;
 
-        this.invertedTheme = invertedTheme;
         this.expanded = expanded;
         this.centerY = expanded ? paddingTopActive : paddingTopInactive;
         this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
@@ -83,21 +86,19 @@ public class BottomNavigationFixedItemView extends View {
         this.textPaint.setHinting(Paint.HINTING_ON);
         this.textPaint.setLinearText(true);
         this.textPaint.setSubpixelText(true);
-        this.textPaint.setTextSize(expanded ? textSizeActive : textSizeInactive);
+        this.textPaint.setTextSize(textSizeInactive);
         this.textPaint.setColor(expanded ? colorActive : colorInactive);
     }
 
     void setItem(BottomNavigationItem item) {
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
-        if (invertedTheme) {
-            MiscUtils.setDrawableColor(drawable, colorActive);
-        }
+        MiscUtils.setDrawableColor(drawable, rippleColor);
 
         this.item = item;
         this.setId(item.getId());
         this.setBackground(drawable);
         this.setEnabled(item.isEnabled());
-        this.textWidth = textPaint.measureText(item.getTitle());
+
     }
 
     public BottomNavigationItem getItem() {
@@ -145,6 +146,8 @@ public class BottomNavigationFixedItemView extends View {
 
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
+        Log.i(TAG, "onLayout(" + changed + ")");
+
         super.onLayout(changed, left, top, right, bottom);
 
         if (null == this.icon) {
@@ -157,10 +160,29 @@ public class BottomNavigationFixedItemView extends View {
             int w = right - left;
             centerX = (w - iconSize) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
-
-            textCenterX = getWidth() / 2;
-            textCenterY = getHeight() - paddingBottom;
+            measureText();
         }
+    }
+
+    private void measureText() {
+        final int width = getWidth();
+        final int height = getHeight();
+
+        Log.v(TAG, "width: " + width);
+        Log.v(TAG, "height: " + height);
+
+        textWidth = textPaint.measureText(item.getTitle());
+        Log.v(TAG, "textWidth: " + textWidth);
+
+        textX = paddingHorizontal + (((width - paddingHorizontal * 2) - textWidth) / 2);
+        textY = height - paddingBottom;
+        textCenterX = width / 2;
+        textCenterY = height - paddingBottom;
+
+        Log.v(TAG, "textX: " + textX);
+        Log.v(TAG, "textY: " + textY);
+        Log.v(TAG, "textCenterX: " + textCenterX);
+        Log.v(TAG, "textCenterY: " + textCenterY);
     }
 
     @Override
@@ -177,8 +199,8 @@ public class BottomNavigationFixedItemView extends View {
 
         canvas.drawText(
             item.getTitle(),
-            ((getWidth()) - textWidth) / 2,
-            getHeight() - paddingBottom,
+            textX,
+            textY,
             textPaint
         );
 

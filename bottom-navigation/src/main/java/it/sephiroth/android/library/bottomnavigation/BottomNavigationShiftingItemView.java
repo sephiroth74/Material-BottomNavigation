@@ -41,6 +41,7 @@ public class BottomNavigationShiftingItemView extends View {
     private final boolean invertedTheme;
     private final int colorActive;
     private final int colorInactive;
+    private final int rippleColor;
     private final ArgbEvaluator evaluator;
 
     public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, boolean invertedTheme) {
@@ -58,6 +59,7 @@ public class BottomNavigationShiftingItemView extends View {
 
         this.colorActive = parent.backgroundColorPrimary;
         this.colorInactive = parent.inactiveItemInvertedColor;
+        this.rippleColor = parent.rippleColor;
 
         this.invertedTheme = invertedTheme;
         this.minAlpha = getResources().getFraction(R.fraction.bbn_item_shifting_inactive_alpha, 1, 1);
@@ -79,11 +81,8 @@ public class BottomNavigationShiftingItemView extends View {
     }
 
     void setItem(BottomNavigationItem item) {
-
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
-        if (invertedTheme) {
-            MiscUtils.setDrawableColor(drawable, colorActive);
-        }
+        MiscUtils.setDrawableColor(drawable, rippleColor);
 
         this.item = item;
         this.setId(item.getId());

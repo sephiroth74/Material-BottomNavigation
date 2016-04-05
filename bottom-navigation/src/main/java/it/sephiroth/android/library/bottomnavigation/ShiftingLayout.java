@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
@@ -198,6 +199,13 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
                     if (null != listener) {
                         listener.onItemClick(ShiftingLayout.this, v, finalI);
                     }
+                }
+            });
+            view.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(final View v) {
+                    Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
             addView(view);

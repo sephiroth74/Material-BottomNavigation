@@ -6,6 +6,6 @@
         android:top="0dp" />
     <item
         android:id="@+id/bbn_background"
-        android:drawable="@android:color/holo_blue_bright"
+        android:drawable="@android:color/white"
         android:top="@dimen/bbn_top_shadow_height" />
 </layer-list>

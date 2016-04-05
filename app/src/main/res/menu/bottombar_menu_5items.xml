@@ -2,28 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bb_menu_recents"
+        android:id="@+id/bbn_item1"
         android:color="@color/colorPrimary"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="Map" />
+        android:icon="@drawable/ic_cloud_off_white_24dp"
+        android:title="Cloud Sync" />
     <item
-        android:id="@+id/bb_menu_favorites"
-        android:color="@color/colorAccent"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="Camera" />
+        android:id="@+id/bbn_item2"
+        android:color="@android:color/holo_green_dark"
+        android:icon="@drawable/ic_cast_connected_white_24dp"
+        android:title="Chromecast" />
     <item
-        android:id="@+id/bb_menu_nearby"
-        android:color="@color/colorPrimaryDark"
-        android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="Gallery" />
+        android:id="@+id/bbn_item3"
+        android:color="@android:color/holo_orange_dark"
+        android:icon="@drawable/ic_mail_white_24dp"
+        android:title="Mail" />
     <item
-        android:id="@+id/bb_menu_friends"
+        android:id="@+id/action4"
         android:color="#FF5252"
-        android:icon="@android:drawable/ic_popup_disk_full"
-        android:title="Calendar" />
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="List" />
     <item
-        android:id="@+id/bb_menu_food"
+        android:id="@+id/action5"
         android:color="#FF9800"
-        android:icon="@android:drawable/ic_popup_reminder"
-        android:title="Search" />
+        android:icon="@drawable/ic_add_circle_white_24dp"
+        android:title="Add New" />
 </menu>
