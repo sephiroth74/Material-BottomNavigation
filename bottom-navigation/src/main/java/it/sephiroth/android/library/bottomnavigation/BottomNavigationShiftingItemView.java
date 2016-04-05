@@ -113,7 +113,7 @@ public class BottomNavigationShiftingItemView extends View {
         this.expanded = expanded;
 
         final AnimatorSet set = new AnimatorSet();
-        set.setDuration(animationDuration);
+        set.setDuration(animationDuration * 10);
         set.setInterpolator(interpolator);
         final ValueAnimator animator1 = ValueAnimator.ofInt(getLayoutParams().width, newSize);
         final ValueAnimator animator2 = ObjectAnimator.ofInt(this, "centerY", expanded ? paddingBottomInactive : paddingTop,
@@ -130,12 +130,12 @@ public class BottomNavigationShiftingItemView extends View {
                 if (expanded) {
                     if (!invertedTheme) {
                         icon.setAlpha((int) ((minAlpha + (fraction * (1.0 - minAlpha))) * 255));
-                        textPaint.setAlpha((int) (fraction * 255));
                     } else {
                         icon.setColorFilter(
                             (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
                         textPaint.setColor((Integer) evaluator.evaluate(fraction, 0, colorActive));
                     }
+                    textPaint.setAlpha((int) (fraction * 255));
                 } else {
                     if (!invertedTheme) {
                         float alpha = 1.0F - fraction;

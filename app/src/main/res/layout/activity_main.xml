@@ -40,6 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        app:bbn_entries="@menu/bottombar_menu_4items" />
+        app:bbn_inverted_theme="false"
+        app:bbn_rippleColor="#33ffffff"
+        app:bbn_entries="@menu/bottombar_menu_4items_no_background" />
 
 </android.support.design.widget.CoordinatorLayout>
