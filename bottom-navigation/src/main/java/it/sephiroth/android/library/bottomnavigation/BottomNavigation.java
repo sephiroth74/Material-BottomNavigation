@@ -12,7 +12,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -23,26 +22,51 @@ import java.lang.ref.SoftReference;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
+import static android.util.Log.INFO;
+import static android.util.Log.VERBOSE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
- * Created by alessandro on 4/2/16.
+ * Created by alessandro crugnola on 4/2/16.
  */
 public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
+    /**
+     * This is the amount of space we have to cover in case there's a translucent navigation
+     * enabled.
+     */
     private int bottomInset;
+
+    /**
+     * This is the current view height. It does take into account the extra space
+     * used in case we have to cover the navigation translucent area, and neither the shadow height.
+     */
     private int defaultHeight;
 
+    /**
+     * Shadow is created above the widget background. It simulates the
+     * elevation.
+     */
     private int shadowHeight;
 
     private SystemBarTintManager systembarTint;
 
+    /**
+     * Layout container used to create and manage the UI items.
+     * It can be either Fixed or Shifting, based on the widget `mode`
+     */
     private ItemsLayoutContainer itemsContainer;
+
+    /**
+     * This is where the color animation is happening
+     */
     private View backgroundOverlay;
 
-    /** true if translucent navigation is on */
+    /**
+     * true if translucent navigation is on
+     */
     private boolean hasTransucentNavigation;
 
     /**
@@ -58,9 +82,28 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private BottomNavigationItem[] tmpEntries;
     private BottomNavigationItem[] items;
 
+    /**
+     * Layout mode for the bottomnavigation view.
+     * shifting is always true with > 3 items. It's always
+     * false with <= 3 items.
+     */
     private boolean shifting;
+
+    /**
+     * Default selected index.
+     * After the items are populated changing this
+     * won't have any effect
+     */
     private int defaultSelectedIndex = 0;
+
+    /**
+     * View visible background color
+     */
     private ColorDrawable backgroundDrawable;
+
+    /**
+     * Animation duration for the background color change
+     */
     private long backgroundColorAnimation;
 
     /**
@@ -92,6 +135,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     int rippleColor;
 
+    /**
+     * Optional typeface used for the items' text labels
+     */
     SoftReference<Typeface> typeface;
 
     public BottomNavigation(final Context context) {
@@ -170,7 +216,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         final int elevation = getResources().getDimensionPixelSize(R.dimen.bbn_elevation);
         ViewCompat.setElevation(this, MiscUtils.getDimensionPixelSize(getContext(), elevation));
 
-        // check if the botton navigation is translucent
+        // check if the bottom navigation is translucent
         hasTransucentNavigation = MiscUtils.hasTranslucentNavigation(activity);
 
         if (hasTransucentNavigation
@@ -181,16 +227,16 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             bottomInset = 0;
         }
 
-        Log.v(TAG, "bottomInset: " + bottomInset + ", " + systembarTint.getConfig().hasNavigtionBar() + ", " + systembarTint
-            .getConfig().isNavigationAtBottom());
+        log(TAG, VERBOSE, "bottomInset: %d, hasNavigation: %b, navigationAtBottom: %b",
+            bottomInset, systembarTint.getConfig().hasNavigtionBar(),
+            systembarTint.getConfig().isNavigationAtBottom()
+        );
 
         setItems(entries);
     }
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        // Log.i(TAG, "onMeasure");
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -206,7 +252,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        Log.i(TAG, "onSizeChanged: " + w + "x" + h);
+        log(TAG, INFO, "onSizeChanged(%d, %d)", w, h);
         super.onSizeChanged(w, h, oldw, oldh);
 
         ((CoordinatorLayout.LayoutParams) getLayoutParams())
@@ -226,7 +272,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     @Override
     protected void onAttachedToWindow() {
-        Log.i(TAG, "onAttachedToWindow");
+        log(TAG, INFO, "onAttachedToWindow");
         super.onAttachedToWindow();
 
         if (null == itemsContainer) {
@@ -239,7 +285,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     public void setItems(BottomNavigationItem[] entries) {
-        Log.i(TAG, "setItems");
+        log(TAG, INFO, "setItems");
 
         tmpEntries = entries;
         items = entries;
@@ -247,10 +293,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initializeUI() {
-        log(TAG, Log.INFO, "initializeUI");
+        log(TAG, INFO, "initializeUI");
 
-        log(TAG, Log.VERBOSE, "shiftingBackgroundColorPrimary: %x", shiftingBackgroundColorPrimary);
-        log(TAG, Log.VERBOSE, "fixedBackgroundColorPrimary: %x", fixedBackgroundColorPrimary);
+        log(TAG, VERBOSE, "shiftingBackgroundColorPrimary: %x", shiftingBackgroundColorPrimary);
+        log(TAG, VERBOSE, "fixedBackgroundColorPrimary: %x", fixedBackgroundColorPrimary);
         backgroundDrawable.setColor(shifting ? shiftingBackgroundColorPrimary : fixedBackgroundColorPrimary);
     }
 
@@ -269,7 +315,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initializeItems() {
-        Log.i(TAG, "initializeItems: " + tmpEntries.length);
+        log(TAG, INFO, "initializeItems: %d", tmpEntries.length);
 
         itemsContainer.setSelectedIndex(defaultSelectedIndex);
         itemsContainer.populate(tmpEntries);
@@ -282,7 +328,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     @Override
     public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index) {
-        Log.i(TAG, "onItemClick: " + index);
+        log(TAG, INFO, "onItemClick: %d", index);
         parent.setSelectedIndex(index);
 
         final BottomNavigationItem item = items[index];
@@ -300,7 +346,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     public void setDefaultTypeface(final Typeface typeface) {
-        Log.i(TAG, "setDefaultTypeface: " + typeface);
+        log(TAG, INFO, "setDefaultTypeface: " + typeface);
         this.typeface = new SoftReference<>(typeface);
+    }
+
+    public void setDefaultSelectedIndex(final int defaultSelectedIndex) {
+        this.defaultSelectedIndex = defaultSelectedIndex;
     }
 }
