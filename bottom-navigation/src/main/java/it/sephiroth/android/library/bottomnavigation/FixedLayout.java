@@ -19,12 +19,6 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     private static final String TAG = FixedLayout.class.getSimpleName();
     private final int maxActiveItemWidth;
     private final int minActiveItemWidth;
-    private final int paddingTopActive;
-    private final int paddingTopInactive;
-    private final int paddingBottom;
-    private final int paddingHorizontal;
-    private final int textSizeActive;
-    private final int textSizeInactive;
     private int totalChildrenSize;
     private boolean hasFrame;
     private int selectedIndex;
@@ -39,12 +33,6 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final Resources res = getResources();
         maxActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_maxActiveItemWidth);
         minActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_minActiveItemWidth);
-        paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
-        paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
-        paddingBottom = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom);
-        paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal);
-        textSizeActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_active);
-        textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive);
     }
 
     @Override
@@ -105,8 +93,8 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationFixedItemView current = (BottomNavigationFixedItemView) getChildAt(oldSelectedIndex);
         final BottomNavigationFixedItemView child = (BottomNavigationFixedItemView) getChildAt(index);
 
-        current.setExpanded(false);
-        child.setExpanded(true);
+        current.setExpanded(false, 0);
+        child.setExpanded(true, 0);
     }
 
     @Override

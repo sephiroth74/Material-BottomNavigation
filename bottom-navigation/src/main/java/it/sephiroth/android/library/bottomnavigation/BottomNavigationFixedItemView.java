@@ -9,38 +9,31 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
-import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-import java.lang.ref.SoftReference;
-
 import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
+
+import static android.util.Log.INFO;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
  * Project: MaterialBottomNavigation
  */
-public class BottomNavigationFixedItemView extends View {
+public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationFixedItemView.class.getSimpleName();
     private final int iconSize;
-    private boolean expanded;
-    private BottomNavigationItem item;
     private Drawable icon;
     private int centerY;
     private final Interpolator interpolator = new DecelerateInterpolator();
-    private final Paint textPaint;
     private float textWidth;
     private long animationDuration;
     private final int colorActive;
     private final int colorInactive;
-    private final int rippleColor;
     private final ArgbEvaluator evaluator;
 
     private final int paddingTopActive;
@@ -58,10 +51,9 @@ public class BottomNavigationFixedItemView extends View {
     private int centerX;
     private float textX;
     private float textY;
-    private boolean textDirty;
 
     public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded) {
-        super(parent.getContext());
+        super(parent, expanded);
 
         final Resources res = getResources();
         animationDuration = res.getInteger(R.integer.bbn_shifting_item_animation_duration);
@@ -78,14 +70,10 @@ public class BottomNavigationFixedItemView extends View {
 
         this.colorActive = parent.fixedItemColorActive;
         this.colorInactive = parent.fixedItemColorInactive;
-        this.rippleColor = parent.rippleColor;
-
-        this.expanded = expanded;
         this.centerY = expanded ? paddingTopActive : paddingTopInactive;
         this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
         this.iconTranslation = expanded ? 0 : (paddingTopInactive - paddingTopActive);
 
-        this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.textPaint.setColor(Color.WHITE);
         this.textPaint.setHinting(Paint.HINTING_ON);
         this.textPaint.setLinearText(true);
@@ -94,29 +82,8 @@ public class BottomNavigationFixedItemView extends View {
         this.textPaint.setColor(expanded ? colorActive : colorInactive);
     }
 
-    void setItem(BottomNavigationItem item) {
-        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
-        MiscUtils.setDrawableColor(drawable, rippleColor);
-
-        this.item = item;
-        this.setId(item.getId());
-        this.setBackground(drawable);
-        this.setEnabled(item.isEnabled());
-
-    }
-
-    public BottomNavigationItem getItem() {
-        return item;
-    }
-
     @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    public void setExpanded(final boolean expanded) {
-        this.expanded = expanded;
-
+    protected void onStatusChanged(final boolean expanded, final int size) {
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(animationDuration);
         set.setInterpolator(interpolator);
@@ -150,13 +117,13 @@ public class BottomNavigationFixedItemView extends View {
 
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
-        Log.i(TAG, "onLayout(" + changed + ")");
+        log(TAG, INFO, "onLayout(%b)", changed);
 
         super.onLayout(changed, left, top, right, bottom);
 
         if (null == this.icon) {
-            this.icon = item.getIcon(getContext());
-            this.icon.setColorFilter(expanded ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
+            this.icon = getItem().getIcon(getContext());
+            this.icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
             this.icon.setBounds(0, 0, iconSize, iconSize);
         }
 
@@ -174,12 +141,12 @@ public class BottomNavigationFixedItemView extends View {
     }
 
     private void measureText() {
-        Log.i(TAG, "measureText");
+        log(TAG, INFO, "measureText");
 
         final int width = getWidth();
         final int height = getHeight();
 
-        textWidth = textPaint.measureText(item.getTitle());
+        textWidth = textPaint.measureText(getItem().getTitle());
         textX = paddingHorizontal + (((width - paddingHorizontal * 2) - textWidth) / 2);
         textY = height - paddingBottom;
         textCenterX = width / 2;
@@ -199,7 +166,7 @@ public class BottomNavigationFixedItemView extends View {
         canvas.scale(canvasTextScale, canvasTextScale, textCenterX, textCenterY);
 
         canvas.drawText(
-            item.getTitle(),
+            getItem().getTitle(),
             textX,
             textY,
             textPaint
@@ -247,17 +214,4 @@ public class BottomNavigationFixedItemView extends View {
         return iconTranslation;
     }
 
-    public void setTypeface(final SoftReference<Typeface> typeface) {
-        if (null != typeface) {
-            Typeface tf = typeface.get();
-            if (null != tf) {
-                textPaint.setTypeface(tf);
-            } else {
-                textPaint.setTypeface(Typeface.DEFAULT);
-            }
-
-            textDirty = true;
-            requestLayout();
-        }
-    }
 }

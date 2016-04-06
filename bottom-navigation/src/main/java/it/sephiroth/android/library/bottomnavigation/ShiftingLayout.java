@@ -96,12 +96,14 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         int oldSelectedIndex = this.selectedIndex;
         this.selectedIndex = index;
 
+        MiscUtils.log(TAG, Log.DEBUG, "change selection: %d --> %d", oldSelectedIndex, selectedIndex);
+
         if (!hasFrame || getChildCount() == 0) {
             return;
         }
 
-        final BottomNavigationShiftingItemView current = (BottomNavigationShiftingItemView) getChildAt(oldSelectedIndex);
-        final BottomNavigationShiftingItemView child = (BottomNavigationShiftingItemView) getChildAt(index);
+        final BottomNavigationItemViewAbstract current = (BottomNavigationItemViewAbstract) getChildAt(oldSelectedIndex);
+        final BottomNavigationItemViewAbstract child = (BottomNavigationItemViewAbstract) getChildAt(index);
 
         current.setExpanded(false, minSize);
         child.setExpanded(true, maxSize);
@@ -185,7 +187,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
                 params.width = itemWidthMax;
             }
 
-            BottomNavigationShiftingItemView view =
+            BottomNavigationItemViewAbstract view =
                 new BottomNavigationShiftingItemView(parent, i == selectedIndex);
             view.setItem(item);
             view.setLayoutParams(params);
