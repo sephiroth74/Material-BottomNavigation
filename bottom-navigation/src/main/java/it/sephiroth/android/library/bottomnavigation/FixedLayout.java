@@ -22,17 +22,27 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     private int totalChildrenSize;
     private boolean hasFrame;
     private int selectedIndex;
-    BottomNavigationItem[] entries;
     OnItemClickListener listener;
     private int itemFinalWidth;
+    private MenuParser.Menu menu;
 
     public FixedLayout(final Context context) {
         super(context);
         totalChildrenSize = 0;
+        selectedIndex = 0;
 
         final Resources res = getResources();
         maxActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_maxActiveItemWidth);
         minActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_minActiveItemWidth);
+    }
+
+    @Override
+    public void removeAll() {
+        removeAllViews();
+        totalChildrenSize = 0;
+        itemFinalWidth = 0;
+        selectedIndex = 0;
+        menu = null;
     }
 
     @Override
@@ -64,9 +74,9 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         super.onSizeChanged(w, h, oldw, oldh);
         hasFrame = true;
 
-        if (null != entries) {
-            populateInternal(entries);
-            entries = null;
+        if (null != menu) {
+            populateInternal(menu);
+            menu = null;
         }
     }
 
@@ -103,13 +113,13 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
-    public void populate(@NonNull final BottomNavigationItem[] entries) {
-        Log.i(TAG, "populate: " + entries);
+    public void populate(@NonNull final MenuParser.Menu menu) {
+        Log.i(TAG, "populate: " + menu);
 
         if (hasFrame) {
-            populateInternal(entries);
+            populateInternal(menu);
         } else {
-            this.entries = entries;
+            this.menu = menu;
         }
     }
 
@@ -118,7 +128,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         this.listener = listener;
     }
 
-    private void populateInternal(@NonNull final BottomNavigationItem[] entries) {
+    private void populateInternal(@NonNull final MenuParser.Menu menu) {
         Log.d(TAG, "populateInternal");
 
         final BottomNavigation parent = (BottomNavigation) getParent();
@@ -129,12 +139,12 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         Log.v(TAG, "screenWidth: " + screenWidth);
         Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
 
-        int proposedWidth = Math.min(Math.max(screenWidth / entries.length, minActiveItemWidth), maxActiveItemWidth);
+        int proposedWidth = Math.min(Math.max(screenWidth / menu.getItemsCount(), minActiveItemWidth), maxActiveItemWidth);
         Log.v(TAG, "proposedWidth: " + proposedWidth);
         Log.v(TAG, "proposedWidth(dp): " + proposedWidth / density);
 
-        if (proposedWidth * entries.length > screenWidth) {
-            proposedWidth = screenWidth / entries.length;
+        if (proposedWidth * menu.getItemsCount() > screenWidth) {
+            proposedWidth = screenWidth / menu.getItemsCount();
         }
 
         Log.v(TAG, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
@@ -142,14 +152,14 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
 
         this.itemFinalWidth = proposedWidth;
 
-        for (int i = 0; i < entries.length; i++) {
-            final BottomNavigationItem item = entries[i];
+        for (int i = 0; i < menu.getItemsCount(); i++) {
+            final BottomNavigationItem item = menu.getItemAt(i);
             Log.d(TAG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(proposedWidth, getHeight());
 
             BottomNavigationFixedItemView view =
-                new BottomNavigationFixedItemView(parent, i == selectedIndex);
+                new BottomNavigationFixedItemView(parent, i == selectedIndex, menu);
             view.setItem(item);
             view.setLayoutParams(params);
             view.setClickable(true);

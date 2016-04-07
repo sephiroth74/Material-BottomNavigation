@@ -25,8 +25,8 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     private int minSize, maxSize;
     private int selectedIndex;
     private boolean hasFrame;
-    BottomNavigationItem[] entries;
     OnItemClickListener listener;
+    private MenuParser.Menu menu;
 
     public ShiftingLayout(final Context context) {
         super(context);
@@ -35,6 +35,14 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         minActiveItemWidth = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_minActiveItemWidth);
         maxInactiveItemWidth = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_maxInactiveItemWidth);
         minInactiveItemWidth = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_minInactiveItemWidth);
+    }
+
+    @Override
+    public void removeAll() {
+        removeAllViews();
+        totalChildrenSize = 0;
+        selectedIndex = 0;
+        menu = null;
     }
 
     @Override
@@ -64,9 +72,9 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         super.onSizeChanged(w, h, oldw, oldh);
         hasFrame = true;
 
-        if (null != entries) {
-            populateInternal(entries);
-            entries = null;
+        if (null != menu) {
+            populateInternal(menu);
+            menu = null;
         }
     }
 
@@ -117,17 +125,17 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
-    public void populate(@NonNull final BottomNavigationItem[] entries) {
-        Log.i(TAG, "populate: " + entries);
+    public void populate(@NonNull final MenuParser.Menu menu) {
+        Log.i(TAG, "populate: " + menu);
 
         if (hasFrame) {
-            populateInternal(entries);
+            populateInternal(menu);
         } else {
-            this.entries = entries;
+            this.menu = menu;
         }
     }
 
-    private void populateInternal(@NonNull final BottomNavigationItem[] entries) {
+    private void populateInternal(@NonNull final MenuParser.Menu menu) {
         Log.d(TAG, "populateInternal");
 
         final BottomNavigation parent = (BottomNavigation) getParent();
@@ -135,14 +143,12 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         final int screenWidth = parent.getWidth();
 
         Log.v(TAG, "density: " + density);
-        Log.v(TAG, "screenWidth: " + screenWidth);
         Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
 
         int itemWidthMin;
         int itemWidthMax;
 
-        final int totalWidth = maxInactiveItemWidth * (entries.length - 1) + maxActiveItemWidth;
-        Log.v(TAG, "totalWidth: " + totalWidth);
+        final int totalWidth = maxInactiveItemWidth * (menu.getItemsCount() - 1) + maxActiveItemWidth;
         Log.v(TAG, "totalWidth(dp): " + totalWidth / density);
 
         if (totalWidth > screenWidth) {
@@ -156,29 +162,29 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             Log.d(TAG, "computing sizes...");
             Log.v(TAG, "itemWidthMin(dp): " + itemWidthMin / density);
             Log.v(TAG, "itemWidthMax(dp): " + itemWidthMax / density);
-            Log.v(TAG, "total items size(dp): " + (itemWidthMin * (entries.length - 1) + itemWidthMax) / density);
+            Log.v(TAG, "total items size(dp): " + (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax) / density);
 
-            if (itemWidthMin * (entries.length - 1) + itemWidthMax > screenWidth) {
-                itemWidthMax = screenWidth - (itemWidthMin * (entries.length - 1)); // minActiveItemWidth?
+            if (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax > screenWidth) {
+                itemWidthMax = screenWidth - (itemWidthMin * (menu.getItemsCount() - 1)); // minActiveItemWidth?
+                if (itemWidthMax == itemWidthMin) {
+                    itemWidthMin = minInactiveItemWidth;
+                    itemWidthMax = screenWidth - (itemWidthMin * (menu.getItemsCount() - 1));
+                }
             }
         } else {
             itemWidthMax = maxActiveItemWidth;
             itemWidthMin = maxInactiveItemWidth;
         }
 
-        Log.v(TAG, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
-        Log.v(TAG, "inactive size: " + maxInactiveItemWidth + ", " + minInactiveItemWidth);
-
         Log.v(TAG, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
         Log.v(TAG, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
 
-        Log.v(TAG, "itemWidth: " + itemWidthMin + ", " + itemWidthMax);
         Log.v(TAG, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
 
         setTotalSize(itemWidthMin, itemWidthMax);
 
-        for (int i = 0; i < entries.length; i++) {
-            final BottomNavigationItem item = entries[i];
+        for (int i = 0; i < menu.getItemsCount(); i++) {
+            final BottomNavigationItem item = menu.getItemAt(i);
             Log.d(TAG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidthMin, getHeight());
@@ -188,7 +194,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             }
 
             BottomNavigationItemViewAbstract view =
-                new BottomNavigationShiftingItemView(parent, i == selectedIndex);
+                new BottomNavigationShiftingItemView(parent, i == selectedIndex, menu);
             view.setItem(item);
             view.setLayoutParams(params);
             view.setClickable(true);

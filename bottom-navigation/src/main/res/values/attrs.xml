@@ -1,31 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BottomNavigation">
-
-        <!-- default background color in shifting mode -->
-        <attr name="bbn_shifting_backgroundColor" format="color" />
-
-        <!-- shifting mode, inactive icon alpha (0..1) -->
-        <attr name="bbn_shiftingItemInactiveAlpha" format="float" />
-
-        <!-- shifting mode, active icon/text color -->
-        <attr name="bbn_shiftingItemColorActive" format="color" />
-
-        <!-- default background color in fixed mode -->
-        <attr name="bbn_fixed_backgroundColor" format="color" />
-
         <attr name="bbn_entries" format="reference" />
+        <!-- show/hide animation duration -->
+        <attr name="bbn_animationDuration" format="integer" />
+    </declare-styleable>
 
-        <!-- when using the invertedTheme, this is the default icon/text color -->
-        <attr name="bbn_invertedColorInactive" format="color" />
-
-        <!-- fixed theme, inactive icon & text color -->
-        <attr name="bbn_fixedItemColorInactive" format="color" />
-        <!-- fixed theme, active icon & text color -->
-        <attr name="bbn_fixedItemColorActive" format="color" />
-
+    <declare-styleable name="BottomNavigationMenu">
+        <!-- menu background color -->
+        <attr name="android:background" />
         <!-- ripple selector color -->
         <attr name="bbn_rippleColor" format="color" />
+        <attr name="bbn_itemColorActive" format="color" />
+        <attr name="bbn_itemColorInactive" format="color" />
 
     </declare-styleable>
 

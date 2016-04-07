@@ -20,9 +20,9 @@ abstract class BottomNavigationItemViewAbstract extends View {
     protected final Paint textPaint;
     protected boolean textDirty;
 
-    public BottomNavigationItemViewAbstract(final BottomNavigation parent, final boolean expanded) {
+    public BottomNavigationItemViewAbstract(final BottomNavigation parent, final boolean expanded, final MenuParser.Menu menu) {
         super(parent.getContext());
-        this.rippleColor = parent.rippleColor;
+        this.rippleColor = menu.getRippleColor();
         this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.textDirty = true;
         this.expanded = expanded;

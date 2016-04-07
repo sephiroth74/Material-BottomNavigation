@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bbn_itemColorActive="@android:color/black"
+    app:bbn_itemColorInactive="#AA000000"
+    app:bbn_rippleColor="#66ffffff">
 
     <item
         android:id="@+id/bbn_item1"
-        android:color="@color/colorPrimary"
+        android:color="@android:color/holo_blue_bright"
         android:icon="@drawable/ic_cloud_off_white_24dp"
         android:title="Cloud Sync" />
     <item

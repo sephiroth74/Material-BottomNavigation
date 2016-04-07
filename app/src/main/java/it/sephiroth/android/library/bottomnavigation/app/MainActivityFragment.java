@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,27 +40,102 @@ public class MainActivityFragment extends Fragment {
         mRecyclerView.setAdapter(new Adapter());
     }
 
-    private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    static class TwoLinesViewHolder extends RecyclerView.ViewHolder {
+
+        final TextView title;
+        final TextView description;
+
+        public TwoLinesViewHolder(final View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(android.R.id.title);
+            description = (TextView) itemView.findViewById(android.R.id.text1);
+        }
+    }
+
+    private class Adapter extends RecyclerView.Adapter<TwoLinesViewHolder> {
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             final View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_card_item, parent, false);
-            return new RecyclerView.ViewHolder(view) {
+            final TwoLinesViewHolder holder = new TwoLinesViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public String toString() {
-                    return super.toString();
+                public void onClick(final View v) {
+                    onItemClick(holder.getAdapterPosition());
                 }
-            };
+            });
+            return holder;
         }
 
         @Override
-        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
+            switch (position) {
+                case 0:
+                    holder.title.setText("3 items");
+                    holder.description.setText("Switch to BottomNavigation with 3 fixed items");
+                    break;
 
+                case 1:
+                    holder.title.setText("3 items no background");
+                    holder.description.setText("Switch to BottomNavigation with 3 fixed items without changing background");
+                    break;
+
+                case 2:
+                    holder.title.setText("4 items");
+                    holder.description.setText("Switch to BottomNavigation with 4 shifting items");
+                    break;
+
+                case 3:
+                    holder.title.setText("4 items no background");
+                    holder.description.setText("Switch to BottomNavigation with 4 shifting items without changing background");
+                    break;
+
+                case 4:
+                    holder.title.setText("5 items");
+                    holder.description.setText("Switch to BottomNavigation with 5 shifting items");
+                    break;
+
+                case 5:
+                    holder.title.setText("5 items no background");
+                    holder.description.setText("Switch to BottomNavigation with 5 shfting items without changing background");
+                    break;
+
+            }
         }
 
         @Override
         public int getItemCount() {
             return 20;
         }
+
+        private void onItemClick(final int position) {
+            MainActivity activity = ((MainActivity) getActivity());
+            switch (position) {
+                case 0:
+                    activity.setMenuType(MainActivity.MENU_TYPE_3_ITEMS);
+                    break;
+
+                case 1:
+                    activity.setMenuType(MainActivity.MENU_TYPE_3_ITEMS_NO_BACKGROUND);
+                    break;
+
+                case 2:
+                    activity.setMenuType(MainActivity.MENU_TYPE_4_ITEMS);
+                    break;
+
+                case 3:
+                    activity.setMenuType(MainActivity.MENU_TYPE_4_ITEMS_NO_BACKGROUND);
+                    break;
+
+                case 4:
+                    activity.setMenuType(MainActivity.MENU_TYPE_5_ITEMS);
+                    break;
+
+                case 5:
+                    activity.setMenuType(MainActivity.MENU_TYPE_5_ITEMS_NO_BACKGROUND);
+                    break;
+            }
+        }
     }
+
 }

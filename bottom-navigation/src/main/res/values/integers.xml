@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="bbn_hide_animation_duration">100</integer>
+    <!-- show/hide animation duration -->
+    <integer name="bbn_hide_animation_duration">250</integer>
 
-    <!-- item shifting animation durarion (active/inactive) -->
-    <integer name="bbn_shifting_item_animation_duration">100</integer>
+    <!-- item animation durarion (active/inactive) -->
+    <integer name="bbn_item_animation_duration">150</integer>
 
     <!-- background color change animation duration -->
-    <integer name="bbn_background_animation_duration">400</integer>
+    <integer name="bbn_background_animation_duration">350</integer>
 </resources>

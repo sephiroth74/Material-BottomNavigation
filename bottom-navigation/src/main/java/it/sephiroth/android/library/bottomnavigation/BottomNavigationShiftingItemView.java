@@ -41,10 +41,10 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     private float textX;
     private int textY;
 
-    public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded) {
-        super(parent, expanded);
+    public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
+        super(parent, expanded, menu);
 
-        animationDuration = getResources().getInteger(R.integer.bbn_shifting_item_animation_duration);
+        animationDuration = getResources().getInteger(R.integer.bbn_item_animation_duration);
         paddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top);
         paddingBottomActive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active);
         paddingBottomInactive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive);
@@ -52,12 +52,12 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         textPaddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_text_padding_top);
         textSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_text_size);
 
-        this.colorActive = parent.shiftingItemColorActive;
-
+        this.colorActive = menu.getColorActive();
         log(TAG, Log.INFO, "colorActive: %x", colorActive);
 
-        this.maxAlpha = (float) Color.alpha(colorActive) / 255f;
-        this.minAlpha = parent.shiftingItemAlphaInactive;
+        int colorInactive = menu.getColorInactive();
+        this.minAlpha = Color.alpha(colorInactive) / 255f;
+        this.maxAlpha = Math.max((float) Color.alpha(colorActive) / 255f, minAlpha);
 
         log(TAG, Log.VERBOSE, "maxAlpha: %g", this.maxAlpha);
         log(TAG, Log.VERBOSE, "minAlpha: %g", this.minAlpha);

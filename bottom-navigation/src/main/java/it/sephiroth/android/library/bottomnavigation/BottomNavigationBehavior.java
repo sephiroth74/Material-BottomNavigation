@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -17,10 +18,18 @@ import android.view.animation.Interpolator;
 import java.util.WeakHashMap;
 
 import it.sephiroth.android.library.bottonnavigation.R;
+import proguard.annotation.Keep;
+import proguard.annotation.KeepClassMembers;
+
+import static android.util.Log.INFO;
+import static android.util.Log.VERBOSE;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by alessandro on 4/2/16.
  */
+@Keep
+@KeepClassMembers
 public class BottomNavigationBehavior<V extends View> extends VerticalScrollingBehavior<V> {
     private static final String TAG = BottomNavigationBehavior.class.getSimpleName();
 
@@ -37,22 +46,22 @@ public class BottomNavigationBehavior<V extends View> extends VerticalScrollingB
     /**
      * bottom inset when TRANSLUCENT_NAVIGATION is turned on
      */
-    private final int bottomInset;
+    private int bottomInset;
 
     /**
      * bottom navigation real height
      */
-    private final int height;
+    private int height;
 
     /**
      * maximum scroll offset
      */
-    private final int maxOffset;
+    private int maxOffset;
 
     /**
      * true if the current configuration has the TRANSLUCENT_NAVIGATION turned on
      */
-    private final boolean translucentNavigation;
+    private boolean translucentNavigation;
 
     /**
      * Minimum touch distance
@@ -87,17 +96,29 @@ public class BottomNavigationBehavior<V extends View> extends VerticalScrollingB
 
     private final WeakHashMap<View, Integer> dependencyLayoutMap = new WeakHashMap<>();
 
-    public BottomNavigationBehavior(final Context context, int bottomNavHeight, int bottomInset) {
+    public BottomNavigationBehavior() {
+        this(null, null);
+    }
+
+    public BottomNavigationBehavior(final Context context, AttributeSet attrs) {
+        super(context, attrs);
+        log(TAG, INFO, "ctor(attrs:%s)", attrs);
+
+        this.scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
+        this.animationDuration = context.getResources().getInteger(R.integer.bbn_hide_animation_duration);
+        this.offset = 0;
+
+    }
+
+    public void setLayoutValues(final int bottomNavHeight, final int bottomInset) {
+        log(TAG, INFO, "setLayoutValues(%d, %d)", bottomNavHeight, bottomInset);
         this.height = bottomNavHeight;
         this.bottomInset = bottomInset;
         this.translucentNavigation = bottomInset > 0;
-        this.offset = 0;
         this.maxOffset = height + (translucentNavigation ? bottomInset : 0);
-        this.scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        this.animationDuration = context.getResources().getInteger(R.integer.bbn_hide_animation_duration);
 
-        Log.d(
-            TAG, "BottomNavigationBehavior(" + height + ", " + bottomInset + ", " + translucentNavigation + ", " + maxOffset + ")");
+        log(TAG, VERBOSE, "height: %d, translucent: %b, maxOffset: %d", height, translucentNavigation, maxOffset);
+
     }
 
     @Override

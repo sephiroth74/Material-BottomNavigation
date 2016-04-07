@@ -8,11 +8,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.annotation.MenuRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -70,17 +72,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private boolean hasTransucentNavigation;
 
     /**
-     * Default background color in the 'shifting' mode
+     * current menu
      */
-    int shiftingBackgroundColorPrimary;
-
-    /**
-     * Default background color in the 'fixed' mode
-     */
-    int fixedBackgroundColorPrimary;
-
-    private BottomNavigationItem[] tmpEntries;
-    private BottomNavigationItem[] items;
+    private MenuParser.Menu menu;
 
     /**
      * Layout mode for the bottomnavigation view.
@@ -105,35 +99,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * Animation duration for the background color change
      */
     private long backgroundColorAnimation;
-
-    /**
-     * Icon/Text color for the inactive items
-     * in the fixed style
-     */
-    int fixedItemColorInactive;
-
-    /**
-     * Icon/text color for the active items
-     * in the fixed style
-     */
-    int fixedItemColorActive;
-
-    /**
-     * Icon/Text color for the active items
-     * in the shifting mode
-     */
-    int shiftingItemColorActive;
-
-    /**
-     * Icon alpha for the inactive items
-     * in the shifting mode
-     */
-    float shiftingItemAlphaInactive;
-
-    /**
-     * Item background selector
-     */
-    int rippleColor;
 
     /**
      * Optional typeface used for the items' text labels
@@ -167,40 +132,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         typeface = new SoftReference<>(Typeface.DEFAULT);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
-
-        fixedItemColorInactive = array.getColor(
-            R.styleable.BottomNavigation_bbn_fixedItemColorInactive,
-            ContextCompat.getColor(context, R.color.bbn_item_fixed_color_inactive)
-        );
-
-        fixedItemColorActive = array.getColor(
-            R.styleable.BottomNavigation_bbn_fixedItemColorActive,
-            MiscUtils.getColor(context, android.R.attr.colorForeground)
-        );
-
-        shiftingItemColorActive = array.getColor(
-            R.styleable.BottomNavigation_bbn_shiftingItemColorActive,
-            MiscUtils.getColor(context, android.R.attr.colorForegroundInverse)
-        );
-
-        shiftingItemAlphaInactive = array.getFloat(
-            R.styleable.BottomNavigation_bbn_shiftingItemInactiveAlpha,
-            getResources().getFraction(R.fraction.bbn_item_shifting_inactive_alpha, 1, 1)
-        );
-
-        shiftingBackgroundColorPrimary = array
-            .getColor(R.styleable.BottomNavigation_bbn_shifting_backgroundColor, MiscUtils.getColor(context, R.attr.colorPrimary));
-
-        fixedBackgroundColorPrimary = array.getColor(
-            R.styleable.BottomNavigation_bbn_fixed_backgroundColor,
-            MiscUtils.getColor(getContext(), android.R.attr.windowBackground)
-        );
-
-        rippleColor = array.getColor(R.styleable.BottomNavigation_bbn_rippleColor, shiftingBackgroundColorPrimary);
-
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
-        BottomNavigationItem[] entries = MenuParser.inflateMenu(context, menuResId);
+        menu = MenuParser.inflateMenu(context, menuResId);
         array.recycle();
+
+        backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
 
         LayerDrawable layerDrawable = (LayerDrawable) ContextCompat.getDrawable(context, R.drawable.bbn_background);
         backgroundDrawable = (ColorDrawable) layerDrawable.findDrawableByLayerId(R.id.bbn_background);
@@ -208,7 +144,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         // replace the background color
         setBackground(layerDrawable);
 
-        backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
         defaultHeight = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height);
         shadowHeight = getResources().getDimensionPixelOffset(R.dimen.bbn_top_shadow_height);
 
@@ -232,7 +167,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             systembarTint.getConfig().isNavigationAtBottom()
         );
 
-        setItems(entries);
+        setPadding(0, shadowHeight, 0, 0);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        backgroundOverlay = new View(getContext());
+        backgroundOverlay.setLayoutParams(params);
+        addView(backgroundOverlay);
+
+        setItems(menu);
+    }
+
+    public void setMenuItems(@MenuRes final int menuResId) {
+        defaultSelectedIndex = 0;
+        setItems(MenuParser.inflateMenu(getContext(), menuResId));
     }
 
     @Override
@@ -255,52 +201,61 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         log(TAG, INFO, "onSizeChanged(%d, %d)", w, h);
         super.onSizeChanged(w, h, oldw, oldh);
 
-        ((CoordinatorLayout.LayoutParams) getLayoutParams())
-            .setBehavior(new BottomNavigationBehavior(getContext(), defaultHeight, bottomInset));
+        //        ((CoordinatorLayout.LayoutParams) getLayoutParams())
+        //            .setBehavior(new BottomNavigationBehavior(getContext(), null, defaultHeight, bottomInset));
 
-        MarginLayoutParams marginLayoutParams = (MarginLayoutParams) getLayoutParams();
-        marginLayoutParams.bottomMargin = -bottomInset;
+        final ViewGroup.LayoutParams params = getLayoutParams();
 
-        if (null != tmpEntries) {
-            shifting = tmpEntries.length > 3;
-            initializeUI();
-            initializeContainer();
-            initializeItems();
-            tmpEntries = null;
+        if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
+            final CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
+            if (BottomNavigationBehavior.class.isInstance(behavior)) {
+                ((BottomNavigationBehavior) behavior).setLayoutValues(defaultHeight, bottomInset);
+            }
         }
+
+        MarginLayoutParams marginLayoutParams = (MarginLayoutParams) params;
+        marginLayoutParams.bottomMargin = -bottomInset;
     }
 
     @Override
     protected void onAttachedToWindow() {
         log(TAG, INFO, "onAttachedToWindow");
         super.onAttachedToWindow();
-
-        if (null == itemsContainer) {
-            setPadding(0, shadowHeight, 0, 0);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-            backgroundOverlay = new View(getContext());
-            backgroundOverlay.setLayoutParams(params);
-            addView(backgroundOverlay);
-        }
     }
 
-    public void setItems(BottomNavigationItem[] entries) {
+    public void setItems(MenuParser.Menu menu) {
         log(TAG, INFO, "setItems");
+        this.menu = menu;
 
-        tmpEntries = entries;
-        items = entries;
+        if (null != menu) {
+            shifting = menu.getItemsCount() > 3;
+            initializeUI(menu);
+            initializeContainer(menu.isShifting());
+            initializeItems();
+        }
+
         requestLayout();
     }
 
-    private void initializeUI() {
+    private void initializeUI(final MenuParser.Menu menu) {
         log(TAG, INFO, "initializeUI");
 
-        log(TAG, VERBOSE, "shiftingBackgroundColorPrimary: %x", shiftingBackgroundColorPrimary);
-        log(TAG, VERBOSE, "fixedBackgroundColorPrimary: %x", fixedBackgroundColorPrimary);
-        backgroundDrawable.setColor(shifting ? shiftingBackgroundColorPrimary : fixedBackgroundColorPrimary);
+        final int color = menu.getBackground();
+        log(TAG, VERBOSE, "background: %x", color);
+        backgroundDrawable.setColor(color);
     }
 
-    private void initializeContainer() {
+    private void initializeContainer(final boolean shifting) {
+        if (null != itemsContainer) {
+            if ((shifting && !ShiftingLayout.class.isInstance(itemsContainer))
+                || (!shifting && !FixedLayout.class.isInstance(itemsContainer))) {
+                removeView((View) itemsContainer);
+                itemsContainer = null;
+            } else {
+                itemsContainer.removeAll();
+            }
+        }
+
         if (null == itemsContainer) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, defaultHeight);
 
@@ -315,14 +270,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initializeItems() {
-        log(TAG, INFO, "initializeItems: %d", tmpEntries.length);
+        log(TAG, INFO, "initializeItems");
 
         itemsContainer.setSelectedIndex(defaultSelectedIndex);
-        itemsContainer.populate(tmpEntries);
+        itemsContainer.populate(menu);
         itemsContainer.setOnItemClickListener(this);
 
-        if (items[defaultSelectedIndex].hasColor()) {
-            backgroundDrawable.setColor(items[defaultSelectedIndex].getColor());
+        if (menu.getItemAt(defaultSelectedIndex).hasColor()) {
+            backgroundDrawable.setColor(menu.getItemAt(defaultSelectedIndex).getColor());
         }
     }
 
@@ -331,7 +286,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         log(TAG, INFO, "onItemClick: %d", index);
         parent.setSelectedIndex(index);
 
-        final BottomNavigationItem item = items[index];
+        final BottomNavigationItem item = menu.getItemAt(index);
 
         if (item.hasColor()) {
             MiscUtils.animate(
@@ -353,4 +308,5 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void setDefaultSelectedIndex(final int defaultSelectedIndex) {
         this.defaultSelectedIndex = defaultSelectedIndex;
     }
+
 }

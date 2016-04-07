@@ -24,6 +24,16 @@ import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 public class MainActivity extends AppCompatActivity implements View.OnLayoutChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    public static final int MENU_TYPE_3_ITEMS = 0;
+    public static final int MENU_TYPE_3_ITEMS_NO_BACKGROUND = 1;
+
+    public static final int MENU_TYPE_4_ITEMS = 2;
+    public static final int MENU_TYPE_4_ITEMS_NO_BACKGROUND = 3;
+
+    public static final int MENU_TYPE_5_ITEMS = 4;
+    public static final int MENU_TYPE_5_ITEMS_NO_BACKGROUND = 5;
+
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private boolean mTranslucentStatus;
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLayoutChan
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
         mBottomNavigation.setDefaultTypeface(typeface);
+        mBottomNavigation.setDefaultSelectedIndex(2);
     }
 
     @Override
@@ -125,5 +136,34 @@ public class MainActivity extends AppCompatActivity implements View.OnLayoutChan
         //        mAppBarLayout.setPadding(0, topInset, 0, 0);
 
         mCoordinatorLayout.removeOnLayoutChangeListener(this);
+    }
+
+    public void setMenuType(final int type) {
+        switch (type) {
+            case MENU_TYPE_3_ITEMS:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_3items);
+                break;
+
+            case MENU_TYPE_3_ITEMS_NO_BACKGROUND:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_3items_no_background);
+                break;
+
+            case MENU_TYPE_4_ITEMS:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_4items);
+                break;
+
+            case MENU_TYPE_4_ITEMS_NO_BACKGROUND:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_4items_no_background);
+                break;
+
+            case MENU_TYPE_5_ITEMS:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_5items);
+                break;
+
+            case MENU_TYPE_5_ITEMS_NO_BACKGROUND:
+                mBottomNavigation.setMenuItems(R.menu.bottombar_menu_5items_no_background);
+                break;
+
+        }
     }
 }

@@ -52,11 +52,11 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     private float textX;
     private float textY;
 
-    public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded) {
-        super(parent, expanded);
+    public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
+        super(parent, expanded, menu);
 
         final Resources res = getResources();
-        animationDuration = res.getInteger(R.integer.bbn_shifting_item_animation_duration);
+        animationDuration = res.getInteger(R.integer.bbn_item_animation_duration);
 
         paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
         paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
@@ -68,8 +68,8 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
 
         this.evaluator = new ArgbEvaluator();
 
-        this.colorActive = parent.fixedItemColorActive;
-        this.colorInactive = parent.fixedItemColorInactive;
+        this.colorActive = menu.getColorActive();
+        this.colorInactive = menu.getColorInactive();
         this.centerY = expanded ? paddingTopActive : paddingTopInactive;
         this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
         this.iconTranslation = expanded ? 0 : (paddingTopInactive - paddingTopActive);

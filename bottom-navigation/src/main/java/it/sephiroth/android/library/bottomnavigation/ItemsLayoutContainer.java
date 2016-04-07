@@ -17,9 +17,11 @@ public interface ItemsLayoutContainer {
 
     int getSelectedIndex();
 
-    void populate(@NonNull BottomNavigationItem[] entries);
+    void populate(@NonNull MenuParser.Menu menu);
 
     void setLayoutParams(ViewGroup.LayoutParams params);
 
     void setOnItemClickListener(OnItemClickListener listener);
+
+    void removeAll();
 }
