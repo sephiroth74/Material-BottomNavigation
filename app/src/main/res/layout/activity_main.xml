@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:layout_collapseMode="pin"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:bbn_entries="@menu/bottombar_menu_4items"
+        app:bbn_scrollEnabled="false"
         app:layout_behavior="@string/bbn_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

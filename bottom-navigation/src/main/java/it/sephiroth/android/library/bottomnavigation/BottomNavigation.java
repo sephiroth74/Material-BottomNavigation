@@ -174,6 +174,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         addView(backgroundOverlay);
 
         setItems(menu);
+//        setAlpha(0.8f);
     }
 
     public void setMenuItems(@MenuRes final int menuResId) {
@@ -196,24 +197,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         setMeasuredDimension(widthSize, heightSize + bottomInset + shadowHeight);
     }
 
+    private Object mBehavior;
+
+    @Override
+    protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+    }
+
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         log(TAG, INFO, "onSizeChanged(%d, %d)", w, h);
         super.onSizeChanged(w, h, oldw, oldh);
-
-        //        ((CoordinatorLayout.LayoutParams) getLayoutParams())
-        //            .setBehavior(new Behavior(getContext(), null, defaultHeight, bottomInset));
-
-        final ViewGroup.LayoutParams params = getLayoutParams();
-
-        if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
-            final CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
-            if (Behavior.class.isInstance(behavior)) {
-                ((Behavior) behavior).setLayoutValues(defaultHeight, bottomInset);
-            }
-        }
-
-        MarginLayoutParams marginLayoutParams = (MarginLayoutParams) params;
+        MarginLayoutParams marginLayoutParams = (MarginLayoutParams) getLayoutParams();
         marginLayoutParams.bottomMargin = -bottomInset;
     }
 
@@ -221,6 +216,16 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     protected void onAttachedToWindow() {
         log(TAG, INFO, "onAttachedToWindow");
         super.onAttachedToWindow();
+
+        if (null == mBehavior) {
+            final ViewGroup.LayoutParams params = getLayoutParams();
+            if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
+                mBehavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
+                if (Behavior.class.isInstance(mBehavior)) {
+                    ((Behavior) mBehavior).setLayoutValues(defaultHeight, bottomInset);
+                }
+            }
+        }
     }
 
     public void setItems(MenuParser.Menu menu) {

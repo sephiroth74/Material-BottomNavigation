@@ -5,10 +5,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
+
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,24 +40,57 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        int navigationHeight = 0;
+        if (((MainActivity) getActivity()).hasTranslucentNavigation()) {
+            navigationHeight = ((MainActivity) getActivity()).getSystemBarTint().getConfig().getNavigationBarHeight();
+        }
+
+        final BottomNavigation navigation = ((MainActivity) getActivity()).mBottomNavigation;
+        if (null != navigation) {
+            final int height = navigation.getHeight();
+            if (0 == height) {
+                final int finalNavigationHeight = navigationHeight;
+                navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        createAdater(finalNavigationHeight + navigation.getHeight());
+                    }
+                });
+                return;
+            }
+        }
+        createAdater(navigationHeight + navigationHeight);
+    }
+
+    private void createAdater(int height) {
+        Log.i(getClass().getSimpleName(), "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(new Adapter());
+        mRecyclerView.setAdapter(new Adapter(height));
     }
 
     static class TwoLinesViewHolder extends RecyclerView.ViewHolder {
 
         final TextView title;
         final TextView description;
+        final int marginBottom;
 
         public TwoLinesViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(android.R.id.title);
             description = (TextView) itemView.findViewById(android.R.id.text1);
+            marginBottom = ((MarginLayoutParams) itemView.getLayoutParams()).bottomMargin;
         }
     }
 
     private class Adapter extends RecyclerView.Adapter<TwoLinesViewHolder> {
+
+        private final int navigationHeight;
+
+        public Adapter(final int navigationHeight) {
+            this.navigationHeight = navigationHeight;
+        }
 
         @Override
         public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -69,6 +107,12 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
+            if (position == getItemCount() - 1) {
+                ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom + navigationHeight;
+            } else {
+                ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom;
+            }
+
             switch (position) {
                 case 0:
                     holder.title.setText("3 items");
@@ -142,5 +186,4 @@ public class MainActivityFragment extends Fragment {
             }
         }
     }
-
 }

@@ -2,8 +2,6 @@
 <resources>
     <declare-styleable name="BottomNavigation">
         <attr name="bbn_entries" format="reference" />
-        <!-- show/hide animation duration -->
-        <attr name="bbn_animationDuration" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="BottomNavigationMenu">
@@ -13,7 +11,6 @@
         <attr name="bbn_rippleColor" format="color" />
         <attr name="bbn_itemColorActive" format="color" />
         <attr name="bbn_itemColorInactive" format="color" />
-
     </declare-styleable>
 
     <!-- Base attributes that are available to all Item objects. -->
@@ -31,8 +28,14 @@
         <!-- Whether the item is enabled. -->
         <attr name="android:enabled" />
 
+        <!-- background color for the selected tab. If omitted, or 0, the background
+         color will not change and the BottomNavigationMenu#background will be always used -->
         <attr name="android:color" />
+    </declare-styleable>
 
+    <declare-styleable name="BottomNavigationBehavior">
+        <attr name="bbn_animationDuration" format="integer" />
+        <attr name="bbn_scrollEnabled" format="boolean" />
     </declare-styleable>
 
 </resources>
