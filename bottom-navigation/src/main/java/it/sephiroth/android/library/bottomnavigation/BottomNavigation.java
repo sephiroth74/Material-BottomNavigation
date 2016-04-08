@@ -202,14 +202,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onSizeChanged(w, h, oldw, oldh);
 
         //        ((CoordinatorLayout.LayoutParams) getLayoutParams())
-        //            .setBehavior(new BottomNavigationBehavior(getContext(), null, defaultHeight, bottomInset));
+        //            .setBehavior(new Behavior(getContext(), null, defaultHeight, bottomInset));
 
         final ViewGroup.LayoutParams params = getLayoutParams();
 
         if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
             final CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
-            if (BottomNavigationBehavior.class.isInstance(behavior)) {
-                ((BottomNavigationBehavior) behavior).setLayoutValues(defaultHeight, bottomInset);
+            if (Behavior.class.isInstance(behavior)) {
+                ((Behavior) behavior).setLayoutValues(defaultHeight, bottomInset);
             }
         }
 

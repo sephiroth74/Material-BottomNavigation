@@ -30,8 +30,8 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  */
 @Keep
 @KeepClassMembers
-public class BottomNavigationBehavior<V extends View> extends VerticalScrollingBehavior<V> {
-    private static final String TAG = BottomNavigationBehavior.class.getSimpleName();
+public class Behavior<V extends View> extends VerticalScrollingBehavior<V> {
+    private static final String TAG = Behavior.class.getSimpleName();
 
     /**
      * default hide/show interpolator
@@ -96,11 +96,11 @@ public class BottomNavigationBehavior<V extends View> extends VerticalScrollingB
 
     private final WeakHashMap<View, Integer> dependencyLayoutMap = new WeakHashMap<>();
 
-    public BottomNavigationBehavior() {
+    public Behavior() {
         this(null, null);
     }
 
-    public BottomNavigationBehavior(final Context context, AttributeSet attrs) {
+    public Behavior(final Context context, AttributeSet attrs) {
         super(context, attrs);
         log(TAG, INFO, "ctor(attrs:%s)", attrs);
 
