@@ -13,7 +13,7 @@ import proguard.annotation.KeepClassMembers;
 @Keep
 @KeepClassMembers
 public interface ItemsLayoutContainer {
-    void setSelectedIndex(int index);
+    void setSelectedIndex(int index, final boolean animate);
 
     int getSelectedIndex();
 

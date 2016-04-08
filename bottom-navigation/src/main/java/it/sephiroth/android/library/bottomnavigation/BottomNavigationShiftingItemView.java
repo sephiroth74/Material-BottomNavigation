@@ -76,8 +76,15 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     }
 
     @Override
-    protected void onStatusChanged(final boolean expanded, final int size) {
+    protected void onStatusChanged(final boolean expanded, final int size, final boolean animate) {
         log(TAG, INFO, "onStatusChanged(%b, %d)", expanded, size);
+
+        if (!animate) {
+            updateLayoutOnAnimation(size, 1, expanded);
+            setCenterY(expanded ? paddingTop : paddingBottomInactive);
+            return;
+        }
+
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(animationDuration * 2);
         set.setInterpolator(interpolator);
@@ -89,23 +96,27 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(final ValueAnimator animation) {
-                getLayoutParams().width = (int) animation.getAnimatedValue();
-
+                int size = (int) animation.getAnimatedValue();
                 final float fraction = animation.getAnimatedFraction();
 
-                if (expanded) {
-                    icon.setAlpha((int) ((minAlpha + (fraction * (maxAlpha - minAlpha))) * 255));
-                    textPaint.setAlpha((int) (((fraction * (maxAlpha))) * 255));
-                } else {
-                    float alpha = 1.0F - fraction;
-                    icon.setAlpha((int) ((minAlpha + (alpha * (maxAlpha - minAlpha))) * 255));
-                    textPaint.setAlpha((int) (((alpha * (maxAlpha))) * 255));
-                }
+                updateLayoutOnAnimation(size, fraction, expanded);
             }
         });
 
         set.playTogether(animator1, animator2);
         set.start();
+    }
+
+    private void updateLayoutOnAnimation(final int size, final float fraction, final boolean expanded) {
+        getLayoutParams().width = size;
+        if (expanded) {
+            icon.setAlpha((int) ((minAlpha + (fraction * (maxAlpha - minAlpha))) * 255));
+            textPaint.setAlpha((int) (((fraction * (maxAlpha))) * 255));
+        } else {
+            float alpha = 1.0F - fraction;
+            icon.setAlpha((int) ((minAlpha + (alpha * (maxAlpha - minAlpha))) * 255));
+            textPaint.setAlpha((int) (((alpha * (maxAlpha))) * 255));
+        }
     }
 
     private void measureText() {

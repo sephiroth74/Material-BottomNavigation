@@ -83,7 +83,14 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     }
 
     @Override
-    protected void onStatusChanged(final boolean expanded, final int size) {
+    protected void onStatusChanged(final boolean expanded, final int size, final boolean animate) {
+
+        if (!animate) {
+            updateLayoutOnAnimation(1, expanded);
+            setIconTranslation(expanded ? 0 : (paddingTopInactive - paddingTopActive));
+            return;
+        }
+
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(animationDuration);
         set.setInterpolator(interpolator);
@@ -94,17 +101,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
             @Override
             public void onAnimationUpdate(final ValueAnimator animation) {
                 final float fraction = animation.getAnimatedFraction();
-
-                if (expanded) {
-                    icon.setColorFilter(
-                        (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
-                    textPaint.setColor((Integer) evaluator.evaluate(fraction, colorInactive, colorActive));
-                } else {
-
-                    icon.setColorFilter(
-                        (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
-                    textPaint.setColor((Integer) evaluator.evaluate(fraction, colorActive, colorInactive));
-                }
+                updateLayoutOnAnimation(fraction, expanded);
             }
         });
 
@@ -113,6 +110,19 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
 
         set.playTogether(animator1, animator2);
         set.start();
+    }
+
+    private void updateLayoutOnAnimation(final float fraction, final boolean expanded) {
+        if (expanded) {
+            icon.setColorFilter(
+                (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
+            textPaint.setColor((Integer) evaluator.evaluate(fraction, colorInactive, colorActive));
+        } else {
+
+            icon.setColorFilter(
+                (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
+            textPaint.setColor((Integer) evaluator.evaluate(fraction, colorActive, colorInactive));
+        }
     }
 
     @Override

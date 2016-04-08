@@ -86,7 +86,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
-    public void setSelectedIndex(final int index) {
+    public void setSelectedIndex(final int index, final boolean animate) {
         Log.i(TAG, "setSelectedIndex: " + index);
 
         if (selectedIndex == index) {
@@ -103,8 +103,8 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationFixedItemView current = (BottomNavigationFixedItemView) getChildAt(oldSelectedIndex);
         final BottomNavigationFixedItemView child = (BottomNavigationFixedItemView) getChildAt(index);
 
-        current.setExpanded(false, 0);
-        child.setExpanded(true, 0);
+        current.setExpanded(false, 0, animate);
+        child.setExpanded(true, 0, animate);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
                 @Override
                 public void onClick(final View v) {
                     if (null != listener) {
-                        listener.onItemClick(FixedLayout.this, v, finalI);
+                        listener.onItemClick(FixedLayout.this, v, finalI, true);
                     }
                 }
             });

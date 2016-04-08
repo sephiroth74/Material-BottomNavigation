@@ -90,6 +90,27 @@ public class MiscUtils {
         }
     }
 
+    protected static void switchColor(
+        final BottomNavigation navigation,
+        final View v,
+        final View backgroundOverlay,
+        final ColorDrawable backgroundDrawable,
+        final int newColor) {
+
+        backgroundOverlay.clearAnimation();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
+            if (null != currentAnimator) {
+                currentAnimator.cancel();
+            }
+        }
+
+        backgroundDrawable.setColor(newColor);
+        backgroundOverlay.setVisibility(View.INVISIBLE);
+        ViewCompat.setAlpha(backgroundOverlay, 1);
+    }
+
     protected static void animate(
         final BottomNavigation navigation, final View v, final View backgroundOverlay, final ColorDrawable backgroundDrawable,
         final int newColor, final long duration) {

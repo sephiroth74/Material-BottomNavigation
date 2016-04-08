@@ -7,5 +7,5 @@ import android.view.View;
  * Project: Material-BottomNavigation
  */
 public interface OnItemClickListener {
-    void onItemClick(ItemsLayoutContainer parent, View view, int index);
+    void onItemClick(ItemsLayoutContainer parent, View view, int index, boolean animate);
 }

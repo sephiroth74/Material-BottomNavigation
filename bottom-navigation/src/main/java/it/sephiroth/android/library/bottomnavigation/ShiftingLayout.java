@@ -94,7 +94,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
-    public void setSelectedIndex(final int index) {
+    public void setSelectedIndex(final int index, final boolean animate) {
         Log.i(TAG, "setSelectedIndex: " + index);
 
         if (selectedIndex == index) {
@@ -113,8 +113,8 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationItemViewAbstract current = (BottomNavigationItemViewAbstract) getChildAt(oldSelectedIndex);
         final BottomNavigationItemViewAbstract child = (BottomNavigationItemViewAbstract) getChildAt(index);
 
-        current.setExpanded(false, minSize);
-        child.setExpanded(true, maxSize);
+        current.setExpanded(false, minSize, animate);
+        child.setExpanded(true, maxSize, animate);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
                 @Override
                 public void onClick(final View v) {
                     if (null != listener) {
-                        listener.onItemClick(ShiftingLayout.this, v, finalI);
+                        listener.onItemClick(ShiftingLayout.this, v, finalI, true);
                     }
                 }
             });

@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
@@ -110,6 +111,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private Object mBehavior;
 
+    private OnMenuItemClickListener listener;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -196,6 +199,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         mPendingAction = PENDING_ACTION_NONE;
     }
 
+    public void setSelectedIndex(final int position, final boolean animate) {
+        if (null != itemsContainer) {
+            onItemClick(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate);
+        }
+    }
+
     public void setExpanded(boolean expanded, boolean animate) {
         log(TAG, INFO, "setExpanded(%b, %b)", expanded, animate);
         mPendingAction = (expanded ? PENDING_ACTION_EXPANDED : PENDING_ACTION_COLLAPSED)
@@ -208,6 +217,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             return ((Behavior) mBehavior).isExpanded();
         }
         return false;
+    }
+
+    public void setOnMenuItemClickListener(final OnMenuItemClickListener listener) {
+        this.listener = listener;
     }
 
     public void setMenuItems(@MenuRes final int menuResId) {
@@ -307,7 +320,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private void initializeItems() {
         log(TAG, INFO, "initializeItems");
 
-        itemsContainer.setSelectedIndex(defaultSelectedIndex);
+        itemsContainer.setSelectedIndex(defaultSelectedIndex, false);
         itemsContainer.populate(menu);
         itemsContainer.setOnItemClickListener(this);
 
@@ -317,21 +330,31 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     @Override
-    public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index) {
+    public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index, boolean animate) {
         log(TAG, INFO, "onItemClick: %d", index);
-        parent.setSelectedIndex(index);
+        parent.setSelectedIndex(index, animate);
 
         final BottomNavigationItem item = menu.getItemAt(index);
 
         if (item.hasColor()) {
-            MiscUtils.animate(
-                this,
-                view,
-                backgroundOverlay,
-                backgroundDrawable,
-                item.getColor(),
-                backgroundColorAnimation
-            );
+            if (animate) {
+                MiscUtils.animate(
+                    this,
+                    view,
+                    backgroundOverlay,
+                    backgroundDrawable,
+                    item.getColor(),
+                    backgroundColorAnimation
+                );
+            } else {
+                MiscUtils.switchColor(
+                    this,
+                    view,
+                    backgroundOverlay,
+                    backgroundDrawable,
+                    item.getColor()
+                );
+            }
         }
     }
 
@@ -344,4 +367,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.defaultSelectedIndex = defaultSelectedIndex;
     }
 
+    public interface OnMenuItemClickListener {
+        void onMenuItemClick(@IdRes final int itemId, final int position);
+    }
 }

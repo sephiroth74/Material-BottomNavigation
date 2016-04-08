@@ -38,7 +38,7 @@ abstract class BottomNavigationItemViewAbstract extends View {
         this.setEnabled(item.isEnabled());
     }
 
-    protected abstract void onStatusChanged(final boolean expanded, final int size);
+    protected abstract void onStatusChanged(final boolean expanded, final int size, final boolean animate);
 
     public final BottomNavigationItem getItem() {
         return item;
@@ -48,10 +48,10 @@ abstract class BottomNavigationItemViewAbstract extends View {
         return expanded;
     }
 
-    public void setExpanded(final boolean expanded, int newSize) {
+    public void setExpanded(final boolean expanded, int newSize, boolean animate) {
         if (this.expanded != expanded) {
             this.expanded = expanded;
-            onStatusChanged(expanded, newSize);
+            onStatusChanged(expanded, newSize, animate);
         }
     }
 
