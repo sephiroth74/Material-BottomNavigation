@@ -295,16 +295,27 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     private void setExpanded(
         final CoordinatorLayout coordinatorLayout, final BottomNavigation child, boolean expanded, boolean animate) {
         log(TAG, INFO, "setExpanded(%b)", expanded);
-        if (animate) {
-            animateOffset(coordinatorLayout, child, expanded ? 0 : maxOffset);
-        }
+        animateOffset(coordinatorLayout, child, expanded ? 0 : maxOffset, animate);
     }
 
-    private void animateOffset(final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final int offset) {
+    private void animateOffset(
+        final CoordinatorLayout coordinatorLayout,
+        final BottomNavigation child,
+        final int offset,
+        final boolean animate) {
+
         log(TAG, INFO, "animateOffset(%d)", offset);
         hidden = offset != 0;
         ensureOrCancelAnimator(coordinatorLayout, child);
-        animator.translationY(offset).start();
+
+        if (animate) {
+            animator.translationY(offset).start();
+        } else {
+            child.setTranslationY(offset);
+            if (null != fabDependentView) {
+                fabDependentView.onDependentViewChanged(coordinatorLayout, child);
+            }
+        }
     }
 
     private void ensureOrCancelAnimator(final CoordinatorLayout coordinatorLayout, final BottomNavigation child) {

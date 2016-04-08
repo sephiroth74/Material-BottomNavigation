@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), true);
+                            mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), false);
                         }
-                    }, 400);
+                    }, 200);
                 }
                 // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action",null).show();
             }
