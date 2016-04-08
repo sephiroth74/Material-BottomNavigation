@@ -36,6 +36,16 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
+    static final int PENDING_ACTION_NONE = 0x0;
+    static final int PENDING_ACTION_EXPANDED = 0x1;
+    static final int PENDING_ACTION_COLLAPSED = 0x2;
+    static final int PENDING_ACTION_ANIMATE_ENABLED = 0x4;
+
+    /**
+     * Current pending action (used inside the Behavior instance)
+     */
+    private int mPendingAction = PENDING_ACTION_NONE;
+
     /**
      * This is the amount of space we have to cover in case there's a translucent navigation
      * enabled.
@@ -184,12 +194,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         setItems(menu);
         //        setAlpha(0.8f);
     }
-
-    private int mPendingAction = PENDING_ACTION_NONE;
-    static final int PENDING_ACTION_NONE = 0x0;
-    static final int PENDING_ACTION_EXPANDED = 0x1;
-    static final int PENDING_ACTION_COLLAPSED = 0x2;
-    static final int PENDING_ACTION_ANIMATE_ENABLED = 0x4;
 
     int getPendingAction() {
         return mPendingAction;

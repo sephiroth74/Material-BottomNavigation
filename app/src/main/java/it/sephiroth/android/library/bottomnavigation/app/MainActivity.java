@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,7 +26,7 @@ import it.sephiroth.android.library.bottomnavigation.Behavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigation.OnMenuItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -66,15 +67,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (null != mBottomNavigation) {
-
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), false);
+                            //mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), false);
+                            mBottomNavigation.setSelectedIndex(2, false);
                         }
                     }, 200);
                 }
-                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action",null).show();
+                //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action",
+                // null).show();
             }
         });
 
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+        mBottomNavigation.setOnMenuItemClickListener(this);
     }
 
     public SystemBarTintManager getSystemBarTint() {
@@ -223,5 +226,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    @Override
+    public void onMenuItemClick(final int itemId, final int position) {
+        Log.i(TAG, "onMenuItemClick. itemId: " + itemId + ", position: " + position);
     }
 }
