@@ -182,6 +182,34 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         //        setAlpha(0.8f);
     }
 
+    private int mPendingAction = PENDING_ACTION_NONE;
+    static final int PENDING_ACTION_NONE = 0x0;
+    static final int PENDING_ACTION_EXPANDED = 0x1;
+    static final int PENDING_ACTION_COLLAPSED = 0x2;
+    static final int PENDING_ACTION_ANIMATE_ENABLED = 0x4;
+
+    int getPendingAction() {
+        return mPendingAction;
+    }
+
+    void resetPendingAction() {
+        mPendingAction = PENDING_ACTION_NONE;
+    }
+
+    public void setExpanded(boolean expanded, boolean animate) {
+        log(TAG, INFO, "setExpanded(%b, %b)", expanded, animate);
+        mPendingAction = (expanded ? PENDING_ACTION_EXPANDED : PENDING_ACTION_COLLAPSED)
+            | (animate ? PENDING_ACTION_ANIMATE_ENABLED : 0);
+        requestLayout();
+    }
+
+    public boolean isExpanded() {
+        if (null != mBehavior && mBehavior instanceof Behavior) {
+            return ((Behavior) mBehavior).isExpanded();
+        }
+        return false;
+    }
+
     public void setMenuItems(@MenuRes final int menuResId) {
         defaultSelectedIndex = 0;
         setItems(MenuParser.inflateMenu(getContext(), menuResId));

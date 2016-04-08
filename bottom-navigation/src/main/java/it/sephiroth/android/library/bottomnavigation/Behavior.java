@@ -26,6 +26,8 @@ import static android.util.Log.DEBUG;
 import static android.util.Log.ERROR;
 import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
+import static it.sephiroth.android.library.bottomnavigation.BottomNavigation.PENDING_ACTION_ANIMATE_ENABLED;
+import static it.sephiroth.android.library.bottomnavigation.BottomNavigation.PENDING_ACTION_NONE;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
@@ -33,7 +35,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  */
 @Keep
 @KeepClassMembers
-public class Behavior<V extends View> extends VerticalScrollingBehavior<BottomNavigation> {
+public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     private static final String TAG = Behavior.class.getSimpleName();
 
     private boolean scrollable;
@@ -122,6 +124,10 @@ public class Behavior<V extends View> extends VerticalScrollingBehavior<BottomNa
         return scrollable;
     }
 
+    public boolean isExpanded() {
+        return !hidden;
+    }
+
     public void setLayoutValues(final int bottomNavHeight, final int bottomInset) {
         log(TAG, INFO, "setLayoutValues(%d, %d)", bottomNavHeight, bottomInset);
         this.height = bottomNavHeight;
@@ -151,6 +157,27 @@ public class Behavior<V extends View> extends VerticalScrollingBehavior<BottomNa
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onLayoutChild(CoordinatorLayout parent, BottomNavigation abl, int layoutDirection) {
+        boolean handled = super.onLayoutChild(parent, abl, layoutDirection);
+
+        final int pendingAction = abl.getPendingAction();
+        if (pendingAction != PENDING_ACTION_NONE) {
+            final boolean animate = (pendingAction & PENDING_ACTION_ANIMATE_ENABLED) != 0;
+            if ((pendingAction & BottomNavigation.PENDING_ACTION_COLLAPSED) != 0) {
+                setExpanded(parent, abl, false, animate);
+            } else {
+                if ((pendingAction & BottomNavigation.PENDING_ACTION_EXPANDED) != 0) {
+                    setExpanded(parent, abl, true, animate);
+                }
+            }
+            // Finally reset the pending state
+            abl.resetPendingAction();
+        }
+
+        return handled;
     }
 
     @Override
@@ -259,15 +286,23 @@ public class Behavior<V extends View> extends VerticalScrollingBehavior<BottomNa
             return;
         }
         if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
-            hidden = false;
-            animateOffset(coordinatorLayout, child, 0);
+            setExpanded(coordinatorLayout, child, true, true);
         } else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
-            hidden = true;
-            animateOffset(coordinatorLayout, child, maxOffset);
+            setExpanded(coordinatorLayout, child, false, true);
+        }
+    }
+
+    private void setExpanded(
+        final CoordinatorLayout coordinatorLayout, final BottomNavigation child, boolean expanded, boolean animate) {
+        log(TAG, INFO, "setExpanded(%b)", expanded);
+        if (animate) {
+            animateOffset(coordinatorLayout, child, expanded ? 0 : maxOffset);
         }
     }
 
     private void animateOffset(final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final int offset) {
+        log(TAG, INFO, "animateOffset(%d)", offset);
+        hidden = offset != 0;
         ensureOrCancelAnimator(coordinatorLayout, child);
         animator.translationY(offset).start();
     }
@@ -336,7 +371,7 @@ public class Behavior<V extends View> extends VerticalScrollingBehavior<BottomNa
         @Override
         boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
             final float t = Math.max(0, navigation.getTranslationY() - height);
-            log(TAG, VERBOSE, "onDependentViewChanged(%g, %d, %d)", navigation.getTranslationY(), height, bottomInset);
+            // log(TAG, VERBOSE, "onDependentViewChanged(%g, %d, %d)", navigation.getTranslationY(), height, bottomInset);
 
             if (bottomInset > 0) {
                 layoutParams.bottomMargin = (int) (bottomMargin + height - t);

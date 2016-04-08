@@ -4,10 +4,10 @@ import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 
+import it.sephiroth.android.library.bottomnavigation.Behavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     BottomNavigation mBottomNavigation;
     private FloatingActionButton mFab;
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +65,16 @@ public class MainActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                if (null != mBottomNavigation) {
+
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), true);
+                        }
+                    }, 400);
+                }
+                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action",null).show();
             }
         });
 
@@ -105,6 +115,19 @@ public class MainActivity extends AppCompatActivity {
                     (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
             }
         });
+    }
+
+    public Behavior getNavigationBehavior() {
+        if (null != mBottomNavigation) {
+            final ViewGroup.LayoutParams params = mBottomNavigation.getLayoutParams();
+            if (params instanceof CoordinatorLayout.LayoutParams) {
+                final CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
+                if (behavior instanceof Behavior) {
+                    return (Behavior) behavior;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
