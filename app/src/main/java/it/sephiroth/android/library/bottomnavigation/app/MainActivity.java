@@ -10,9 +10,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -52,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        final int statusbarHeight = getStatusBarHeight();
+        final boolean translucentStatus = hasTranslucentStatusBar();
+        final boolean translucentNavigation = hasTranslucentNavigation();
+
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,29 +70,41 @@ public class MainActivity extends AppCompatActivity {
 
         mAppBarLayout = (AppBarLayout) findViewById(R.id.AppBarLayout01);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
-        //
-        //        if (hasTranslucentStatusBar()) {
-        //            int statusbarHeight = getStatusBarHeight();
-        //            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-        //            params.topMargin = -statusbarHeight;
-        //
-        //            params = (ViewGroup.MarginLayoutParams) mToolbar.getLayoutParams();
-        //            params.topMargin = statusbarHeight;
-        //        }
-        //
-        //        if (hasTranslucentNavigation()) {
-        //            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-        //            params.bottomMargin = -getSystemBarTint().getConfig().getNavigationBarHeight();
-        //
-        //            params = (ViewGroup.MarginLayoutParams) mFab.getLayoutParams();
-        //            params.bottomMargin += getSystemBarTint().getConfig().getNavigationBarHeight();
-        //        }
+
+        if (translucentStatus) {
+            Log.d(TAG, "hasTranslucentStatusBar");
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
+            params.topMargin = -statusbarHeight;
+
+            params = (ViewGroup.MarginLayoutParams) mToolbar.getLayoutParams();
+            params.topMargin = statusbarHeight;
+        }
+
+        if (translucentNavigation) {
+            Log.d(TAG, "hasTranslucentNavigation");
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
+            //            params.bottomMargin = -getSystemBarTint().getConfig().getNavigationBarHeight();
+
+            params = (ViewGroup.MarginLayoutParams) mFab.getLayoutParams();
+            //            params.bottomMargin += getSystemBarTint().getConfig().getNavigationBarHeight();
+
+        }
 
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
             mBottomNavigation.setDefaultTypeface(typeface);
             mBottomNavigation.setDefaultSelectedIndex(2);
         }
+
+        mCoordinatorLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mCoordinatorLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                AppBarLayout.Behavior b =
+                    (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+            }
+        });
     }
 
     @Override

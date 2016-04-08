@@ -2,6 +2,7 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +14,16 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+
+import it.sephiroth.android.library.bottomnavigation.Behavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+    private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
 
     public MainActivityFragment() { }
@@ -40,27 +45,51 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        MainActivity activity = (MainActivity) getActivity();
+        final SystemBarConfig config = activity.getSystemBarTint().getConfig();
+
         int navigationHeight = 0;
-        if (((MainActivity) getActivity()).hasTranslucentNavigation()) {
-            navigationHeight = ((MainActivity) getActivity()).getSystemBarTint().getConfig().getNavigationBarHeight();
+        int actionbarHeight = 0;
+
+        if (activity.hasTranslucentNavigation()) {
+            navigationHeight = config.getNavigationBarHeight();
         }
 
-        final BottomNavigation navigation = ((MainActivity) getActivity()).mBottomNavigation;
-        if (null != navigation) {
-            final int height = navigation.getHeight();
-            if (0 == height) {
-                final int finalNavigationHeight = navigationHeight;
-                navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        createAdater(finalNavigationHeight + navigation.getHeight());
-                    }
-                });
-                return;
-            }
+        if (activity.hasTranslucentStatusBar()) {
+            actionbarHeight = config.getActionBarHeight();
         }
-        createAdater(navigationHeight + navigationHeight);
+
+        final BottomNavigation navigation = activity.mBottomNavigation;
+        if (null != navigation) {
+            final int finalNavigationHeight = navigationHeight;
+            final int finalActionbarHeight = actionbarHeight;
+            navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Log.i(TAG, "onGlobalLayout");
+                    navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
+                        (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
+                    final Behavior behavior = (Behavior) coordinatorLayoutParams.getBehavior();
+                    final boolean scrollable = behavior.isScrollable();
+                    int totalHeight = finalNavigationHeight + navigation.getNavigationHeight() - finalActionbarHeight;
+                    final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+
+                    Log.v(TAG, "scrollable: " + scrollable);
+                    Log.v(TAG, "navigationHeight: " + finalNavigationHeight);
+
+                    if (scrollable) {
+                        totalHeight = finalNavigationHeight;
+                        params.bottomMargin -= finalNavigationHeight;
+                    }
+
+                    mRecyclerView.requestLayout();
+                    createAdater(totalHeight);
+                }
+            });
+        } else {
+            createAdater(navigationHeight - actionbarHeight);
+        }
     }
 
     private void createAdater(int height) {

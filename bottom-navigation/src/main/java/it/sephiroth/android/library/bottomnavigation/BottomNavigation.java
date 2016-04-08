@@ -105,6 +105,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     SoftReference<Typeface> typeface;
 
+    /**
+     * Current Behavior assigned from the CoordinatorLayout
+     */
+    private Object mBehavior;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -174,7 +179,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         addView(backgroundOverlay);
 
         setItems(menu);
-//        setAlpha(0.8f);
+        //        setAlpha(0.8f);
     }
 
     public void setMenuItems(@MenuRes final int menuResId) {
@@ -197,11 +202,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         setMeasuredDimension(widthSize, heightSize + bottomInset + shadowHeight);
     }
 
-    private Object mBehavior;
-
-    @Override
-    protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+    public int getNavigationHeight() {
+        return defaultHeight;
     }
 
     @Override
