@@ -71,12 +71,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
                         @Override
                         public void run() {
                             //mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), false);
-                            mBottomNavigation.setSelectedIndex(2, false);
+                            //mBottomNavigation.setSelectedIndex(2, false);
                         }
                     }, 200);
                 }
-                //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action",
-                // null).show();
+                
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
+                    "Action",
+                    null
+                ).show();
             }
         });
 
