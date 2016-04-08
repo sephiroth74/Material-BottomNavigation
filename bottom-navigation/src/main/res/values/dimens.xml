@@ -8,7 +8,7 @@
     <dimen name="bbn_elevation">8dp</dimen>
 
     <!-- top shadow size -->
-    <dimen name="bbn_top_shadow_height">8dp</dimen>
+    <dimen name="bbn_top_shadow_height">6dp</dimen>
 
     <!-- shifting item dimensions -->
     <dimen name="bbn_shifting_item_padding_bottom_active">10dp</dimen>
