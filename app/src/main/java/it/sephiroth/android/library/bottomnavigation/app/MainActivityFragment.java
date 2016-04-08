@@ -100,6 +100,11 @@ public class MainActivityFragment extends Fragment {
                     holder.description.setText("Switch to BottomNavigation with 5 shfting items without changing background");
                     break;
 
+                default:
+                    holder.title.setText("Item " + position);
+                    holder.description.setText("Description\nDescription line 2");
+                    break;
+
             }
         }
 
