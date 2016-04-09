@@ -22,8 +22,10 @@ import android.view.WindowManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 
-import it.sephiroth.android.library.bottomnavigation.Behavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.MiscUtils;
+
+import static android.util.Log.INFO;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends AppCompatActivity implements BottomNavigation.OnMenuItemClickListener {
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        MiscUtils.log(TAG, INFO, "screen density: %g", getResources().getDisplayMetrics().density);
+
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
         final boolean translucentNavigation = hasTranslucentNavigation();
@@ -66,16 +70,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != mBottomNavigation) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //mBottomNavigation.setExpanded(!mBottomNavigation.isExpanded(), false);
-                            //mBottomNavigation.setSelectedIndex(2, false);
-                        }
-                    }, 200);
-                }
-                
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
                     "Action",
                     null
@@ -97,12 +91,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
 
         if (translucentNavigation) {
             Log.d(TAG, "hasTranslucentNavigation");
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-            //            params.bottomMargin = -getSystemBarTint().getConfig().getNavigationBarHeight();
-
-            params = (ViewGroup.MarginLayoutParams) mFab.getLayoutParams();
-            //            params.bottomMargin += getSystemBarTint().getConfig().getNavigationBarHeight();
-
+            // ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
+            // params.bottomMargin = -getSystemBarTint().getConfig().getNavigationBarHeight();
+            // params = (ViewGroup.MarginLayoutParams) mFab.getLayoutParams();
+            // params.bottomMargin += getSystemBarTint().getConfig().getNavigationBarHeight();
         }
 
         if (null != mBottomNavigation) {
@@ -120,19 +112,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
                     (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
             }
         });
-    }
-
-    public Behavior getNavigationBehavior() {
-        if (null != mBottomNavigation) {
-            final ViewGroup.LayoutParams params = mBottomNavigation.getLayoutParams();
-            if (params instanceof CoordinatorLayout.LayoutParams) {
-                final CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
-                if (behavior instanceof Behavior) {
-                    return (Behavior) behavior;
-                }
-            }
-        }
-        return null;
     }
 
     @Override

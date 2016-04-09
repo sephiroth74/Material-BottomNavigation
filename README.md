@@ -64,7 +64,12 @@ All the menu main configurations are defined within the xml menu resource itself
 | :------------: | :-----------: |
 |	![Video 1](art/video1.gif)	|	![Video 2](art/video2.gif)	|
 
+| 4 items no background | 
+| :------------: |
+| 4 items without changing background. <br />Menu show/hide feature is also disabled | 
+| ![Video 3](art/video3.gif) |
+
 <br />
 
 Dimensions and paddings follow the Google giudelines<br />
-![Sizing 1](art/sizing1.png)
+![Sizing](art/sizing1.png)
