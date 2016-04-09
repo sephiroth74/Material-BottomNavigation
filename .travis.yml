@@ -35,7 +35,7 @@ install:
 
 script:
   - sh ci.sh
-  - ./gradlew bottom-navigation:connectedCheck bottom-navigation:assemble
+  - ./gradlew bottom-navigation:assemble
 
 cache:
   directories:
