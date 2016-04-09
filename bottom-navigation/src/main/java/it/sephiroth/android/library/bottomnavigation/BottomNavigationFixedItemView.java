@@ -40,7 +40,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     private final int paddingTopInactive;
     private final int paddingBottom;
     private final int paddingHorizontal;
-    private final int textSizeActive;
     private final int textSizeInactive;
 
     private static final float TEXT_SCALE_ACTIVE = 1.1666666667f;
@@ -62,7 +61,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
         paddingBottom = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom);
         paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal);
-        textSizeActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_active);
         textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive);
         iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size);
 
@@ -70,7 +68,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
 
         this.colorActive = menu.getColorActive();
         this.colorInactive = menu.getColorInactive();
-        this.centerY = expanded ? paddingTopActive : paddingTopInactive;
+        this.centerY = paddingTopActive;
         this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
         this.iconTranslation = expanded ? 0 : (paddingTopInactive - paddingTopActive);
 
