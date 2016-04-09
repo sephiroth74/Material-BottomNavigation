@@ -208,6 +208,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
+    @SuppressWarnings ("unused")
     public void setExpanded(boolean expanded, boolean animate) {
         log(TAG, INFO, "setExpanded(%b, %b)", expanded, animate);
         mPendingAction = (expanded ? PENDING_ACTION_EXPANDED : PENDING_ACTION_COLLAPSED)
