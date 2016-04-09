@@ -7,8 +7,13 @@
     <declare-styleable name="BottomNavigationMenu">
         <!-- menu background color -->
         <attr name="android:background" />
+
+        <!-- animation duration for the menu items -->
+        <attr name="bbn_itemAnimationDuration" format="integer" />
+
         <!-- ripple selector color -->
         <attr name="bbn_rippleColor" format="color" />
+
         <attr name="bbn_itemColorActive" format="color" />
         <attr name="bbn_itemColorInactive" format="color" />
     </declare-styleable>
@@ -33,6 +38,7 @@
         <attr name="android:color" />
     </declare-styleable>
 
+    <!-- style for the scroll behavior -->
     <declare-styleable name="BottomNavigationBehavior">
         <attr name="bbn_animationDuration" format="integer" />
         <attr name="bbn_scrollEnabled" format="boolean" />

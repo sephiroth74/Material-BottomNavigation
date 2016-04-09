@@ -33,10 +33,15 @@ class MenuParser {
         private int background;
         private int rippleColor;
         private int colorInactive;
+        private int itemAnimationDuration;
         private boolean shifting;
 
         public Menu(final Context context) {
             this.context = context;
+        }
+
+        public int getItemAnimationDuration() {
+            return itemAnimationDuration;
         }
 
         public int getBackground() {
@@ -144,6 +149,10 @@ class MenuParser {
             log(TAG, VERBOSE, "attr: %s", attrs.getAttributeName(i));
         }
 
+        menu.itemAnimationDuration = a.getInt(
+            R.styleable.BottomNavigationMenu_bbn_itemAnimationDuration,
+            context.getResources().getInteger(R.integer.bbn_item_animation_duration)
+        );
         menu.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0);
         menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);

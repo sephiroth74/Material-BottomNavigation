@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
@@ -46,25 +45,19 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
         super(parent, expanded, menu);
 
-        animationDuration = getResources().getInteger(R.integer.bbn_item_animation_duration);
-        paddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top);
-        paddingBottomActive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active);
-        paddingBottomInactive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive);
-        iconSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size);
-        textSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_text_size);
-
-        this.colorActive = menu.getColorActive();
-        log(TAG, Log.INFO, "colorActive: %x", colorActive);
+        this.paddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top);
+        this.paddingBottomActive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active);
+        this.paddingBottomInactive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive);
+        this.iconSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size);
+        this.textSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_text_size);
 
         int colorInactive = menu.getColorInactive();
+        this.animationDuration = menu.getItemAnimationDuration();
+        this.colorActive = menu.getColorActive();
         this.minAlpha = Color.alpha(colorInactive) / ALPHA_MAX;
         this.maxAlpha = Math.max((float) Color.alpha(colorActive) / ALPHA_MAX, minAlpha);
 
-        log(TAG, Log.VERBOSE, "maxAlpha: %g", this.maxAlpha);
-        log(TAG, Log.VERBOSE, "minAlpha: %g", this.minAlpha);
-
         this.centerY = expanded ? paddingTop : paddingBottomInactive;
-
         this.textPaint.setHinting(Paint.HINTING_ON);
         this.textPaint.setLinearText(true);
         this.textPaint.setSubpixelText(true);

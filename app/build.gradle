@@ -20,6 +20,7 @@ android {
     lintOptions {
         disable "AppLinksAutoVerifyError", "AppLinksAutoVerifyWarning", "AllowBackup", "IconMissingDensityFolder",
                 "GoogleAppIndexingWarning", "SetTextI18n", "HardcodedText"
+        htmlReport false
         textReport true
         textOutput "stdout"
         abortOnError false

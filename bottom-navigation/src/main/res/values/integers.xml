@@ -4,7 +4,7 @@
     <integer name="bbn_hide_animation_duration">250</integer>
 
     <!-- item animation durarion (active/inactive) -->
-    <integer name="bbn_item_animation_duration">150</integer>
+    <integer name="bbn_item_animation_duration">100</integer>
 
     <!-- background color change animation duration -->
     <integer name="bbn_background_animation_duration">350</integer>

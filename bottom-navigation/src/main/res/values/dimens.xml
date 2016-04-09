@@ -15,7 +15,7 @@
     <dimen name="bbn_shifting_item_padding_bottom_inactive">16dp</dimen>
     <dimen name="bbn_shifting_item_padding_top">6dp</dimen>
     <dimen name="bbn_shifting_item_icon_size">24dp</dimen>
-    <dimen name="bbn_shifting_text_size">14sp</dimen>
+    <dimen name="bbn_shifting_text_size">14dp</dimen>
     <dimen name="bbn_shifting_item_ripple_radius">48dp</dimen>
     <dimen name="bbn_shifting_maxActiveItemWidth">168dp</dimen>
     <dimen name="bbn_shifting_minActiveItemWidth">96dp</dimen>
@@ -29,6 +29,6 @@
     <dimen name="bbn_fixed_item_padding_top_inactive">8dp</dimen>
     <dimen name="bbn_fixed_item_padding_bottom">10dp</dimen>
     <dimen name="bbn_fixed_item_padding_horizontal">12dp</dimen>
-    <dimen name="bbn_fixed_text_size_inactive">12sp</dimen>
+    <dimen name="bbn_fixed_text_size_inactive">12dp</dimen>
     <dimen name="bbn_fixed_item_icon_size">24dp</dimen>
 </resources>

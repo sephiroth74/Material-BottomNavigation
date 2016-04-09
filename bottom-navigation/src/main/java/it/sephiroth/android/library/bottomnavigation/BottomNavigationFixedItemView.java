@@ -56,18 +56,17 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
         super(parent, expanded, menu);
 
-        final Resources res = getResources();
-        animationDuration = res.getInteger(R.integer.bbn_item_animation_duration);
-
-        paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
-        paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
-        paddingBottom = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom);
-        paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal);
-        textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive);
-        iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size);
-
         this.evaluator = new ArgbEvaluator();
 
+        final Resources res = getResources();
+        this.paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
+        this.paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
+        this.paddingBottom = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom);
+        this.paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal);
+        this.textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive);
+        this.iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size);
+
+        this.animationDuration = menu.getItemAnimationDuration();
         this.colorActive = menu.getColorActive();
         this.colorInactive = menu.getColorInactive();
         this.centerY = paddingTopActive;
