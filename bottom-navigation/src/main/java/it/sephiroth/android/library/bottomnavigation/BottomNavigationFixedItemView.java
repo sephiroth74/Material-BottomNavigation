@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  * Created by alessandro on 4/3/16 at 10:55 PM.
  * Project: MaterialBottomNavigation
  */
+@SuppressLint ("ViewConstructor")
 public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationFixedItemView.class.getSimpleName();
     private final int iconSize;

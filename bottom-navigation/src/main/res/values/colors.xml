@@ -2,11 +2,6 @@
 <resources>
     <color name="bbn_shifting_item_ripple_color">#33FFFFFF</color>
 
-    <color name="bbn_item_inverted_color_inactive">#FF888888</color>
-
-    <!-- fixed item inactive color -->
-    <color name="bbn_item_fixed_color_inactive">#FF737574</color>
-
     <!-- fixed item inactive color (only alpha will be used) -->
     <color name="bbn_item_shifting_color_inactive">#99000000</color>
 </resources>

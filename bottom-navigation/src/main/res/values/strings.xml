@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="bbn_scrolling_view_behavior" translatable="false">it.sephiroth.android.library.bottomnavigation.Behavior</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="bbn_scrolling_view_behavior" translatable="false" tools:ignore="UnusedResources">it.sephiroth.android.library.bottomnavigation.Behavior</string>
 </resources>

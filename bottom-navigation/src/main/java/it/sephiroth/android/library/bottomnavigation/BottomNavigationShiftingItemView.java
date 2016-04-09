@@ -3,6 +3,7 @@ package it.sephiroth.android.library.bottomnavigation;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,12 +22,12 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  * Created by alessandro on 4/3/16 at 10:55 PM.
  * Project: MaterialBottomNavigation
  */
+@SuppressLint ("ViewConstructor")
 public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationShiftingItemView.class.getSimpleName();
     public static final float ALPHA_MAX = 255f;
     private final int paddingTop;
     private final int paddingBottomActive;
-    private final int textPaddingTop;
     private final int iconSize;
     private final int paddingBottomInactive;
     private final int textSize;
@@ -50,7 +51,6 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         paddingBottomActive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active);
         paddingBottomInactive = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive);
         iconSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size);
-        textPaddingTop = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_item_text_padding_top);
         textSize = getResources().getDimensionPixelSize(R.dimen.bbn_shifting_text_size);
 
         this.colorActive = menu.getColorActive();

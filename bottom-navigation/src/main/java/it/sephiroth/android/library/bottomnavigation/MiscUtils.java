@@ -1,6 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -22,8 +23,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+import static android.view.WindowManager.LayoutParams;
 
 /**
  * Created by alessandro on 4/2/16.
@@ -43,11 +43,12 @@ public final class MiscUtils {
      * @param activity context
      * @return true if the current theme has the translucent statusbar
      */
+    @TargetApi (19)
     public static boolean hasTranslucentStatusBar(final Activity activity) {
         if (Build.VERSION.SDK_INT >= 19) {
             return
-                ((activity.getWindow().getAttributes().flags & FLAG_TRANSLUCENT_STATUS)
-                    == FLAG_TRANSLUCENT_STATUS);
+                ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                    == LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
             return false;
         }
@@ -59,10 +60,12 @@ public final class MiscUtils {
      * @param activity context
      * @return true if the activity has the translucent navigation enabled
      */
+    @TargetApi (19)
     public static boolean hasTranslucentNavigation(final Activity activity) {
         if (Build.VERSION.SDK_INT >= 19) {
             return
-                ((activity.getWindow().getAttributes().flags & FLAG_TRANSLUCENT_NAVIGATION) == FLAG_TRANSLUCENT_NAVIGATION);
+                ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) ==
+                    LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else {
             return false;
         }
@@ -81,6 +84,7 @@ public final class MiscUtils {
         return tv.data;
     }
 
+    @TargetApi(21)
     protected static void setDrawableColor(@NonNull final Drawable drawable, final int color) {
         if (Build.VERSION.SDK_INT >= 21) {
             if (RippleDrawable.class.isInstance(drawable)) {
