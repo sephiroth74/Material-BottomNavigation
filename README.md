@@ -72,4 +72,4 @@ All the menu main configurations are defined within the xml menu resource itself
 <br />
 
 Dimensions and paddings follow the Google giudelines<br />
-![Sizing](art/sizing1.png)
+![Sizing](art/sizing.png)
