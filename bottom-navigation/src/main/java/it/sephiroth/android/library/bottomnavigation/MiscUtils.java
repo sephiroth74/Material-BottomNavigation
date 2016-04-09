@@ -64,8 +64,8 @@ public final class MiscUtils {
     public static boolean hasTranslucentNavigation(final Activity activity) {
         if (Build.VERSION.SDK_INT >= 19) {
             return
-                ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) ==
-                    LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                    == LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else {
             return false;
         }
@@ -84,7 +84,7 @@ public final class MiscUtils {
         return tv.data;
     }
 
-    @TargetApi(21)
+    @TargetApi (21)
     protected static void setDrawableColor(@NonNull final Drawable drawable, final int color) {
         if (Build.VERSION.SDK_INT >= 21) {
             if (RippleDrawable.class.isInstance(drawable)) {
