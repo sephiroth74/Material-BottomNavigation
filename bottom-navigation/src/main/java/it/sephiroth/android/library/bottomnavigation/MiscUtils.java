@@ -29,7 +29,7 @@ import static android.view.WindowManager.LayoutParams;
  * Created by alessandro on 4/2/16.
  */
 public final class MiscUtils {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private MiscUtils() { }
 
