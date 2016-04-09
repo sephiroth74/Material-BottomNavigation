@@ -29,7 +29,6 @@ import static android.view.WindowManager.LayoutParams;
  * Created by alessandro on 4/2/16.
  */
 public final class MiscUtils {
-    private static final boolean DEBUG = false;
 
     private MiscUtils() { }
 
@@ -204,7 +203,7 @@ public final class MiscUtils {
     }
 
     public static void log(final String tag, final int level, String message, Object... arguments) {
-        if (DEBUG) {
+        if (BottomNavigation.DEBUG) {
             Log.println(level, tag, String.format(message, arguments));
         }
     }
