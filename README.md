@@ -2,13 +2,69 @@
 
 Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
 
+This project is also inspired by https://github.com/roughike/BottomBar
+
+# Usage
+Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:
+
+	<?xml version="1.0" encoding="utf-8"?>
+	<android.support.design.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:app="http://schemas.android.com/apk/res-auto"
+    	xmlns:tools="http://schemas.android.com/tools"
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+	    android:fitsSystemWindows="true">
+
+		...your content...
+
+	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+    	    android:id="@+id/BottomNavigation"
+	        android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+	        android:layout_gravity="bottom"
+    	    app:bbn_entries="@menu/bottombar_menu_4items"
+	        app:bbn_scrollEnabled="true"
+    	    app:layout_behavior="@string/bbn_scrolling_view_behavior" />
+	</android.support.design.widget.CoordinatorLayout>
+
+All the menu main configurations are defined within the xml menu resource itself. Here's an example of a menu with 4 items:
+
+	<?xml version="1.0" encoding="utf-8"?>
+	<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    	xmlns:app="http://schemas.android.com/apk/res-auto"
+	    android:background="@android:color/black"
+    	app:bbn_rippleColor="#33ffffff">
+	    <item
+    	    android:id="@+id/bbn_item1"
+        	android:color="@color/colorPrimary"
+	        android:icon="@drawable/ic_cloud_off_white_24dp"
+    	    android:title="Cloud Sync" />
+	    <item
+    	    android:id="@+id/bbn_item2"
+	        android:color="@android:color/holo_green_dark"
+    	    android:icon="@drawable/ic_cast_connected_white_24dp"
+	        android:title="Chromecast" />
+    	<item
+	        android:id="@+id/bbn_item3"
+    	    android:color="@android:color/holo_orange_dark"
+	        android:icon="@drawable/ic_mail_white_24dp"
+    	    android:title="Mail" />
+	    <item
+    	    android:id="@+id/action4"
+        	android:color="#FF5252"
+	        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+    	    android:title="List" />
+	</menu>
+
 
 # Examples
 
-Shifting menu with 4 items.<br />
-![Video 1](video/video1.gif)
+| 4 shifting items menu | 3 fixed items menu |
+| :------------: | :-----------: |
+|	![Video 1](art/video1.gif)	|	![Video 2](art/video2.gif)	|
 
 <br />
 
-Fixed menu with 3 items.<br />
-![Video 2](video/video2.gif)
+Dimensions and paddings follow the Google giudelines<br />
+![Sizing 1](art/sizing1.png)
