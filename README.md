@@ -1,5 +1,7 @@
 # Material-BottomNavigation
 
+[![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
+
 Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
 
 This project is also inspired by https://github.com/roughike/BottomBar
@@ -69,7 +71,8 @@ All the menu main configurations are defined within the xml menu resource itself
 | 4 items without changing background. <br />Menu show/hide feature is also disabled | 
 | ![Video 3](art/video3.gif) |
 
-<br />
+
+# Sizing
 
 Dimensions and paddings follow the Google giudelines<br />
 ![Sizing](art/sizing.png)
