@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
 
+[![codecov.io](https://codecov.io/github/sephiroth74/Material-BottomNavigation/coverage.svg?branch=tests)](https://codecov.io/github/sephiroth74/Material-BottomNavigation?branch=tests)
+
 Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
 
 This project is also inspired by https://github.com/roughike/BottomBar
