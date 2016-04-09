@@ -33,7 +33,8 @@ import static it.sephiroth.android.library.bottomnavigation.BottomNavigation.PEN
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
- * Created by alessandro on 4/2/16.
+ * Created by alessandro crugnola on 4/2/16.
+ * alessandro.crugnola@gmail.com
  */
 @Keep
 @KeepClassMembers
