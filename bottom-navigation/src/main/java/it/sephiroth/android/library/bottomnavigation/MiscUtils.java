@@ -28,8 +28,10 @@ import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 /**
  * Created by alessandro on 4/2/16.
  */
-public class MiscUtils {
+public final class MiscUtils {
     private static final boolean DEBUG = true;
+
+    private MiscUtils() { }
 
     public static int getDimensionPixelSize(final Context context, final int dp) {
         return (int) (context.getResources().getDisplayMetrics().density * dp);

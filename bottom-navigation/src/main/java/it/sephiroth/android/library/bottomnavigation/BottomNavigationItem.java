@@ -55,12 +55,12 @@ public class BottomNavigationItem {
 
     @Override
     public String toString() {
-        return "BottomNavigationItem{" +
-            "id=" + id +
-            ", iconResource=" + String.format("%x", iconResource) +
-            ", title='" + title + '\'' +
-            ", color=" + String.format("%x", color) +
-            ", enabled=" + enabled +
-            '}';
+        return "BottomNavigationItem{"
+            + "id=" + id
+            + ", iconResource=" + String.format("%x", iconResource)
+            + ", title='" + title + '\''
+            + ", color=" + String.format("%x", color)
+            + ", enabled=" + enabled
+            + '}';
     }
 }

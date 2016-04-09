@@ -17,6 +17,8 @@ import proguard.annotation.Keep;
  */
 public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     private static final String TAG = ShiftingLayout.class.getSimpleName();
+    public static final double ROUND_DECIMALS = 10d;
+    public static final float RATIO_MIN_INCREASE = 0.05f;
     private final int maxActiveItemWidth;
     private final int minActiveItemWidth;
     private final int maxInactiveItemWidth;
@@ -153,7 +155,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
         if (totalWidth > screenWidth) {
             float ratio = (float) screenWidth / totalWidth;
-            ratio = (float) ((double) Math.round(ratio * 10d) / 10d) + 0.05f;
+            ratio = (float) ((double) Math.round(ratio * ROUND_DECIMALS) / ROUND_DECIMALS) + RATIO_MIN_INCREASE;
             Log.v(TAG, "ratio: " + ratio);
 
             itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);

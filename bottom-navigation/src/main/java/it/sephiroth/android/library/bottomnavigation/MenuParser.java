@@ -152,6 +152,7 @@ class MenuParser {
         a.recycle();
     }
 
+    @SuppressWarnings ("checkstyle:cyclomaticcomplexity")
     protected static Menu inflateMenu(final Context context, int menuRes) {
         List<BottomNavigationItem> list = new ArrayList<>();
 
@@ -218,6 +219,9 @@ class MenuParser {
 
                     case XmlPullParser.END_DOCUMENT:
                         throw new RuntimeException("Unexpected end of document");
+
+                    default:
+                        break;
                 }
                 eventType = parser.next();
             }

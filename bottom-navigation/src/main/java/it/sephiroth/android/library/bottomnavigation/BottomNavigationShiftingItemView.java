@@ -23,6 +23,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  */
 public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationShiftingItemView.class.getSimpleName();
+    public static final float ALPHA_MAX = 255f;
     private final int paddingTop;
     private final int paddingBottomActive;
     private final int textPaddingTop;
@@ -56,8 +57,8 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         log(TAG, Log.INFO, "colorActive: %x", colorActive);
 
         int colorInactive = menu.getColorInactive();
-        this.minAlpha = Color.alpha(colorInactive) / 255f;
-        this.maxAlpha = Math.max((float) Color.alpha(colorActive) / 255f, minAlpha);
+        this.minAlpha = Color.alpha(colorInactive) / ALPHA_MAX;
+        this.maxAlpha = Math.max((float) Color.alpha(colorActive) / ALPHA_MAX, minAlpha);
 
         log(TAG, Log.VERBOSE, "maxAlpha: %g", this.maxAlpha);
         log(TAG, Log.VERBOSE, "minAlpha: %g", this.minAlpha);
