@@ -441,7 +441,8 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
                 expanded
             );
 
-            layoutParams.bottomMargin = (int) (height - navigation.getTranslationY());
+            final float maxScroll = Math.max(0, navigation.getTranslationY() - bottomInset);
+            layoutParams.bottomMargin = (int) (height - maxScroll);
             child.requestLayout();
 
             return true;
