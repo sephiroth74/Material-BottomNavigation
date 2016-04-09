@@ -192,7 +192,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         addView(backgroundOverlay);
 
         setItems(menu);
-        //        setAlpha(0.8f);
     }
 
     int getPendingAction() {
