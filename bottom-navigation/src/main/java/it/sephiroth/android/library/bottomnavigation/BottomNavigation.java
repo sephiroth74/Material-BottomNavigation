@@ -203,10 +203,19 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         mPendingAction = PENDING_ACTION_NONE;
     }
 
+    @SuppressWarnings ("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
             onItemClick(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public int getSelectedIndex() {
+        if (null != itemsContainer) {
+            return itemsContainer.getSelectedIndex();
+        }
+        return -1;
     }
 
     @SuppressWarnings ("unused")
