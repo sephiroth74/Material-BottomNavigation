@@ -73,13 +73,19 @@ class MenuParser {
                 } else {
                     int color = getColorActive();
                     colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
-                    // colorInactive = ContextCompat.getColor(context, R.color.bbn_item_fixed_color_inactive);
                 }
             }
             return colorInactive;
         }
 
         public int getRippleColor() {
+            if (-1 == rippleColor) {
+                if (shifting) {
+                    rippleColor = ContextCompat.getColor(context, R.color.bbn_shifting_item_ripple_color);
+                } else {
+                    rippleColor = ContextCompat.getColor(context, R.color.bbn_fixed_item_ripple_color);
+                }
+            }
             return rippleColor;
         }
 
@@ -105,6 +111,15 @@ class MenuParser {
                 return items.length;
             }
             return 0;
+        }
+
+        /**
+         * Returns true if the first item of the menu
+         * has a color defined
+         */
+        @SuppressWarnings ("unused")
+        public boolean hasChangingColor() {
+            return items[0].hasColor();
         }
     }
 
@@ -154,7 +169,7 @@ class MenuParser {
             context.getResources().getInteger(R.integer.bbn_item_animation_duration)
         );
         menu.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0);
-        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
+        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, -1);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
 
