@@ -1,12 +1,5 @@
 language: android
 
-before_install:
-  - pip install --user codecov
-
-after_success:
-  - codecov
-  # - bash <(curl -s https://codecov.io/bash)
-
 jdk:
     - oraclejdk8
 
@@ -34,8 +27,7 @@ install:
     - ./gradlew androidDependencies
 
 script:
-  - sh ci.sh
-  - ./gradlew bottom-navigation:assemble
+  - ./gradlew clean build checkstyleDebug -PdisablePreDex
 
 cache:
   directories:
