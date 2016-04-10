@@ -78,32 +78,38 @@ public class MainActivityFragment extends Fragment {
                     navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
-                    final Behavior behavior = (Behavior) coordinatorLayoutParams.getBehavior();
-                    if (null == behavior) {
-                        createAdater(0);
-                        return;
-                    }
 
-                    final boolean scrollable = behavior.isScrollable();
-                    int totalHeight = navigationHeight + navigation.getNavigationHeight() - actionbarHeight;
-                    final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+                    final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
 
-                    Log.d(TAG, "scrollable: " + scrollable);
-                    Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
-                    Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+                    if (behavior instanceof Behavior) {
+                        if (null == behavior) {
+                            createAdater(0);
+                            return;
+                        }
 
-                    if (scrollable) {
-                        totalHeight = navigationHeight;
-                        params.bottomMargin -= navigationHeight;
+                        final boolean scrollable = ((Behavior) behavior).isScrollable();
+                        int totalHeight = navigationHeight + navigation.getNavigationHeight() - actionbarHeight;
+                        final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+
+                        Log.d(TAG, "scrollable: " + scrollable);
+                        Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
+                        Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+
+                        if (scrollable) {
+                            totalHeight = navigationHeight;
+                            params.bottomMargin -= navigationHeight;
+                        } else {
+                            totalHeight = navigation.getNavigationHeight();
+                        }
+
+                        Log.d(TAG, "totalHeight: " + totalHeight);
+                        Log.d(TAG, "bottomMargin: " + params.bottomMargin);
+
+                        mRecyclerView.requestLayout();
+                        createAdater(totalHeight);
                     } else {
-                        totalHeight = navigation.getNavigationHeight();
+                        createAdater(0);
                     }
-
-                    Log.d(TAG, "totalHeight: " + totalHeight);
-                    Log.d(TAG, "bottomMargin: " + params.bottomMargin);
-
-                    mRecyclerView.requestLayout();
-                    createAdater(totalHeight);
                 }
             });
         } else {

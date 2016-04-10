@@ -12,8 +12,12 @@ import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.LayoutDirection;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -124,6 +128,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     private OnMenuItemSelectionListener listener;
 
+    private boolean layoutParamsSet;
+    private int gravity;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -155,6 +162,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         menu = MenuParser.inflateMenu(context, menuResId);
         array.recycle();
 
+        //        log(TAG, Log.DEBUG, "gravity: %d", GravityCompat.getAbsoluteGravity(gravity, LayoutDirection.LOCALE));
+
         backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
 
         LayerDrawable layerDrawable = (LayerDrawable) ContextCompat.getDrawable(context, R.drawable.bbn_background);
@@ -165,10 +174,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         defaultHeight = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height);
         shadowHeight = getResources().getDimensionPixelOffset(R.dimen.bbn_top_shadow_height);
-
-        // apply the default elevation
-        final int elevation = getResources().getDimensionPixelSize(R.dimen.bbn_elevation);
-        ViewCompat.setElevation(this, MiscUtils.getDimensionPixelSize(getContext(), elevation));
 
         // check if the bottom navigation is translucent
         hasTransucentNavigation = MiscUtils.hasTranslucentNavigation(activity);
@@ -190,9 +195,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         backgroundOverlay = new View(getContext());
         backgroundOverlay.setLayoutParams(params);
-        addView(backgroundOverlay);
 
-        setItems(menu);
+        addView(backgroundOverlay);
+        //setItems(menu);
     }
 
     int getPendingAction() {
@@ -201,6 +206,35 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     void resetPendingAction() {
         mPendingAction = PENDING_ACTION_NONE;
+    }
+
+    @Override
+    public void setLayoutParams(final ViewGroup.LayoutParams params) {
+        log(TAG, INFO, "setLayoutParams: %s", params);
+        final int g = ((CoordinatorLayout.LayoutParams) params).gravity;
+        gravity = GravityCompat.getAbsoluteGravity(g, LayoutDirection.LOCALE);
+        log(TAG, Log.DEBUG, "gravity: %d", gravity);
+
+        super.setLayoutParams(params);
+        layoutParamsSet = true;
+
+        // apply the default elevation
+
+        if (!isTablet(gravity)) {
+            ViewCompat.setElevation(this,
+                MiscUtils.getDimensionPixelSize(getContext(), getResources().getDimensionPixelSize(R.dimen.bbn_elevation))
+            );
+        } else {
+            ViewCompat.setElevation(this, 0);
+        }
+
+        if (null != menu) {
+            setItems(menu);
+        }
+    }
+
+    private boolean isTablet(final int gravity) {
+        return (gravity & Gravity.LEFT) == Gravity.LEFT || (gravity & Gravity.RIGHT) == Gravity.RIGHT;
     }
 
     @SuppressWarnings ("unused")
@@ -245,16 +279,27 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        log(TAG, INFO, "onMeasure: %d", gravity);
 
-        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int heightSize = defaultHeight;
+        if ((gravity & Gravity.BOTTOM) == Gravity.BOTTOM) {
+            final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+            final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
-        if (widthMode == MeasureSpec.AT_MOST) {
-            throw new IllegalArgumentException("layout_width must be equal to `match_parent`");
+            if (widthMode == MeasureSpec.AT_MOST) {
+                throw new IllegalArgumentException("layout_width must be equal to `match_parent`");
+            }
+            setMeasuredDimension(widthSize, defaultHeight + bottomInset + shadowHeight);
+        } else if ((gravity & Gravity.LEFT) == Gravity.LEFT || (gravity & Gravity.RIGHT) == Gravity.RIGHT) {
+            final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+            final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+            if (heightMode == MeasureSpec.AT_MOST) {
+                throw new IllegalArgumentException("layout_height must be equal to `match_parent`");
+            }
+            setMeasuredDimension(defaultHeight + shadowHeight, heightSize);
+        } else {
+            throw new IllegalArgumentException("invalid layout_gravity");
         }
-
-        setMeasuredDimension(widthSize, heightSize + bottomInset + shadowHeight);
     }
 
     public int getNavigationHeight() {
@@ -288,6 +333,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void setItems(MenuParser.Menu menu) {
         log(TAG, INFO, "setItems");
         this.menu = menu;
+
+        if (!layoutParamsSet) {
+            return;
+        }
 
         if (null != menu) {
             if (menu.getItemsCount() < 3 || menu.getItemsCount() > 5) {

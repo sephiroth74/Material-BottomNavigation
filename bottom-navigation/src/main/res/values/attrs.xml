@@ -8,6 +8,9 @@
         <!-- menu background color -->
         <attr name="android:background" />
 
+        <!-- menu gravity -->
+        <attr name="android:layout_gravity" />
+
         <!-- animation duration for the menu items -->
         <attr name="bbn_itemAnimationDuration" format="integer" />
 

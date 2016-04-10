@@ -6,6 +6,7 @@
 
     <!-- default BottomNavigation elevation -->
     <dimen name="bbn_elevation">8dp</dimen>
+    <dimen name="bbn_elevation_tablet">4dp</dimen>
 
     <!-- top shadow size -->
     <dimen name="bbn_top_shadow_height">6dp</dimen>
