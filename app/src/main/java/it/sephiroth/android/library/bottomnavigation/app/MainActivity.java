@@ -10,6 +10,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -236,5 +237,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
     @Override
     public void onMenuItemReselect(@IdRes final int itemId, final int position) {
         Log.i(TAG, "onMenuItemReselect(" + itemId + ", " + position + ")");
+
+        final FragmentManager manager = getSupportFragmentManager();
+        MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);
+        fragment.scrollToTop();
+
     }
 }

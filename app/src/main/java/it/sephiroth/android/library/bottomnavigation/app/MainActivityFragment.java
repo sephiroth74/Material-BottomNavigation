@@ -120,6 +120,10 @@ public class MainActivityFragment extends Fragment {
         mRecyclerView.setAdapter(new Adapter(getContext(), height, createData()));
     }
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     static class TwoLinesViewHolder extends RecyclerView.ViewHolder {
 
         final TextView title;
@@ -140,7 +144,6 @@ public class MainActivityFragment extends Fragment {
         private final Picasso picasso;
         private final int navigationHeight;
         private final Book[] data;
-        private int imageHeight = 0;
 
         public Adapter(final Context context, final int navigationHeight, final Book[] data) {
             this.navigationHeight = navigationHeight;
