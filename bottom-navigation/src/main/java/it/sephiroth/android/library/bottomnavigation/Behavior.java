@@ -10,7 +10,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -95,8 +94,6 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
      */
     private int offset;
 
-    //    private final LollipopBottomNavWithSnackBarImpl mWithSnackBarImpl = new LollipopBottomNavWithSnackBarImpl();
-
     private final HashMap<View, DependentView> dependentViewHashMap = new HashMap<>();
     private FabDependentView fabDependentView;
     private SnackBarDependentView snackbarDependentView;
@@ -107,7 +104,6 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
 
     public Behavior(final Context context, AttributeSet attrs) {
         super(context, attrs);
-        log(TAG, INFO, "ctor(attrs:%s)", attrs);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationBehavior);
         this.scrollable = array.getBoolean(R.styleable.BottomNavigationBehavior_bbn_scrollEnabled, true);
@@ -155,9 +151,9 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
             return true;
         }
 
-        if (!scrollable) {
-            return RecyclerView.class.isInstance(dependency);
-        }
+        //        if (!scrollable) {
+        //            return false;
+        //        }
 
         return false;
     }
@@ -341,7 +337,7 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
         }
     }
 
-    private abstract static class DependentView<V extends View> {
+    abstract static class DependentView<V extends View> {
         final V child;
         final MarginLayoutParams layoutParams;
         final int bottomMargin;
@@ -361,8 +357,8 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
         abstract boolean onDependentViewChanged(CoordinatorLayout parent, BottomNavigation navigation);
     }
 
-    private static class GenericDependentView extends DependentView<View> {
-        private static final String TAG = GenericDependentView.class.getSimpleName();
+    static class GenericDependentView extends DependentView<View> {
+        private static final String TAG = Behavior.TAG + "." + GenericDependentView.class.getSimpleName();
 
         GenericDependentView(final View child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
@@ -381,7 +377,7 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     }
 
     private static class FabDependentView extends DependentView<FloatingActionButton> {
-        private static final String TAG = FabDependentView.class.getSimpleName();
+        private static final String TAG = Behavior.TAG + "." + FabDependentView.class.getSimpleName();
 
         FabDependentView(final FloatingActionButton child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
@@ -391,7 +387,6 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
         @Override
         boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
             final float t = Math.max(0, navigation.getTranslationY() - height);
-            // log(TAG, VERBOSE, "onDependentViewChanged(%g, %d, %d)", navigation.getTranslationY(), height, bottomInset);
 
             if (bottomInset > 0) {
                 layoutParams.bottomMargin = (int) (bottomMargin + height - t);
@@ -407,12 +402,11 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     }
 
     private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
-        private static final String TAG = SnackBarDependentView.class.getSimpleName();
+        private static final String TAG = Behavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
         private int snackbarHeight = -1;
 
         SnackBarDependentView(final SnackbarLayout child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
-            log(TAG, INFO, "new SnackBarDependentView");
         }
 
         @Override
