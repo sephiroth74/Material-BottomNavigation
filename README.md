@@ -6,6 +6,12 @@ Bottom Navigation component inspired by the Google Material Design Guidelines at
 
 This project is also inspired by https://github.com/roughike/BottomBar
 
+# Installation
+
+In your project's `build.gradle` file add the following line to the `dependencies` group:
+
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.0-SNAPSHOT'
+
 # Usage
 Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:
 
