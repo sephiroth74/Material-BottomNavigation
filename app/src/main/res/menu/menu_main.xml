@@ -3,8 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".app.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/item1"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="3 items"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item2"
+        android:orderInCategory="100"
+        android:title="3 items no bg"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item3"
+        android:orderInCategory="100"
+        android:title="4 items"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item4"
+        android:orderInCategory="100"
+        android:title="4 items no bg"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item5"
+        android:orderInCategory="100"
+        android:title="5 items"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item6"
+        android:orderInCategory="100"
+        android:title="5 items no bg"
         app:showAsAction="never" />
 </menu>

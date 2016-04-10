@@ -174,16 +174,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        final int id = item.getItemId();
+
+        switch (id) {
+            case R.id.item1:
+                return setMenuType(MENU_TYPE_3_ITEMS);
+            case R.id.item2:
+                return setMenuType(MENU_TYPE_3_ITEMS_NO_BACKGROUND);
+            case R.id.item3:
+                return setMenuType(MENU_TYPE_4_ITEMS);
+            case R.id.item4:
+                return setMenuType(MENU_TYPE_4_ITEMS_NO_BACKGROUND);
+            case R.id.item5:
+                return setMenuType(MENU_TYPE_5_ITEMS);
+            case R.id.item6:
+                return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    public void setMenuType(final int type) {
+    public boolean setMenuType(final int type) {
         if (null == mBottomNavigation) {
-            return;
+            return false;
         }
 
         switch (type) {
@@ -210,8 +223,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
             case MENU_TYPE_5_ITEMS_NO_BACKGROUND:
                 mBottomNavigation.setMenuItems(R.menu.bottombar_menu_5items_no_background);
                 break;
-
         }
+
+        return true;
     }
 
     @Override

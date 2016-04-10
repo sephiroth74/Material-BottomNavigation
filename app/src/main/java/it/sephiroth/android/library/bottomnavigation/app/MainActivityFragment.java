@@ -152,12 +152,6 @@ public class MainActivityFragment extends Fragment {
         public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             final View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_card_item, parent, false);
             final TwoLinesViewHolder holder = new TwoLinesViewHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    onItemClick(holder.getAdapterPosition());
-                }
-            });
             return holder;
         }
 
@@ -187,35 +181,6 @@ public class MainActivityFragment extends Fragment {
         @Override
         public int getItemCount() {
             return data.length;
-        }
-
-        private void onItemClick(final int position) {
-            MainActivity activity = ((MainActivity) getActivity());
-            switch (position) {
-                case 0:
-                    activity.setMenuType(MainActivity.MENU_TYPE_3_ITEMS);
-                    break;
-
-                case 1:
-                    activity.setMenuType(MainActivity.MENU_TYPE_3_ITEMS_NO_BACKGROUND);
-                    break;
-
-                case 2:
-                    activity.setMenuType(MainActivity.MENU_TYPE_4_ITEMS);
-                    break;
-
-                case 3:
-                    activity.setMenuType(MainActivity.MENU_TYPE_4_ITEMS_NO_BACKGROUND);
-                    break;
-
-                case 4:
-                    activity.setMenuType(MainActivity.MENU_TYPE_5_ITEMS);
-                    break;
-
-                case 5:
-                    activity.setMenuType(MainActivity.MENU_TYPE_5_ITEMS_NO_BACKGROUND);
-                    break;
-            }
         }
     }
 
