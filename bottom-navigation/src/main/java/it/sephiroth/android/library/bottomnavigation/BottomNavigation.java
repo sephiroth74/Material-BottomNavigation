@@ -122,7 +122,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private Object mBehavior;
 
-    private OnMenuItemClickListener listener;
+    private OnMenuItemSelectionListener listener;
 
     public BottomNavigation(final Context context) {
         this(context, null);
@@ -206,11 +206,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @SuppressWarnings ("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
-            onItemClick(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate);
+            setSelectedItemInternal(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings ("unused")
     public int getSelectedIndex() {
         if (null != itemsContainer) {
             return itemsContainer.getSelectedIndex();
@@ -233,7 +233,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return false;
     }
 
-    public void setOnMenuItemClickListener(final OnMenuItemClickListener listener) {
+    public void setOnMenuItemClickListener(final OnMenuItemSelectionListener listener) {
         this.listener = listener;
     }
 
@@ -350,30 +350,51 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @Override
     public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index, boolean animate) {
         log(TAG, INFO, "onItemClick: %d", index);
-        parent.setSelectedIndex(index, animate);
+        setSelectedItemInternal(parent, view, index, animate, true);
+    }
+
+    private void setSelectedItemInternal(
+        final ItemsLayoutContainer layoutContainer,
+        final View view, final int index,
+        final boolean animate,
+        final boolean fromUser) {
 
         final BottomNavigationItem item = menu.getItemAt(index);
 
-        if (item.hasColor()) {
-            if (animate) {
-                MiscUtils.animate(
-                    this,
-                    view,
-                    backgroundOverlay,
-                    backgroundDrawable,
-                    item.getColor(),
-                    backgroundColorAnimation
-                );
-            } else {
-                MiscUtils.switchColor(
-                    this,
-                    view,
-                    backgroundOverlay,
-                    backgroundDrawable,
-                    item.getColor()
-                );
+        if (layoutContainer.getSelectedIndex() != index) {
+            layoutContainer.setSelectedIndex(index, animate);
+
+            if (item.hasColor()) {
+                if (animate) {
+                    MiscUtils.animate(
+                        this,
+                        view,
+                        backgroundOverlay,
+                        backgroundDrawable,
+                        item.getColor(),
+                        backgroundColorAnimation
+                    );
+                } else {
+                    MiscUtils.switchColor(
+                        this,
+                        view,
+                        backgroundOverlay,
+                        backgroundDrawable,
+                        item.getColor()
+                    );
+                }
+            }
+
+            if (null != listener && fromUser) {
+                listener.onMenuItemSelect(item.getId(), index);
+            }
+
+        } else {
+            if (null != listener && fromUser) {
+                listener.onMenuItemReselect(item.getId(), index);
             }
         }
+
     }
 
     public void setDefaultTypeface(final Typeface typeface) {
@@ -385,7 +406,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.defaultSelectedIndex = defaultSelectedIndex;
     }
 
-    public interface OnMenuItemClickListener {
-        void onMenuItemClick(@IdRes final int itemId, final int position);
+    public interface OnMenuItemSelectionListener {
+        void onMenuItemSelect(@IdRes final int itemId, final int position);
+
+        void onMenuItemReselect(@IdRes final int itemId, final int position);
     }
 }

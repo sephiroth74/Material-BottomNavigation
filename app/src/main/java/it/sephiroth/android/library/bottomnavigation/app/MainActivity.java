@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -28,7 +29,7 @@ import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 import static android.util.Log.INFO;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
-public class MainActivity extends AppCompatActivity implements BottomNavigation.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigation.OnMenuItemSelectionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -211,7 +212,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
     }
 
     @Override
-    public void onMenuItemClick(final int itemId, final int position) {
-        Log.i(TAG, "onMenuItemClick. itemId: " + itemId + ", position: " + position);
+    public void onMenuItemSelect(final int itemId, final int position) {
+        Log.i(TAG, "onMenuItemSelect(" + itemId + ", " + position + ")");
+    }
+
+    @Override
+    public void onMenuItemReselect(@IdRes final int itemId, final int position) {
+        Log.i(TAG, "onMenuItemReselect(" + itemId + ", " + position + ")");
     }
 }
