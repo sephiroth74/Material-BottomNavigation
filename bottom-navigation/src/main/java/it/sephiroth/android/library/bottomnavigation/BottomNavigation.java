@@ -35,7 +35,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  */
 public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     static final int PENDING_ACTION_NONE = 0x0;
     static final int PENDING_ACTION_EXPANDED = 0x1;

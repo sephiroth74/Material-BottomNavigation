@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation.app;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.squareup.picasso.Picasso;
 
 import it.sephiroth.android.library.bottomnavigation.Behavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
@@ -48,21 +51,26 @@ public class MainActivityFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         final SystemBarConfig config = activity.getSystemBarTint().getConfig();
 
-        int navigationHeight = 0;
-        int actionbarHeight = 0;
+        final int navigationHeight;
+        final int actionbarHeight;
 
         if (activity.hasTranslucentNavigation()) {
             navigationHeight = config.getNavigationBarHeight();
+        } else {
+            navigationHeight = 0;
         }
 
         if (activity.hasTranslucentStatusBar()) {
             actionbarHeight = config.getActionBarHeight();
+        } else {
+            actionbarHeight = 0;
         }
+
+        Log.d(TAG, "navigationHeight: " + navigationHeight);
+        Log.d(TAG, "actionbarHeight: " + actionbarHeight);
 
         final BottomNavigation navigation = activity.mBottomNavigation;
         if (null != navigation) {
-            final int finalNavigationHeight = navigationHeight;
-            final int finalActionbarHeight = actionbarHeight;
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -71,24 +79,37 @@ public class MainActivityFragment extends Fragment {
                     final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
                     final Behavior behavior = (Behavior) coordinatorLayoutParams.getBehavior();
+                    if (null == behavior) {
+                        createAdater(0);
+                        return;
+                    }
+
                     final boolean scrollable = behavior.isScrollable();
-                    int totalHeight = finalNavigationHeight + navigation.getNavigationHeight() - finalActionbarHeight;
+                    int totalHeight = navigationHeight + navigation.getNavigationHeight() - actionbarHeight;
                     final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
-                    Log.v(TAG, "scrollable: " + scrollable);
-                    Log.v(TAG, "navigationHeight: " + finalNavigationHeight);
+                    Log.d(TAG, "scrollable: " + scrollable);
+                    Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
+                    Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
 
                     if (scrollable) {
-                        totalHeight = finalNavigationHeight;
-                        params.bottomMargin -= finalNavigationHeight;
+                        totalHeight = navigationHeight;
+                        params.bottomMargin -= navigationHeight;
+                    } else {
+                        totalHeight = navigation.getNavigationHeight();
                     }
+
+                    Log.d(TAG, "totalHeight: " + totalHeight);
+                    Log.d(TAG, "bottomMargin: " + params.bottomMargin);
 
                     mRecyclerView.requestLayout();
                     createAdater(totalHeight);
                 }
             });
         } else {
-            createAdater(navigationHeight - actionbarHeight);
+            final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+            params.bottomMargin -= navigationHeight;
+            createAdater(navigationHeight);
         }
     }
 
@@ -96,29 +117,35 @@ public class MainActivityFragment extends Fragment {
         Log.i(getClass().getSimpleName(), "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(new Adapter(height));
+        mRecyclerView.setAdapter(new Adapter(getContext(), height, createData()));
     }
 
     static class TwoLinesViewHolder extends RecyclerView.ViewHolder {
 
         final TextView title;
         final TextView description;
+        final ImageView imageView;
         final int marginBottom;
 
         public TwoLinesViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(android.R.id.title);
             description = (TextView) itemView.findViewById(android.R.id.text1);
+            imageView = (ImageView) itemView.findViewById(android.R.id.icon);
             marginBottom = ((MarginLayoutParams) itemView.getLayoutParams()).bottomMargin;
         }
     }
 
     private class Adapter extends RecyclerView.Adapter<TwoLinesViewHolder> {
-
+        private final Picasso picasso;
         private final int navigationHeight;
+        private final Book[] data;
+        private int imageHeight = 0;
 
-        public Adapter(final int navigationHeight) {
+        public Adapter(final Context context, final int navigationHeight, final Book[] data) {
             this.navigationHeight = navigationHeight;
+            this.data = data;
+            this.picasso = Picasso.with(context);
         }
 
         @Override
@@ -142,48 +169,24 @@ public class MainActivityFragment extends Fragment {
                 ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom;
             }
 
-            switch (position) {
-                case 0:
-                    holder.title.setText("3 items");
-                    holder.description.setText("Switch to BottomNavigation with 3 fixed items");
-                    break;
+            final Book item = data[position];
+            holder.title.setText(item.title);
+            holder.description.setText("By " + item.author);
+            holder.imageView.setImageBitmap(null);
 
-                case 1:
-                    holder.title.setText("3 items no background");
-                    holder.description.setText("Switch to BottomNavigation with 3 fixed items without changing background");
-                    break;
+            picasso.cancelRequest(holder.imageView);
 
-                case 2:
-                    holder.title.setText("4 items");
-                    holder.description.setText("Switch to BottomNavigation with 4 shifting items");
-                    break;
-
-                case 3:
-                    holder.title.setText("4 items no background");
-                    holder.description.setText("Switch to BottomNavigation with 4 shifting items without changing background");
-                    break;
-
-                case 4:
-                    holder.title.setText("5 items");
-                    holder.description.setText("Switch to BottomNavigation with 5 shifting items");
-                    break;
-
-                case 5:
-                    holder.title.setText("5 items no background");
-                    holder.description.setText("Switch to BottomNavigation with 5 shfting items without changing background");
-                    break;
-
-                default:
-                    holder.title.setText("Item " + position);
-                    holder.description.setText("Description\nDescription line 2");
-                    break;
-
-            }
+            picasso
+                .load(item.imageUrl)
+                .noPlaceholder()
+                .resizeDimen(R.dimen.simple_card_image_width, R.dimen.simple_card_image_height)
+                .centerCrop()
+                .into(holder.imageView);
         }
 
         @Override
         public int getItemCount() {
-            return 20;
+            return data.length;
         }
 
         private void onItemClick(final int position) {
@@ -213,6 +216,35 @@ public class MainActivityFragment extends Fragment {
                     activity.setMenuType(MainActivity.MENU_TYPE_5_ITEMS_NO_BACKGROUND);
                     break;
             }
+        }
+    }
+
+    private Book[] createData() {
+        return new Book[]{
+            new Book("The Flight", "Scott Masterson", "http://i.imgur.com/dyyP2iO.jpg"),
+            new Book("Room of Plates", "Ali Conners", "http://i.imgur.com/da6QIlR.jpg"),
+            new Book("The Sleek Boot", "Sandra Adams", "http://i.imgur.com/YHoOJh4.jpg"),
+            new Book("Night Hunting", "Janet Perkins", "http://i.imgur.com/3jxqrKP.jpg"),
+            new Book("Rain and Coffee", "Peter Carlsson", "http://i.imgur.com/AZRynvM.jpg"),
+            new Book("Ocean View", "Trevor Hansen", "http://i.imgur.com/IvhOJcw.jpg"),
+            new Book("Lovers Of The Roof", "Britta Holt", "http://i.imgur.com/pxgI1b4.png"),
+            new Book("Lessons from Delhi", "Mary Johnson", "http://i.imgur.com/oT1WYX9.jpg"),
+            new Book("Mountaineers", "Abbey Christensen", "http://i.imgur.com/CLLDz.jpg"),
+            new Book("Plains In The Night", "David Park", "http://i.imgur.com/7MrSvXE.jpg?1"),
+            new Book("Dear Olivia", "Sylvia Sorensen", "http://i.imgur.com/3mkUuux.jpg"),
+            new Book("Driving Lessons", "Halime Carver", "http://i.imgur.com/LzYAfFL.jpg"),
+        };
+    }
+
+    static class Book {
+        final String title;
+        final String author;
+        final String imageUrl;
+
+        Book(final String title, final String author, final String imageUrl) {
+            this.title = title;
+            this.author = author;
+            this.imageUrl = imageUrl;
         }
     }
 }

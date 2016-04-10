@@ -119,7 +119,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
     public void onContentChanged() {
         super.onContentChanged();
         mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
-        mBottomNavigation.setOnMenuItemClickListener(this);
+
+        if (null != mBottomNavigation) {
+            mBottomNavigation.setOnMenuItemClickListener(this);
+        }
     }
 
     public SystemBarTintManager getSystemBarTint() {

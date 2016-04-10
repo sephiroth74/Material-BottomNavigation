@@ -9,33 +9,86 @@
     android:layout_marginTop="3dp"
     android:padding="8dp"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="2dp"
     app:cardElevation="2dp"
     app:cardMaxElevation="6dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="false"
-    app:contentPadding="8dp">
+    app:contentPadding="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@android:id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textAppearance="?android:attr/textAppearance" />
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="@dimen/simple_card_image_width"
+            android:layout_height="@dimen/simple_card_image_height"
+            android:background="@android:color/darker_gray"
+            android:scaleType="fitXY" />
 
-        <TextView
-            android:id="@android:id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:lines="2"
-            android:text="Description\nDescription line 2"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@android:id/icon"
+            android:layout_weight="1"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@android:id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:lines="1"
+                android:text="Title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@android:id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@android:id/title"
+                android:lines="1"
+                android:text="Description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <View
+                android:id="@+id/spacer"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@android:id/text1"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@android:id/button1"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spacer"
+                android:text="FREE SAMPLE"
+                android:textAppearance="?android:attr/textAppearanceButton"
+                android:textColor="@color/colorButton" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@android:id/button2"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@android:id/button1"
+                android:layout_toRightOf="@android:id/button1"
+                android:text="REVIEW"
+                android:textAppearance="?android:attr/textAppearanceButton"
+                android:textColor="@color/colorButton" />
+
+        </RelativeLayout>
+
     </LinearLayout>
+
 
 </android.support.v7.widget.CardView>
