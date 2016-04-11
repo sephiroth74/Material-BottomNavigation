@@ -18,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -216,7 +215,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private boolean isTablet(final int gravity) {
-        return (gravity & Gravity.LEFT) == Gravity.LEFT || (gravity & Gravity.RIGHT) == Gravity.RIGHT;
+        return MiscUtils.isGravitiyLeft(gravity) || MiscUtils.isGravityRight(gravity);
     }
 
     @SuppressWarnings ("unused")
@@ -323,7 +322,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
         this.gravity = GravityCompat.getAbsoluteGravity(params.gravity, ViewCompat.getLayoutDirection(this));
-        initializeUI();
+        initializeUI(gravity);
 
         if (null != pendingMenu) {
             setItems(pendingMenu);
@@ -363,8 +362,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         requestLayout();
     }
 
-    private void initializeUI() {
-        log(TAG, INFO, "initializeUI");
+    private void initializeUI(final int gravity) {
+        log(TAG, INFO, "initializeUI(%d)", gravity);
         final LayerDrawable layerDrawable;
 
         final boolean tablet = isTablet(gravity);
