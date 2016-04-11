@@ -48,7 +48,7 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MainActivity activity = (MainActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         final SystemBarConfig config = activity.getSystemBarTint().getConfig();
 
         final int navigationHeight;
@@ -69,13 +69,13 @@ public class MainActivityFragment extends Fragment {
         Log.d(TAG, "navigationHeight: " + navigationHeight);
         Log.d(TAG, "actionbarHeight: " + actionbarHeight);
 
-        final BottomNavigation navigation = activity.mBottomNavigation;
+        final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    Log.i(TAG, "onGlobalLayout");
                     navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                     final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
 
@@ -83,11 +83,6 @@ public class MainActivityFragment extends Fragment {
                     final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
                     if (behavior instanceof BottomBehavior) {
-                        if (null == behavior) {
-                            createAdater(0);
-                            return;
-                        }
-
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
 
                         Log.d(TAG, "scrollable: " + scrollable);
