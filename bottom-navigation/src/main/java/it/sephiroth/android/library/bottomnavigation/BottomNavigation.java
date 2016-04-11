@@ -438,7 +438,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         if (layoutContainer.getSelectedIndex() != index) {
             layoutContainer.setSelectedIndex(index, animate);
 
-            if (item.hasColor()) {
+            if (item.hasColor() && !menu.isTablet()) {
                 if (animate) {
                     MiscUtils.animate(
                         this,
