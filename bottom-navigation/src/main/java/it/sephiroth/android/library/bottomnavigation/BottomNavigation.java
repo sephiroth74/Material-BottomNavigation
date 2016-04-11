@@ -1,3 +1,21 @@
+/**
+ * The MIT License (MIT)
+ * <p>
+ * Copyright (c) 2016 Alessandro Crugnola
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.annotation.TargetApi;
@@ -36,6 +54,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by alessandro crugnola on 4/2/16.
+ * BottomNavigation
  */
 public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
@@ -68,6 +87,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * used in case we have to cover the navigation translucent area, and neither the shadow height.
      */
     private int defaultHeight;
+
+    /**
+     * Same as defaultHeight, but for tablet mode.
+     */
     private int defaultWidth;
 
     /**
@@ -121,9 +144,19 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private Object mBehavior;
 
+    /**
+     * Menu selection listener
+     */
     private OnMenuItemSelectionListener listener;
 
+    /**
+     * The user defined layout_gravity
+     */
     private int gravity;
+
+    /**
+     * View is attached
+     */
     private boolean attached;
 
     public BottomNavigation(final Context context) {
@@ -291,10 +324,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
+    @SuppressWarnings ("unused")
     public int getNavigationHeight() {
         return defaultHeight;
     }
 
+    @SuppressWarnings ("unused")
     public int getNavigationWidth() {
         return defaultWidth;
     }
