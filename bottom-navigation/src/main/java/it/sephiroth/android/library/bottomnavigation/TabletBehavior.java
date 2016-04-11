@@ -48,15 +48,17 @@ public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     public boolean onDependentViewChanged(
         final CoordinatorLayout parent, final BottomNavigation child, final View dependency) {
         log(TAG, INFO, "onDependentViewChange: %s", dependency.getClass().getSimpleName());
-        log(TAG, DEBUG, "top: %d", dependency.getTop());
+        log(TAG, DEBUG, "top: %d, topInset: %d", dependency.getTop(), topInset);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        params.topMargin = Math.max(dependency.getTop() + dependency.getHeight() - topInset, translucentStatus ? 0 : 0);
+        params.topMargin = Math.max(dependency.getTop() + dependency.getHeight() - topInset, translucentStatus ? 0 : -topInset);
 
-        if (params.topMargin < topInset) {
-            child.setPadding(0, topInset - params.topMargin, 0, 0);
-        } else {
-            child.setPadding(0, 0, 0, 0);
+        if (translucentStatus) {
+            if (params.topMargin < topInset) {
+                child.setPadding(0, topInset - params.topMargin, 0, 0);
+            } else {
+                child.setPadding(0, 0, 0, 0);
+            }
         }
 
         child.requestLayout();
