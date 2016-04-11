@@ -5,7 +5,7 @@
     </declare-styleable>
 
     <declare-styleable name="BottomNavigationMenu">
-        <!-- menu background color -->
+        <!-- menu default background color -->
         <attr name="android:background" />
 
         <!-- animation duration for the menu items -->
@@ -15,6 +15,7 @@
         <attr name="bbn_rippleColor" format="color" />
 
         <attr name="bbn_itemColorActive" format="color" />
+
         <attr name="bbn_itemColorInactive" format="color" />
     </declare-styleable>
 
@@ -30,7 +31,7 @@
              the title should be sufficient in describing this item. -->
         <attr name="android:icon" />
 
-        <!-- Whether the item is enabled. -->
+        <!-- Whether the item is enabled (not currently used). -->
         <attr name="android:enabled" />
 
         <!-- background color for the selected tab. If omitted, or 0, the background

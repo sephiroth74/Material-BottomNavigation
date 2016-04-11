@@ -21,6 +21,7 @@ android {
 
     lintOptions {
         disable "AppLinksAutoVerifyError", "AppLinksAutoVerifyWarning"
+        xmlReport false
         textReport true
         htmlReport false
         textOutput "stdout"

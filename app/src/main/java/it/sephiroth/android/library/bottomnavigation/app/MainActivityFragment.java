@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.squareup.picasso.Picasso;
 
-import it.sephiroth.android.library.bottomnavigation.Behavior;
+import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
@@ -48,7 +48,7 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MainActivity activity = (MainActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         final SystemBarConfig config = activity.getSystemBarTint().getConfig();
 
         final int navigationHeight;
@@ -69,41 +69,44 @@ public class MainActivityFragment extends Fragment {
         Log.d(TAG, "navigationHeight: " + navigationHeight);
         Log.d(TAG, "actionbarHeight: " + actionbarHeight);
 
-        final BottomNavigation navigation = activity.mBottomNavigation;
+        final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    Log.i(TAG, "onGlobalLayout");
                     navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                     final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
-                    final Behavior behavior = (Behavior) coordinatorLayoutParams.getBehavior();
-                    if (null == behavior) {
-                        createAdater(0);
-                        return;
-                    }
 
-                    final boolean scrollable = behavior.isScrollable();
-                    int totalHeight = navigationHeight + navigation.getNavigationHeight() - actionbarHeight;
+                    final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
                     final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
-                    Log.d(TAG, "scrollable: " + scrollable);
-                    Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
-                    Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+                    if (behavior instanceof BottomBehavior) {
+                        final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
 
-                    if (scrollable) {
-                        totalHeight = navigationHeight;
-                        params.bottomMargin -= navigationHeight;
+                        Log.d(TAG, "scrollable: " + scrollable);
+                        Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
+                        Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+
+                        int totalHeight;
+
+                        if (scrollable) {
+                            totalHeight = navigationHeight;
+                            params.bottomMargin -= navigationHeight;
+                        } else {
+                            totalHeight = navigation.getNavigationHeight();
+                        }
+
+                        Log.d(TAG, "totalHeight: " + totalHeight);
+                        Log.d(TAG, "bottomMargin: " + params.bottomMargin);
+
+                        createAdater(totalHeight);
                     } else {
-                        totalHeight = navigation.getNavigationHeight();
+                        params.bottomMargin -= navigationHeight;
+                        createAdater(navigationHeight);
                     }
-
-                    Log.d(TAG, "totalHeight: " + totalHeight);
-                    Log.d(TAG, "bottomMargin: " + params.bottomMargin);
-
                     mRecyclerView.requestLayout();
-                    createAdater(totalHeight);
                 }
             });
         } else {

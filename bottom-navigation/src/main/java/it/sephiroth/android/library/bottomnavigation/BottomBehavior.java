@@ -37,8 +37,8 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
  */
 @Keep
 @KeepClassMembers
-public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
-    private static final String TAG = Behavior.class.getSimpleName();
+public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> {
+    private static final String TAG = BottomBehavior.class.getSimpleName();
 
     private boolean scrollable;
     private boolean scrollEnabled;
@@ -98,11 +98,11 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     private FabDependentView fabDependentView;
     private SnackBarDependentView snackbarDependentView;
 
-    public Behavior() {
+    public BottomBehavior() {
         this(null, null);
     }
 
-    public Behavior(final Context context, AttributeSet attrs) {
+    public BottomBehavior(final Context context, AttributeSet attrs) {
         super(context, attrs);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationBehavior);
@@ -270,6 +270,12 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     protected boolean onNestedDirectionFling(
         CoordinatorLayout coordinatorLayout, BottomNavigation child, View target, float velocityX, float velocityY,
         @ScrollDirection int scrollDirection) {
+        log(TAG, INFO, "onNestedDirectionFling(%g, %d)", velocityY, scrollDirection);
+
+        if (Math.abs(velocityY) > 1000) {
+            handleDirection(coordinatorLayout, child, scrollDirection);
+        }
+
         return true;
     }
 
@@ -358,7 +364,7 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     }
 
     static class GenericDependentView extends DependentView<View> {
-        private static final String TAG = Behavior.TAG + "." + GenericDependentView.class.getSimpleName();
+        private static final String TAG = BottomBehavior.TAG + "." + GenericDependentView.class.getSimpleName();
 
         GenericDependentView(final View child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
@@ -377,7 +383,7 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     }
 
     private static class FabDependentView extends DependentView<FloatingActionButton> {
-        private static final String TAG = Behavior.TAG + "." + FabDependentView.class.getSimpleName();
+        private static final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
 
         FabDependentView(final FloatingActionButton child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
@@ -402,7 +408,7 @@ public class Behavior extends VerticalScrollingBehavior<BottomNavigation> {
     }
 
     private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
-        private static final String TAG = Behavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
+        private static final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
         private int snackbarHeight = -1;
 
         SnackBarDependentView(final SnackbarLayout child, final int height, final int bottomInset) {

@@ -37,4 +37,10 @@
         android:orderInCategory="100"
         android:title="5 items no bg"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item7"
+        android:orderInCategory="100"
+        android:title="Tablet Mode"
+        app:showAsAction="never" />
 </menu>

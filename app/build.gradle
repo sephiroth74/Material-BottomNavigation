@@ -23,6 +23,7 @@ android {
                 "GoogleAppIndexingWarning", "SetTextI18n", "HardcodedText"
         htmlReport false
         textReport true
+        xmlReport false
         textOutput "stdout"
         abortOnError false
     }

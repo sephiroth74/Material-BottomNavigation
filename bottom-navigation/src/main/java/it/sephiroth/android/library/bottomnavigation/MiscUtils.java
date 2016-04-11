@@ -1,6 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -95,6 +97,20 @@ public final class MiscUtils {
         }
     }
 
+    @SuppressLint ("RtlHardcoded")
+    static boolean isGravitiyLeft(final int gravity) {
+        return gravity == Gravity.LEFT;
+    }
+
+    @SuppressLint ("RtlHardcoded")
+    static boolean isGravityRight(final int gravity) {
+        return gravity == Gravity.RIGHT;
+    }
+
+    static boolean isGravityBottom(final int gravity) {
+        return gravity == Gravity.BOTTOM;
+    }
+
     protected static void switchColor(
         final BottomNavigation navigation,
         final View v,
@@ -104,7 +120,7 @@ public final class MiscUtils {
 
         backgroundOverlay.clearAnimation();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {
                 currentAnimator.cancel();
@@ -127,7 +143,7 @@ public final class MiscUtils {
 
         final Object animator;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
 
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {

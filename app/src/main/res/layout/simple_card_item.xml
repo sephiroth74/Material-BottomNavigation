@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/spacer"
                 android:text="FREE SAMPLE"
-                android:textAppearance="?android:attr/textAppearanceButton"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorButton" />
 
             <android.support.v7.widget.AppCompatButton
@@ -83,7 +83,7 @@
                 android:layout_alignTop="@android:id/button1"
                 android:layout_toRightOf="@android:id/button1"
                 android:text="REVIEW"
-                android:textAppearance="?android:attr/textAppearanceButton"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorButton" />
 
         </RelativeLayout>

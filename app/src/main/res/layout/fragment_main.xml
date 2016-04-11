@@ -1,5 +1,3 @@
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:background="#990000FF"--><!--tools:context=".MainActivityFragment"--><!--tools:showIn="@layout/activity_main">-->
-
 <android.support.v7.widget.RecyclerView android:id="@+id/RecyclerView01"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,4 +5,4 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" /><!--</FrameLayout>-->
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />

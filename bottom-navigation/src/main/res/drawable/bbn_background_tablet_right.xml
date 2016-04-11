@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@android:color/darker_gray"
+        android:left="0dp" />
+    <item
+        android:id="@+id/bbn_background"
+        android:drawable="@android:color/background_light"
+        android:left="0.5dp" />
+</layer-list>
