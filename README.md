@@ -96,6 +96,30 @@ The View supports tablet mode too (Left or Right). In order to enable tablet mod
     	    app:layout_behavior="@string/bbn_tablet_view_behavior" />
 
 
+# Styling
+
+The xml menu supports the following attributes in the &lt;menu&gt; tag:
+
+
+    <declare-styleable name="BottomNavigationMenu">
+        <!-- menu default background color -->
+        <attr name="android:background" />
+
+        <!-- animation duration for the menu items -->
+        <attr name="bbn_itemAnimationDuration" format="integer" />
+
+        <!-- ripple selector color -->
+        <attr name="bbn_rippleColor" format="color" />
+
+        <!-- menu item active color -->
+        <attr name="bbn_itemColorActive" format="color" />
+
+        <!-- menu item inactive color -->
+        <attr name="bbn_itemColorInactive" format="color" />
+    </declare-styleable>
+
+
+
 # License
 
 The MIT License (MIT)
