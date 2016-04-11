@@ -1,6 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -96,10 +97,12 @@ public final class MiscUtils {
         }
     }
 
+    @SuppressLint ("RtlHardcoded")
     static boolean isGravitiyLeft(final int gravity) {
         return gravity == Gravity.LEFT;
     }
 
+    @SuppressLint ("RtlHardcoded")
     static boolean isGravityRight(final int gravity) {
         return gravity == Gravity.RIGHT;
     }
@@ -117,7 +120,7 @@ public final class MiscUtils {
 
         backgroundOverlay.clearAnimation();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {
                 currentAnimator.cancel();
@@ -140,7 +143,7 @@ public final class MiscUtils {
 
         final Object animator;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
 
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {
