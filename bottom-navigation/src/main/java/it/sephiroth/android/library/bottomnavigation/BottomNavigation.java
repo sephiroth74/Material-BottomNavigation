@@ -200,9 +200,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initialize(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
-        final Activity activity = (Activity) context;
-        final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
-
         typeface = new SoftReference<>(Typeface.DEFAULT);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
@@ -217,15 +214,19 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         shadowHeight = getResources().getDimensionPixelOffset(R.dimen.bbn_top_shadow_height);
 
         // check if the bottom navigation is translucent
+        if (!isInEditMode()) {
+            final Activity activity = (Activity) context;
+            final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
 
-        if (MiscUtils.hasTranslucentNavigation(activity)
-            && systembarTint.getConfig().isNavigationAtBottom()
-            && systembarTint.getConfig().hasNavigtionBar()) {
-            bottomInset = systembarTint.getConfig().getNavigationBarHeight();
-        } else {
-            bottomInset = 0;
+            if (MiscUtils.hasTranslucentNavigation(activity)
+                && systembarTint.getConfig().isNavigationAtBottom()
+                && systembarTint.getConfig().hasNavigtionBar()) {
+                bottomInset = systembarTint.getConfig().getNavigationBarHeight();
+            } else {
+                bottomInset = 0;
+            }
+            topInset = systembarTint.getConfig().getStatusBarHeight();
         }
-        topInset = systembarTint.getConfig().getStatusBarHeight();
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         backgroundOverlay = new View(getContext());
