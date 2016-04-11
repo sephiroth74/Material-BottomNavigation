@@ -455,6 +455,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             } else {
                 itemsContainer = new FixedLayout(getContext());
             }
+
+            // force the layout manager ID
+            ((View) itemsContainer).setId(R.id.bbn_layoutManager);
             itemsContainer.setLayoutParams(params);
             addView((View) itemsContainer);
         }
