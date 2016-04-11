@@ -1,5 +1,6 @@
 # Material-BottomNavigation
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialBottomNavigation-green.svg?style=true)](https://android-arsenal.com/details/1/3414)
 [![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
 
 Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
