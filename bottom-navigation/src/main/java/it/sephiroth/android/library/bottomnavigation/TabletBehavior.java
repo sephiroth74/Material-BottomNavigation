@@ -53,7 +53,7 @@ public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
         params.topMargin = Math.max(dependency.getTop() + dependency.getHeight() - topInset, translucentStatus ? 0 : 0);
 
-        if(params.topMargin < topInset) {
+        if (params.topMargin < topInset) {
             child.setPadding(0, topInset - params.topMargin, 0, 0);
         } else {
             child.setPadding(0, 0, 0, 0);
