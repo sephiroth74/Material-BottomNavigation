@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.squareup.picasso.Picasso;
 
-import it.sephiroth.android.library.bottomnavigation.Behavior;
+import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
@@ -80,20 +80,21 @@ public class MainActivityFragment extends Fragment {
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
 
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
+                    final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
-                    if (behavior instanceof Behavior) {
+                    if (behavior instanceof BottomBehavior) {
                         if (null == behavior) {
                             createAdater(0);
                             return;
                         }
 
-                        final boolean scrollable = ((Behavior) behavior).isScrollable();
-                        int totalHeight = navigationHeight + navigation.getNavigationHeight() - actionbarHeight;
-                        final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+                        final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
 
                         Log.d(TAG, "scrollable: " + scrollable);
                         Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
                         Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+
+                        int totalHeight;
 
                         if (scrollable) {
                             totalHeight = navigationHeight;
@@ -105,11 +106,12 @@ public class MainActivityFragment extends Fragment {
                         Log.d(TAG, "totalHeight: " + totalHeight);
                         Log.d(TAG, "bottomMargin: " + params.bottomMargin);
 
-                        mRecyclerView.requestLayout();
                         createAdater(totalHeight);
                     } else {
-                        createAdater(0);
+                        params.bottomMargin -= navigationHeight;
+                        createAdater(navigationHeight);
                     }
+                    mRecyclerView.requestLayout();
                 }
             });
         } else {

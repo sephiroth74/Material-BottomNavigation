@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -93,6 +94,18 @@ public final class MiscUtils {
         } else {
             DrawableCompat.setTint(drawable, color);
         }
+    }
+
+    static boolean isGravitiyLeft(final int gravity) {
+        return gravity == Gravity.LEFT;
+    }
+
+    static boolean isGravityRight(final int gravity) {
+        return gravity == Gravity.RIGHT;
+    }
+
+    static boolean isGravityBottom(final int gravity) {
+        return gravity == Gravity.BOTTOM;
     }
 
     protected static void switchColor(

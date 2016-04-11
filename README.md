@@ -33,7 +33,7 @@ Usage of the BottomNavigation widget is very easy. Just place it in your layout.
 	        android:layout_gravity="bottom"
     	    app:bbn_entries="@menu/bottombar_menu_4items"
 	        app:bbn_scrollEnabled="true"
-    	    app:layout_behavior="@string/bbn_scrolling_view_behavior" />
+    	    app:layout_behavior="@string/bbn_phone_view_behavior" />
 	</android.support.design.widget.CoordinatorLayout>
 
 All the menu main configurations are defined within the xml menu resource itself. Here's an example of a menu with 4 items:
@@ -72,16 +72,28 @@ All the menu main configurations are defined within the xml menu resource itself
 | :------------: | :-----------: |
 |	![Video 1](art/video1.gif)	|	![Video 2](art/video2.gif)	|
 
-| 4 items no background | 
-| :------------: |
-| 4 items without changing background. <br />Menu show/hide feature is also disabled | 
-| ![Video 3](art/video3.gif) |
+| 4 items no background |  Tablet mode |
+| :------------: | :-----------: |
+| 4 items without changing background. <br />Menu show/hide feature is also disabled | Menu can be easily setup for (left or right) tablet support. |
+| ![Video 3](art/video3.gif) | ![Tablet Mode](art/tablet.png) |
 
 
 # Sizing
 
 Dimensions and paddings follow the Google giudelines<br />
 ![Sizing](art/sizing.png)
+
+# Tablets
+
+The View supports tablet mode too (Left or Right). In order to enable tablet mode this is the configuration that should be used:
+
+	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+    	    android:id="@+id/BottomNavigation"
+	        android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+	        android:layout_gravity="start"
+    	    app:bbn_entries="@menu/bottombar_menu_3items"
+    	    app:layout_behavior="@string/bbn_tablet_view_behavior" />
 
 
 # License

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
     private Toolbar mToolbar;
     BottomNavigation mBottomNavigation;
     private FloatingActionButton mFab;
-    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigation.
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
             mBottomNavigation.setDefaultTypeface(typeface);
-            mBottomNavigation.setDefaultSelectedIndex(2);
+            mBottomNavigation.setDefaultSelectedIndex(0);
         }
 
         mCoordinatorLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

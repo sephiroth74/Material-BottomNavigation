@@ -35,6 +35,7 @@ class MenuParser {
         private int colorInactive;
         private int itemAnimationDuration;
         private boolean shifting;
+        private boolean tablet;
 
         public Menu(final Context context) {
             this.context = context;
@@ -44,9 +45,16 @@ class MenuParser {
             return itemAnimationDuration;
         }
 
+        @Override
+        public String toString() {
+            return String.format("Menu{background:%x, colorActive:%x, colorInactive:%x, shifting:%b, tablet:%b}",
+                background, colorActive, colorInactive, shifting, tablet
+            );
+        }
+
         public int getBackground() {
             if (0 == background) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     return MiscUtils.getColor(context, R.attr.colorPrimary);
                 } else {
                     return MiscUtils.getColor(context, android.R.attr.windowBackground);
@@ -57,7 +65,7 @@ class MenuParser {
 
         public int getColorActive() {
             if (0 == colorActive) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     colorActive = MiscUtils.getColor(context, android.R.attr.colorForegroundInverse);
                 } else {
                     colorActive = MiscUtils.getColor(context, android.R.attr.colorForeground);
@@ -68,7 +76,7 @@ class MenuParser {
 
         public int getColorInactive() {
             if (0 == colorInactive) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     colorInactive = ContextCompat.getColor(context, R.color.bbn_item_shifting_color_inactive);
                 } else {
                     int color = getColorActive();
@@ -80,7 +88,7 @@ class MenuParser {
 
         public int getRippleColor() {
             if (-1 == rippleColor) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     rippleColor = ContextCompat.getColor(context, R.color.bbn_shifting_item_ripple_color);
                 } else {
                     rippleColor = ContextCompat.getColor(context, R.color.bbn_fixed_item_ripple_color);
@@ -120,6 +128,14 @@ class MenuParser {
         @SuppressWarnings ("unused")
         public boolean hasChangingColor() {
             return items[0].hasColor();
+        }
+
+        void setTabletMode(final boolean tablet) {
+            this.tablet = tablet;
+        }
+
+        public boolean isTablet() {
+            return tablet;
         }
     }
 

@@ -3,7 +3,6 @@ package it.sephiroth.android.library.bottomnavigation;
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,21 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 @KeepClassMembers
 public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> {
     private static final String TAG = TabletBehavior.class.getSimpleName();
+    private int topInset;
+    private boolean enabled;
+    private int width;
+    private boolean translucentStatus;
 
     public TabletBehavior(final Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public void setLayoutValues(final int bottomNavWidth, final int topInset, final boolean translucentStatus) {
+        log(TAG, INFO, "setLayoutValues(%d, %d)", bottomNavWidth, topInset);
+        this.translucentStatus = translucentStatus;
+        this.width = bottomNavWidth;
+        this.topInset = topInset;
+        this.enabled = true;
     }
 
     @Override
@@ -40,9 +51,15 @@ public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         log(TAG, DEBUG, "top: %d", dependency.getTop());
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        params.topMargin = dependency.getTop() + 168;
-        child.requestLayout();
+        params.topMargin = Math.max(dependency.getTop() + dependency.getHeight() - topInset, translucentStatus ? 0 : 0);
 
+        if(params.topMargin < topInset) {
+            child.setPadding(0, topInset - params.topMargin, 0, 0);
+        } else {
+            child.setPadding(0, 0, 0, 0);
+        }
+
+        child.requestLayout();
         return true;
     }
 
