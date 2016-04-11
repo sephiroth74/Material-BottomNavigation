@@ -15,9 +15,6 @@ import java.util.List;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
-import static android.util.Log.VERBOSE;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
-
 /**
  * Created by alessandro crugnola on 4/3/16 at 7:59 PM.
  * Project: MaterialBottomNavigation
@@ -87,7 +84,7 @@ class MenuParser {
         }
 
         public int getRippleColor() {
-            if (-1 == rippleColor) {
+            if (0 == rippleColor) {
                 if (shifting && !tablet) {
                     rippleColor = ContextCompat.getColor(context, R.color.bbn_shifting_item_ripple_color);
                 } else {
@@ -176,16 +173,12 @@ class MenuParser {
         menu = new Menu(context);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationMenu);
 
-        for (int i = 0; i < attrs.getAttributeCount(); i++) {
-            log(TAG, VERBOSE, "attr: %s", attrs.getAttributeName(i));
-        }
-
         menu.itemAnimationDuration = a.getInt(
             R.styleable.BottomNavigationMenu_bbn_itemAnimationDuration,
             context.getResources().getInteger(R.integer.bbn_item_animation_duration)
         );
         menu.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0);
-        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, -1);
+        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
 
