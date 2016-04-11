@@ -8,6 +8,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,6 +145,26 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public BottomNavigation(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initialize(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        log(TAG, INFO, "onSaveInstanceState");
+        Parcelable parcelable = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(parcelable);
+        savedState.selectedIndex = getSelectedIndex();
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Parcelable state) {
+        log(TAG, INFO, "onRestoreInstanceState");
+        SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+
+        defaultSelectedIndex = savedState.selectedIndex;
+        log(TAG, Log.DEBUG, "saved selectedIndex: %d", defaultSelectedIndex);
+
     }
 
     private void initialize(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
@@ -320,12 +343,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
-    @Override
-    protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
-        log(TAG, INFO, "onLayout(%b, %d, %d)", changed, right - left, bottom - top);
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
     private void setItems(MenuParser.Menu menu) {
         log(TAG, INFO, "setItems: %s", menu);
 
@@ -468,7 +485,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 listener.onMenuItemReselect(item.getId(), index);
             }
         }
-
     }
 
     public void setDefaultTypeface(final Typeface typeface) {
@@ -483,5 +499,40 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         void onMenuItemSelect(@IdRes final int itemId, final int position);
 
         void onMenuItemReselect(@IdRes final int itemId, final int position);
+    }
+
+    static class SavedState extends BaseSavedState {
+        int selectedIndex;
+
+        public SavedState(Parcel in) {
+            super(in);
+            selectedIndex = in.readInt();
+        }
+
+        public SavedState(final Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(final Parcel out, final int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(selectedIndex);
+        }
+
+        @Override
+        public int describeContents() {
+            return super.describeContents();
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR
+            = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }
