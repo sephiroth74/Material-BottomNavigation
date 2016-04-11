@@ -270,6 +270,12 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     protected boolean onNestedDirectionFling(
         CoordinatorLayout coordinatorLayout, BottomNavigation child, View target, float velocityX, float velocityY,
         @ScrollDirection int scrollDirection) {
+        log(TAG, INFO, "onNestedDirectionFling(%g, %d)", velocityY, scrollDirection);
+
+        if (Math.abs(velocityY) > 1000) {
+            handleDirection(coordinatorLayout, child, scrollDirection);
+        }
+
         return true;
     }
 
