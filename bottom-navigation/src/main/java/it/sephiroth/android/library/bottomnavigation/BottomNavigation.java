@@ -567,7 +567,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
-    static final ThreadLocal<Map<String, Constructor<BadgeProvider>>> sConstructors = new ThreadLocal<>();
+    static final ThreadLocal<Map<String, Constructor<BadgeProvider>>> S_CONSTRUCTORS = new ThreadLocal<>();
 
     static BadgeProvider parseBadgeProvider(final BottomNavigation navigation, final Context context, final String name) {
         log(TAG, INFO, "parseBadgeProvider: %s", name);
@@ -589,10 +589,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
 
         try {
-            Map<String, Constructor<BadgeProvider>> constructors = sConstructors.get();
+            Map<String, Constructor<BadgeProvider>> constructors = S_CONSTRUCTORS.get();
             if (constructors == null) {
                 constructors = new HashMap<>();
-                sConstructors.set(constructors);
+                S_CONSTRUCTORS.set(constructors);
             }
             Constructor<BadgeProvider> c = constructors.get(fullName);
             if (c == null) {

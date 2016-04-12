@@ -10,7 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
