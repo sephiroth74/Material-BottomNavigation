@@ -60,11 +60,13 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
 
     private void updateLayoutOnAnimation(final float fraction, final boolean expanded) {
         if (expanded) {
-            icon.setColorFilter(
-                (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
+            final int color = (int) evaluator.evaluate(fraction, colorInactive, colorActive);
+            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            icon.setAlpha(Color.alpha(color));
         } else {
             int color = (int) evaluator.evaluate(fraction, colorActive, colorInactive);
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            icon.setAlpha(Color.alpha(color));
         }
         ViewCompat.postInvalidateOnAnimation(this);
     }
@@ -76,6 +78,7 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
         if (null == this.icon) {
             this.icon = getItem().getIcon(getContext()).mutate();
             this.icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
+            this.icon.setAlpha(Color.alpha(isExpanded() ? colorActive : colorInactive));
             this.icon.setBounds(0, 0, iconSize, iconSize);
         }
 
