@@ -370,6 +370,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         if (null == mBehavior) {
             if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
                 mBehavior = params.getBehavior();
+
+                if (isInEditMode()) {
+                    return;
+                }
+
                 if (BottomBehavior.class.isInstance(mBehavior)) {
                     ((BottomBehavior) mBehavior).setLayoutValues(defaultHeight, bottomInset);
                 } else if (TabletBehavior.class.isInstance(mBehavior)) {
