@@ -109,6 +109,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             case R.id.item7:
                 startActivity(new Intent(this, MainActivityTablet.class));
                 return true;
+            case R.id.item8:
+                startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
