@@ -9,4 +9,7 @@
 
     <!-- this is the default value -->
     <string name="bbn_default_view_behavior" translatable="false" tools:ignore="UnusedResources">it.sephiroth.android.library.bottomnavigation.BottomBehavior</string>
+
+    <!-- default badge provider -->
+    <string name="bbn_badgeProvider" translatable="false" tools:ignore="UnusedResources">it.sephiroth.android.library.bottomnavigation.BadgeProvider</string>
 </resources>

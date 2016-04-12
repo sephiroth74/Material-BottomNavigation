@@ -40,4 +40,6 @@
     <dimen name="bbn_tablet_item_icon_size">24dp</dimen>
     <dimen name="bbn_tablet_item_height">72dp</dimen>
     <dimen name="bbn_tablet_layout_padding_top">0dp</dimen>
+
+    <dimen name="bbn_badge_size">8dp</dimen>
 </resources>

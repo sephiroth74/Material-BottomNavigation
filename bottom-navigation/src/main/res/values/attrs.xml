@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- styles for the 'BottomNavigation' View -->
     <declare-styleable name="BottomNavigation">
         <attr name="bbn_entries" format="reference" />
+        <attr name="bbn_badgeProvider" format="string" />
     </declare-styleable>
 
+    <!-- styles for the menu resource -->
     <declare-styleable name="BottomNavigationMenu">
         <!-- menu default background color -->
         <attr name="android:background" />
+
+        <!-- default badge color -->
+        <attr name="bbn_badgeColor" format="color" />
 
         <!-- animation duration for the menu items -->
         <attr name="bbn_itemAnimationDuration" format="integer" />
@@ -19,7 +25,7 @@
         <attr name="bbn_itemColorInactive" format="color" />
     </declare-styleable>
 
-    <!-- Base attributes that are available to all Item objects. -->
+    <!-- attributes for the 'item' tag within the menu resource. -->
     <declare-styleable name="BottomNavigationMenuItem">
         <!-- The ID of the item. -->
         <attr name="android:id" />

@@ -1,6 +1,8 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +21,9 @@ abstract class BottomNavigationItemViewAbstract extends View {
     private boolean expanded;
     protected final Paint textPaint;
     protected boolean textDirty;
+    private final BadgeProvider provider;
+    protected Drawable badge;
+    protected Drawable icon;
 
     public BottomNavigationItemViewAbstract(final BottomNavigation parent, final boolean expanded, final MenuParser.Menu menu) {
         super(parent.getContext());
@@ -26,6 +31,7 @@ abstract class BottomNavigationItemViewAbstract extends View {
         this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.textDirty = true;
         this.expanded = expanded;
+        this.provider = parent.getBadgeProvider();
     }
 
     void setItem(BottomNavigationItem item) {
@@ -36,6 +42,39 @@ abstract class BottomNavigationItemViewAbstract extends View {
         this.setId(item.getId());
         this.setBackground(drawable);
         this.setEnabled(item.isEnabled());
+        invalidateBadge();
+    }
+
+    void invalidateBadge() {
+        Drawable d = provider.getBadge(getId());
+
+        if (badge != d) {
+            if (null != badge) {
+                badge.setCallback(null);
+                badge = null;
+            }
+            badge = d;
+
+            if (null != badge) {
+                badge.setCallback(this);
+                if (badge instanceof BadgeDrawable && null == getParent()) {
+                    ((BadgeDrawable) badge).setIsAnimating(false);
+                }
+            }
+
+            if (null != getParent()) {
+                invalidate();
+            }
+        }
+    }
+
+    @Override
+    public void invalidateDrawable(final Drawable drawable) {
+        super.invalidateDrawable(drawable);
+
+        if (drawable == badge) {
+            invalidate();
+        }
     }
 
     protected abstract void onStatusChanged(final boolean expanded, final int size, final boolean animate);
@@ -52,6 +91,16 @@ abstract class BottomNavigationItemViewAbstract extends View {
         if (this.expanded != expanded) {
             this.expanded = expanded;
             onStatusChanged(expanded, newSize, animate);
+        }
+    }
+
+    protected final void drawBadge(final Canvas canvas) {
+        if (null != badge && null != icon) {
+            Rect bounds = icon.getBounds();
+            badge.setBounds(bounds.right - badge.getIntrinsicWidth(), bounds.top, bounds.right,
+                bounds.top + badge.getIntrinsicHeight()
+            );
+            badge.draw(canvas);
         }
     }
 

@@ -34,6 +34,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,9 @@ import android.widget.LinearLayout;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
@@ -60,12 +64,21 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     @SuppressWarnings ("checkstyle:staticvariablename")
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     static final int PENDING_ACTION_NONE = 0x0;
     static final int PENDING_ACTION_EXPANDED = 0x1;
     static final int PENDING_ACTION_COLLAPSED = 0x2;
     static final int PENDING_ACTION_ANIMATE_ENABLED = 0x4;
+
+    private static final String WIDGET_PACKAGE_NAME;
+
+    static {
+        final Package pkg = BottomNavigation.class.getPackage();
+        WIDGET_PACKAGE_NAME = pkg != null ? pkg.getName() : null;
+    }
+
+    static final Class<?>[] CONSTRUCTOR_PARAMS = new Class<?>[]{BottomNavigation.class};
 
     /**
      * Current pending action (used inside the BottomBehavior instance)
@@ -115,7 +128,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     /**
      * current menu
      */
-    private MenuParser.Menu menu;
+    MenuParser.Menu menu;
 
     private MenuParser.Menu pendingMenu;
 
@@ -161,6 +174,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private boolean attached;
 
+    private BadgeProvider badgeProvider;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -201,12 +216,17 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     }
 
+    public BadgeProvider getBadgeProvider() {
+        return badgeProvider;
+    }
+
     private void initialize(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         typeface = new SoftReference<>(Typeface.DEFAULT);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
         pendingMenu = MenuParser.inflateMenu(context, menuResId);
+        badgeProvider = parseBadgeProvider(this, context, array.getString(R.styleable.BottomNavigation_bbn_badgeProvider));
         array.recycle();
 
         backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
@@ -538,6 +558,53 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     public void setDefaultSelectedIndex(final int defaultSelectedIndex) {
         this.defaultSelectedIndex = defaultSelectedIndex;
+    }
+
+    public void invalidateBadge(final int itemId) {
+        log(TAG, INFO, "invalidateBadge: %d", itemId);
+        if (null != itemsContainer) {
+            ((BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId)).invalidateBadge();
+        }
+    }
+
+    static final ThreadLocal<Map<String, Constructor<BadgeProvider>>> sConstructors = new ThreadLocal<>();
+
+    static BadgeProvider parseBadgeProvider(final BottomNavigation navigation, final Context context, final String name) {
+        log(TAG, INFO, "parseBadgeProvider: %s", name);
+
+        if (TextUtils.isEmpty(name)) {
+            return new BadgeProvider(navigation);
+        }
+
+        final String fullName;
+        if (name.startsWith(".")) {
+            fullName = context.getPackageName() + name;
+        } else if (name.indexOf('.') >= 0) {
+            fullName = name;
+        } else {
+            // Assume stock behavior in this package (if we have one)
+            fullName = !TextUtils.isEmpty(WIDGET_PACKAGE_NAME)
+                ? (WIDGET_PACKAGE_NAME + '.' + name)
+                : name;
+        }
+
+        try {
+            Map<String, Constructor<BadgeProvider>> constructors = sConstructors.get();
+            if (constructors == null) {
+                constructors = new HashMap<>();
+                sConstructors.set(constructors);
+            }
+            Constructor<BadgeProvider> c = constructors.get(fullName);
+            if (c == null) {
+                final Class<BadgeProvider> clazz = (Class<BadgeProvider>) Class.forName(fullName, true, context.getClassLoader());
+                c = clazz.getConstructor(CONSTRUCTOR_PARAMS);
+                c.setAccessible(true);
+                constructors.put(fullName, c);
+            }
+            return c.newInstance(navigation);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not inflate Behavior subclass " + fullName, e);
+        }
     }
 
     public interface OnMenuItemSelectionListener {

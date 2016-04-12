@@ -6,8 +6,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -22,7 +22,7 @@ import it.sephiroth.android.library.bottonnavigation.R;
 public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationTabletItemView.class.getSimpleName();
     private final int iconSize;
-    private Drawable icon;
+
     private final Interpolator interpolator = new DecelerateInterpolator();
     private long animationDuration;
     private final int colorActive;
@@ -95,5 +95,6 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         icon.draw(canvas);
+        drawBadge(canvas);
     }
 }
