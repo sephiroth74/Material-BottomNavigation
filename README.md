@@ -159,9 +159,9 @@ Then you can hide the badge using:
 
 ## Badge Customization
 
-You can create your own `badge` drawable by extending the `BadgeProvider` class. 
-Once you've setup your new class you can tell the BottomNavigation view to use your class by specifying it in the "bbn_badgeProvider" attribute of your xml file. For instance:
-
+You can use your own [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html) by extending the `BadgeProvider` class. 
+Once you've setup your new class you can tell the BottomNavigation view to use your class by specifying it in the "bbn_badgeProvider" attribute of your xml file. <br />
+For instance:
 
 	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
         android:id="@id/BottomNavigation"
