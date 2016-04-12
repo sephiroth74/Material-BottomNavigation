@@ -11,7 +11,7 @@ This project is also inspired by https://github.com/roughike/BottomBar
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.1-SNAPSHOT'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.1'
 
 # Usage
 Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:
