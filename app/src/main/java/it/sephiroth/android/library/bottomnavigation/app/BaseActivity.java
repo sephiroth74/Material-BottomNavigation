@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation.app;
 
+import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         return getSystemBarTint().getConfig().getStatusBarHeight();
     }
 
+    @TargetApi (19)
     public boolean hasTranslucentStatusBar() {
         if (!mTranslucentStatusSet) {
             if (Build.VERSION.SDK_INT >= 19) {
@@ -61,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         return mTranslucentStatus;
     }
 
+    @TargetApi (19)
     public boolean hasTranslucentNavigation() {
         if (!mTranslucentNavigationSet) {
             final SystemBarTintManager.SystemBarConfig config = getSystemBarTint().getConfig();

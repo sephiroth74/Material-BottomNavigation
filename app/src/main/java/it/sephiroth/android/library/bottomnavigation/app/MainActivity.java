@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
@@ -37,18 +35,12 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     public static final int MENU_TYPE_5_ITEMS = 4;
     public static final int MENU_TYPE_5_ITEMS_NO_BACKGROUND = 5;
 
-    private AppBarLayout mAppBarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
-
-    private Toolbar mToolbar;
-    private FloatingActionButton mFab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         MiscUtils.log(TAG, INFO, "screen density: %g", getResources().getDisplayMetrics().density);
 
@@ -56,8 +48,8 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final boolean translucentStatus = hasTranslucentStatusBar();
         final boolean translucentNavigation = hasTranslucentNavigation();
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
@@ -67,15 +59,14 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             }
         });
 
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.AppBarLayout01);
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
+        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
         if (translucentStatus) {
             Log.d(TAG, "hasTranslucentStatusBar");
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coordinatorLayout.getLayoutParams();
             params.topMargin = -statusbarHeight;
 
-            params = (ViewGroup.MarginLayoutParams) mToolbar.getLayoutParams();
+            params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
             params.topMargin = statusbarHeight;
         }
 
@@ -90,16 +81,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         if (null != getBottomNavigation()) {
             getBottomNavigation().setDefaultSelectedIndex(0);
         }
-
-        mCoordinatorLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mCoordinatorLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                AppBarLayout.Behavior b =
-                    (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
-            }
-        });
     }
 
     @Override

@@ -39,7 +39,7 @@
         android:id="@id/BottomNavigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         app:bbn_entries="@menu/bottombar_menu_3items_tablet"
         app:layout_behavior="@string/bbn_tablet_view_behavior" />
 
