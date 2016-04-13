@@ -202,7 +202,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         log(TAG, INFO, "onSaveInstanceState");
         Parcelable parcelable = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parcelable);
-        savedState.selectedIndex = getSelectedIndex();
+
+        if (null == menu) {
+            savedState.selectedIndex = 0;
+        } else {
+            savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
+        }
 
         if (null != badgeProvider) {
             savedState.badgeBundle = badgeProvider.save();
