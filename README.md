@@ -19,8 +19,8 @@ Table of contents
   * [Styling](#styling)
   * [Badges](#badges)  
     * [Badges Customization](#badges-customization)
-  * [Wiki](./wiki)
-    * [Custom Layout Behavior](./wiki/Custom-Layout-Behavior)
+  * [Wiki](https://github.com/sephiroth74/Material-BottomNavigation/wiki)
+    * [Custom Layout Behavior](https://github.com/sephiroth74/Material-BottomNavigation/wiki/Custom-Layout-Behavior)
 
 
 Installation
