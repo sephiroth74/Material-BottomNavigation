@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
     <item
-        android:id="@+id/action4"
+        android:id="@+id/bbn_item4"
         android:icon="@drawable/ic_format_list_numbered_white_24dp"
         android:title="List" />
 

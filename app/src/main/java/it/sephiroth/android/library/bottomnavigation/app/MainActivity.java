@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
-        final boolean translucentNavigation = hasTranslucentNavigation();
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         assert floatingActionButton != null;
