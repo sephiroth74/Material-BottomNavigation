@@ -237,6 +237,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         array.recycle();
 
         backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
+        defaultSelectedIndex = 0;
 
         defaultHeight = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height);
         defaultWidth = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_width);
