@@ -158,7 +158,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     /**
      * Current BottomBehavior assigned from the CoordinatorLayout
      */
-    private Object mBehavior;
+    private CoordinatorLayout.Behavior mBehavior;
 
     /**
      * Menu selection listener
@@ -415,6 +415,15 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 }
             }
         }
+    }
+
+    public CoordinatorLayout.Behavior getBehavior() {
+        if (null == mBehavior) {
+            if (CoordinatorLayout.LayoutParams.class.isInstance(getLayoutParams())) {
+                return ((CoordinatorLayout.LayoutParams) getLayoutParams()).getBehavior();
+            }
+        }
+        return mBehavior;
     }
 
     private void setItems(MenuParser.Menu menu) {
