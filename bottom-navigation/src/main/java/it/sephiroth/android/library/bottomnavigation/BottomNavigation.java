@@ -572,7 +572,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void invalidateBadge(final int itemId) {
         log(TAG, INFO, "invalidateBadge: %d", itemId);
         if (null != itemsContainer) {
-            ((BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId)).invalidateBadge();
+            final BottomNavigationItemViewAbstract viewAbstract =
+                (BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId);
+            if (null != viewAbstract) {
+                viewAbstract.invalidateBadge();
+            }
         }
     }
 
