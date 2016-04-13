@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             params.topMargin = statusbarHeight;
         }
 
-        if (null != getBottomNavigation()) {
+        if (null != getBottomNavigation() && null == savedInstanceState) {
             getBottomNavigation().setDefaultSelectedIndex(0);
 
             final BadgeProvider provider = getBottomNavigation().getBadgeProvider();

@@ -202,6 +202,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         Parcelable parcelable = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parcelable);
         savedState.selectedIndex = getSelectedIndex();
+
+        if (null != badgeProvider) {
+            savedState.badgeBundle = badgeProvider.save();
+        }
+
         return savedState;
     }
 
@@ -212,8 +217,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onRestoreInstanceState(savedState.getSuperState());
 
         defaultSelectedIndex = savedState.selectedIndex;
-        log(TAG, Log.DEBUG, "saved selectedIndex: %d", defaultSelectedIndex);
 
+        if (null != badgeProvider && null != savedState.badgeBundle) {
+            badgeProvider.restore(savedState.badgeBundle);
+        }
     }
 
     public BadgeProvider getBadgeProvider() {
@@ -615,10 +622,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     static class SavedState extends BaseSavedState {
         int selectedIndex;
+        Bundle badgeBundle;
 
         public SavedState(Parcel in) {
             super(in);
             selectedIndex = in.readInt();
+            badgeBundle = in.readBundle();
         }
 
         public SavedState(final Parcelable superState) {
@@ -629,6 +638,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(selectedIndex);
+            out.writeBundle(badgeBundle);
         }
 
         @Override
