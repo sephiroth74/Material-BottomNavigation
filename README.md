@@ -21,6 +21,7 @@ Table of contents
     * [Badges Customization](#badges-customization)
   * [Wiki](https://github.com/sephiroth74/Material-BottomNavigation/wiki)
     * [Custom Layout Behavior](https://github.com/sephiroth74/Material-BottomNavigation/wiki/Custom-Layout-Behavior)
+  * [License](#license)
 
 
 Installation
