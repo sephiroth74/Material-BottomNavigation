@@ -37,6 +37,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -64,7 +65,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     @SuppressWarnings ("checkstyle:staticvariablename")
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     static final int PENDING_ACTION_NONE = 0x0;
     static final int PENDING_ACTION_EXPANDED = 0x1;
@@ -217,6 +218,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onRestoreInstanceState(savedState.getSuperState());
 
         defaultSelectedIndex = savedState.selectedIndex;
+        log(TAG, Log.DEBUG, "defaultSelectedIndex: %d", defaultSelectedIndex);
 
         if (null != badgeProvider && null != savedState.badgeBundle) {
             badgeProvider.restore(savedState.badgeBundle);
@@ -237,6 +239,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         array.recycle();
 
         backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
+        defaultSelectedIndex = 0;
 
         defaultHeight = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height);
         defaultWidth = getResources().getDimensionPixelSize(R.dimen.bbn_bottom_navigation_width);
@@ -501,7 +504,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     private void initializeItems(final MenuParser.Menu menu) {
-        log(TAG, INFO, "initializeItems");
+        log(TAG, INFO, "initializeItems(%d)", defaultSelectedIndex);
 
         itemsContainer.setSelectedIndex(defaultSelectedIndex, false);
         itemsContainer.populate(menu);
