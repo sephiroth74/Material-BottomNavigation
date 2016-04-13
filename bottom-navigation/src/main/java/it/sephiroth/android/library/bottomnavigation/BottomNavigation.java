@@ -65,7 +65,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     @SuppressWarnings ("checkstyle:staticvariablename")
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     static final int PENDING_ACTION_NONE = 0x0;
     static final int PENDING_ACTION_EXPANDED = 0x1;
@@ -158,7 +158,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     /**
      * Current BottomBehavior assigned from the CoordinatorLayout
      */
-    private Object mBehavior;
+    private CoordinatorLayout.Behavior mBehavior;
 
     /**
      * Menu selection listener
@@ -202,7 +202,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         log(TAG, INFO, "onSaveInstanceState");
         Parcelable parcelable = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parcelable);
-        savedState.selectedIndex = getSelectedIndex();
+
+        if (null == menu) {
+            savedState.selectedIndex = 0;
+        } else {
+            savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
+        }
 
         if (null != badgeProvider) {
             savedState.badgeBundle = badgeProvider.save();
@@ -415,6 +420,15 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 }
             }
         }
+    }
+
+    public CoordinatorLayout.Behavior getBehavior() {
+        if (null == mBehavior) {
+            if (CoordinatorLayout.LayoutParams.class.isInstance(getLayoutParams())) {
+                return ((CoordinatorLayout.LayoutParams) getLayoutParams()).getBehavior();
+            }
+        }
+        return mBehavior;
     }
 
     private void setItems(MenuParser.Menu menu) {

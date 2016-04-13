@@ -8,13 +8,31 @@ Bottom Navigation component inspired by the Google Material Design Guidelines at
 
 This project is also inspired by https://github.com/roughike/BottomBar
 
-# Installation
+
+Table of contents
+=================
+
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Examples](#examples)
+  * [Sizing](#sizing)
+  * [Styling](#styling)
+  * [Badges](#badges)  
+    * [Badges Customization](#badges-customization)
+  * [Wiki](https://github.com/sephiroth74/Material-BottomNavigation/wiki)
+    * [Custom Layout Behavior](https://github.com/sephiroth74/Material-BottomNavigation/wiki/Custom-Layout-Behavior)
+
+
+Installation
+=================
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.2'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.4'
 
-# Usage
+
+Usage
+=================
 Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:
 
 	<?xml version="1.0" encoding="utf-8"?>
@@ -70,7 +88,8 @@ All the menu main configurations are defined within the xml menu resource itself
 	</menu>
 
 
-# Examples
+Examples
+=================
 
 | 4 shifting items menu | 3 fixed items menu |
 | :------------: | :-----------: |
@@ -82,7 +101,9 @@ All the menu main configurations are defined within the xml menu resource itself
 | ![Video 3](art/video3.gif) | ![Tablet Mode](art/tablet.png) |
 
 
-# Sizing
+
+Sizing
+=================
 
 Dimensions and paddings follow the Google giudelines<br />
 ![Sizing](art/sizing.png)
@@ -101,7 +122,9 @@ The View supports tablet mode too (Left or Right). In order to enable tablet mod
     	    app:layout_behavior="@string/bbn_tablet_view_behavior" />
 
 
-# Styling
+
+Styling
+=================
 
 The xml menu supports the following attributes in the &lt;menu&gt; tag:
 
@@ -127,7 +150,8 @@ The xml menu supports the following attributes in the &lt;menu&gt; tag:
     </declare-styleable>
 
 
-# Badges
+Badges
+=================
 
 ![Badges](art/badges1.png)
 
@@ -158,7 +182,8 @@ Then you can hide the badge using:
 	bottomNavigation.getBadgeProvider().remove(R.id.bbn_item3);
 
 
-## Badge Customization
+Badges Customization
+=================
 
 You can use your own [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html) by extending the `BadgeProvider` class. 
 Once you've setup your new class you can tell the BottomNavigation view to use your class by specifying it in the "bbn_badgeProvider" attribute of your xml file. <br />
@@ -175,7 +200,9 @@ For instance:
 
 This will make your `my.custom.BadgeProviderCustom` the default BadgeProvider.
 
-# License
+
+License
+=================
 
 The MIT License (MIT)
 

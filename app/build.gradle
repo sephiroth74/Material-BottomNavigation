@@ -40,6 +40,8 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
+    compile 'com.github.clans:fab:1.6.3'
+
     compile project(':bottom-navigation')
 
     testCompile 'junit:junit:4.12'

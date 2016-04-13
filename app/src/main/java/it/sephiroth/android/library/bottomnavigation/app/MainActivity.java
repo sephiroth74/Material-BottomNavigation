@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,7 +39,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(getActivityLayoutResId());
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,28 +47,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
-
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        assert floatingActionButton != null;
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final BadgeProvider provider =
-                    getBottomNavigation().getBadgeProvider();
-
-                if (!provider.hasBadge(R.id.bbn_item2)) {
-                    provider.show(R.id.bbn_item2);
-                } else {
-                    provider.remove(R.id.bbn_item2);
-                }
-
-                //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
-                //                    "Action",
-                //                    null
-                //                ).show();
-            }
-        });
 
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
@@ -87,6 +66,26 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             provider.show(R.id.bbn_item3);
             provider.show(R.id.bbn_item4);
         }
+
+        initializeUI(savedInstanceState);
+    }
+
+    protected int getActivityLayoutResId() {return R.layout.activity_main;}
+
+    protected void initializeUI(final Bundle savedInstanceState) {
+
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        assert floatingActionButton != null;
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
+                    "Action",
+                    null
+                ).show();
+            }
+        });
+
     }
 
     @Override
@@ -117,6 +116,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 return true;
             case R.id.item8:
                 startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
+                return true;
+            case R.id.item9:
+                startActivity(new Intent(this, MainActivityCustomBehavior.class));
                 return true;
         }
 
