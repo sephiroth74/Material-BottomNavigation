@@ -65,7 +65,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     @SuppressWarnings ("checkstyle:staticvariablename")
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     static final int PENDING_ACTION_NONE = 0x0;
     static final int PENDING_ACTION_EXPANDED = 0x1;
