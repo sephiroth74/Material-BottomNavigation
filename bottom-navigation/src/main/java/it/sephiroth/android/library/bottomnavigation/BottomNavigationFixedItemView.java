@@ -10,7 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -29,7 +28,6 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstract {
     private static final String TAG = BottomNavigationFixedItemView.class.getSimpleName();
     private final int iconSize;
-    private Drawable icon;
     private int centerY;
     private final Interpolator interpolator = new DecelerateInterpolator();
     private float textWidth;
@@ -169,6 +167,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         canvas.save();
         canvas.translate(0, iconTranslation);
         icon.draw(canvas);
+        drawBadge(canvas);
         canvas.restore();
 
         canvas.save();
@@ -182,6 +181,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         );
 
         canvas.restore();
+
     }
 
     @SuppressWarnings ("unused")

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
@@ -46,16 +46,26 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
-        final boolean translucentNavigation = hasTranslucentNavigation();
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        assert floatingActionButton != null;
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
-                    "Action",
-                    null
-                ).show();
+
+                final BadgeProvider provider =
+                    getBottomNavigation().getBadgeProvider();
+
+                if (!provider.hasBadge(R.id.bbn_item2)) {
+                    provider.show(R.id.bbn_item2);
+                } else {
+                    provider.remove(R.id.bbn_item2);
+                }
+
+                //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
+                //                    "Action",
+                //                    null
+                //                ).show();
             }
         });
 
@@ -70,16 +80,12 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             params.topMargin = statusbarHeight;
         }
 
-        if (translucentNavigation) {
-            Log.d(TAG, "hasTranslucentNavigation");
-            // ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-            // params.bottomMargin = -getSystemBarTint().getConfig().getNavigationBarHeight();
-            // params = (ViewGroup.MarginLayoutParams) mFab.getLayoutParams();
-            // params.bottomMargin += getSystemBarTint().getConfig().getNavigationBarHeight();
-        }
-
-        if (null != getBottomNavigation()) {
+        if (null != getBottomNavigation() && null == savedInstanceState) {
             getBottomNavigation().setDefaultSelectedIndex(0);
+
+            final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
+            provider.show(R.id.bbn_item3);
+            provider.show(R.id.bbn_item4);
         }
     }
 
@@ -155,6 +161,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     @Override
     public void onMenuItemSelect(final int itemId, final int position) {
         Log.i(TAG, "onMenuItemSelect(" + itemId + ", " + position + ")");
+        getBottomNavigation().getBadgeProvider().remove(itemId);
     }
 
     @Override

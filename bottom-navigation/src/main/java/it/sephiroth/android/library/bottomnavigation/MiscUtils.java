@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
@@ -45,7 +47,10 @@ public final class MiscUtils {
      * @return true if the current theme has the translucent statusbar
      */
     @TargetApi (19)
-    public static boolean hasTranslucentStatusBar(final Activity activity) {
+    public static boolean hasTranslucentStatusBar(@Nullable final Activity activity) {
+        if (null == activity) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 19) {
             return
                 ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -62,7 +67,10 @@ public final class MiscUtils {
      * @return true if the activity has the translucent navigation enabled
      */
     @TargetApi (19)
-    public static boolean hasTranslucentNavigation(final Activity activity) {
+    public static boolean hasTranslucentNavigation(@Nullable final Activity activity) {
+        if (null == activity) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 19) {
             return
                 ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
@@ -223,4 +231,17 @@ public final class MiscUtils {
             Log.println(level, tag, String.format(message, arguments));
         }
     }
+
+    @Nullable
+    static Activity getActivity(@Nullable Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return getActivity(((ContextWrapper) context).getBaseContext());
+        }
+        return null;
+    }
+
 }

@@ -40,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
+        app:bbn_badgeProvider="@string/bbn_badgeProvider"
         app:bbn_entries="@menu/bottombar_menu_4items"
         app:layout_behavior="@string/bbn_phone_view_behavior" />
 

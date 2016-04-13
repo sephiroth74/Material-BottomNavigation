@@ -33,6 +33,7 @@ class MenuParser {
         private int itemAnimationDuration;
         private boolean shifting;
         private boolean tablet;
+        private int badgeColor;
 
         public Menu(final Context context) {
             this.context = context;
@@ -47,6 +48,10 @@ class MenuParser {
             return String.format("Menu{background:%x, colorActive:%x, colorInactive:%x, shifting:%b, tablet:%b}",
                 background, colorActive, colorInactive, shifting, tablet
             );
+        }
+
+        public int getBadgeColor() {
+            return badgeColor;
         }
 
         public int getBackground() {
@@ -181,6 +186,7 @@ class MenuParser {
         menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
+        menu.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED);
 
         a.recycle();
     }

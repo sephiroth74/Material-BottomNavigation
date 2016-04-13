@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
@@ -31,7 +30,6 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     private final int paddingBottomInactive;
     private final int textSize;
 
-    private Drawable icon;
     private int centerY;
     private final float maxAlpha;
     private final float minAlpha;
@@ -67,6 +65,7 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         if (!expanded) {
             this.textPaint.setAlpha(0);
         }
+
     }
 
     @Override
@@ -154,6 +153,7 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
             textY,
             textPaint
         );
+        drawBadge(canvas);
     }
 
     @SuppressWarnings ("unused")

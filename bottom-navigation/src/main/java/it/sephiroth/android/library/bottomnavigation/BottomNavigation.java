@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
@@ -34,8 +35,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -44,6 +45,9 @@ import android.widget.LinearLayout;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
@@ -66,6 +70,15 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     static final int PENDING_ACTION_EXPANDED = 0x1;
     static final int PENDING_ACTION_COLLAPSED = 0x2;
     static final int PENDING_ACTION_ANIMATE_ENABLED = 0x4;
+
+    private static final String WIDGET_PACKAGE_NAME;
+
+    static {
+        final Package pkg = BottomNavigation.class.getPackage();
+        WIDGET_PACKAGE_NAME = pkg != null ? pkg.getName() : null;
+    }
+
+    static final Class<?>[] CONSTRUCTOR_PARAMS = new Class<?>[]{BottomNavigation.class};
 
     /**
      * Current pending action (used inside the BottomBehavior instance)
@@ -115,7 +128,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     /**
      * current menu
      */
-    private MenuParser.Menu menu;
+    MenuParser.Menu menu;
 
     private MenuParser.Menu pendingMenu;
 
@@ -161,6 +174,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private boolean attached;
 
+    private BadgeProvider badgeProvider;
+
     public BottomNavigation(final Context context) {
         this(context, null);
     }
@@ -187,6 +202,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         Parcelable parcelable = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parcelable);
         savedState.selectedIndex = getSelectedIndex();
+
+        if (null != badgeProvider) {
+            savedState.badgeBundle = badgeProvider.save();
+        }
+
         return savedState;
     }
 
@@ -197,8 +217,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onRestoreInstanceState(savedState.getSuperState());
 
         defaultSelectedIndex = savedState.selectedIndex;
-        log(TAG, Log.DEBUG, "saved selectedIndex: %d", defaultSelectedIndex);
 
+        if (null != badgeProvider && null != savedState.badgeBundle) {
+            badgeProvider.restore(savedState.badgeBundle);
+        }
+    }
+
+    public BadgeProvider getBadgeProvider() {
+        return badgeProvider;
     }
 
     private void initialize(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
@@ -207,6 +233,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
         pendingMenu = MenuParser.inflateMenu(context, menuResId);
+        badgeProvider = parseBadgeProvider(this, context, array.getString(R.styleable.BottomNavigation_bbn_badgeProvider));
         array.recycle();
 
         backgroundColorAnimation = getResources().getInteger(R.integer.bbn_background_animation_duration);
@@ -217,17 +244,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         // check if the bottom navigation is translucent
         if (!isInEditMode()) {
-            final Activity activity = (Activity) context;
-            final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
-
-            if (MiscUtils.hasTranslucentNavigation(activity)
-                && systembarTint.getConfig().isNavigationAtBottom()
-                && systembarTint.getConfig().hasNavigtionBar()) {
-                bottomInset = systembarTint.getConfig().getNavigationBarHeight();
-            } else {
-                bottomInset = 0;
+            final Activity activity = MiscUtils.getActivity(context);
+            if (null != activity) {
+                final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
+                if (MiscUtils.hasTranslucentNavigation(activity)
+                    && systembarTint.getConfig().isNavigationAtBottom()
+                    && systembarTint.getConfig().hasNavigtionBar()) {
+                    bottomInset = systembarTint.getConfig().getNavigationBarHeight();
+                } else {
+                    bottomInset = 0;
+                }
+                topInset = systembarTint.getConfig().getStatusBarHeight();
             }
-            topInset = systembarTint.getConfig().getStatusBarHeight();
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
@@ -378,7 +406,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 if (BottomBehavior.class.isInstance(mBehavior)) {
                     ((BottomBehavior) mBehavior).setLayoutValues(defaultHeight, bottomInset);
                 } else if (TabletBehavior.class.isInstance(mBehavior)) {
-                    boolean translucentStatus = MiscUtils.hasTranslucentStatusBar((Activity) getContext());
+                    final Activity activity = MiscUtils.getActivity(getContext());
+                    boolean translucentStatus = MiscUtils.hasTranslucentStatusBar(activity);
                     ((TabletBehavior) mBehavior).setLayoutValues(defaultWidth, topInset, translucentStatus);
                 }
             }
@@ -540,6 +569,57 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.defaultSelectedIndex = defaultSelectedIndex;
     }
 
+    public void invalidateBadge(final int itemId) {
+        log(TAG, INFO, "invalidateBadge: %d", itemId);
+        if (null != itemsContainer) {
+            final BottomNavigationItemViewAbstract viewAbstract =
+                (BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId);
+            if (null != viewAbstract) {
+                viewAbstract.invalidateBadge();
+            }
+        }
+    }
+
+    static final ThreadLocal<Map<String, Constructor<BadgeProvider>>> S_CONSTRUCTORS = new ThreadLocal<>();
+
+    static BadgeProvider parseBadgeProvider(final BottomNavigation navigation, final Context context, final String name) {
+        log(TAG, INFO, "parseBadgeProvider: %s", name);
+
+        if (TextUtils.isEmpty(name)) {
+            return new BadgeProvider(navigation);
+        }
+
+        final String fullName;
+        if (name.startsWith(".")) {
+            fullName = context.getPackageName() + name;
+        } else if (name.indexOf('.') >= 0) {
+            fullName = name;
+        } else {
+            // Assume stock behavior in this package (if we have one)
+            fullName = !TextUtils.isEmpty(WIDGET_PACKAGE_NAME)
+                ? (WIDGET_PACKAGE_NAME + '.' + name)
+                : name;
+        }
+
+        try {
+            Map<String, Constructor<BadgeProvider>> constructors = S_CONSTRUCTORS.get();
+            if (constructors == null) {
+                constructors = new HashMap<>();
+                S_CONSTRUCTORS.set(constructors);
+            }
+            Constructor<BadgeProvider> c = constructors.get(fullName);
+            if (c == null) {
+                final Class<BadgeProvider> clazz = (Class<BadgeProvider>) Class.forName(fullName, true, context.getClassLoader());
+                c = clazz.getConstructor(CONSTRUCTOR_PARAMS);
+                c.setAccessible(true);
+                constructors.put(fullName, c);
+            }
+            return c.newInstance(navigation);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not inflate Behavior subclass " + fullName, e);
+        }
+    }
+
     public interface OnMenuItemSelectionListener {
         void onMenuItemSelect(@IdRes final int itemId, final int position);
 
@@ -548,10 +628,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     static class SavedState extends BaseSavedState {
         int selectedIndex;
+        Bundle badgeBundle;
 
         public SavedState(Parcel in) {
             super(in);
             selectedIndex = in.readInt();
+            badgeBundle = in.readBundle();
         }
 
         public SavedState(final Parcelable superState) {
@@ -562,6 +644,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(selectedIndex);
+            out.writeBundle(badgeBundle);
         }
 
         @Override
