@@ -19,9 +19,8 @@ Table of contents
   * [Styling](#styling)
   * [Badges](#badges)  
     * [Badges Customization](#badges-customization)
-
-  * [Wiki](wiki)
-    * [Custom Layout Behavior](#wiki/Custom-Layout-Behavior)
+  * [Wiki](./wiki)
+    * [Custom Layout Behavior](./wiki/Custom-Layout-Behavior)
 
 
 Installation
