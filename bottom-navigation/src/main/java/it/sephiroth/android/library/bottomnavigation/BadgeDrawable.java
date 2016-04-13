@@ -8,9 +8,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
-import static android.util.Log.INFO;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
-
 /**
  * Created by crugnola on 4/12/16.
  */
@@ -38,8 +35,6 @@ public class BadgeDrawable extends Drawable {
 
     @Override
     public void draw(final Canvas canvas) {
-        log(TAG, INFO, "draw(animating:%b, alpha:%d)", animating, getAlpha());
-
         if (!animating) {
             paint.setAlpha((int) ALPHA_MAX);
             drawInternal(canvas);
@@ -63,7 +58,9 @@ public class BadgeDrawable extends Drawable {
 
     private void drawInternal(final Canvas canvas) {
         Rect bounds = getBounds();
-        canvas.drawCircle(bounds.centerX(), bounds.centerY(), bounds.width() / 2, paint);
+        final int w = bounds.width();
+        final int h = bounds.height();
+        canvas.drawCircle(bounds.centerX() + w / 2, bounds.centerY() - h / 2, w / 2, paint);
     }
 
     @Override
