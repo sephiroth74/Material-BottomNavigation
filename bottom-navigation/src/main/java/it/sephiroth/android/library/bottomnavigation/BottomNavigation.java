@@ -244,17 +244,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         // check if the bottom navigation is translucent
         if (!isInEditMode()) {
-            final Activity activity = (Activity) context;
-            final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
-
-            if (MiscUtils.hasTranslucentNavigation(activity)
-                && systembarTint.getConfig().isNavigationAtBottom()
-                && systembarTint.getConfig().hasNavigtionBar()) {
-                bottomInset = systembarTint.getConfig().getNavigationBarHeight();
-            } else {
-                bottomInset = 0;
+            final Activity activity = MiscUtils.getActivity(context);
+            if (null != activity) {
+                final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
+                if (MiscUtils.hasTranslucentNavigation(activity)
+                    && systembarTint.getConfig().isNavigationAtBottom()
+                    && systembarTint.getConfig().hasNavigtionBar()) {
+                    bottomInset = systembarTint.getConfig().getNavigationBarHeight();
+                } else {
+                    bottomInset = 0;
+                }
+                topInset = systembarTint.getConfig().getStatusBarHeight();
             }
-            topInset = systembarTint.getConfig().getStatusBarHeight();
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
@@ -405,7 +406,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 if (BottomBehavior.class.isInstance(mBehavior)) {
                     ((BottomBehavior) mBehavior).setLayoutValues(defaultHeight, bottomInset);
                 } else if (TabletBehavior.class.isInstance(mBehavior)) {
-                    boolean translucentStatus = MiscUtils.hasTranslucentStatusBar((Activity) getContext());
+                    final Activity activity = MiscUtils.getActivity(getContext());
+                    boolean translucentStatus = MiscUtils.hasTranslucentStatusBar(activity);
                     ((TabletBehavior) mBehavior).setLayoutValues(defaultWidth, topInset, translucentStatus);
                 }
             }
