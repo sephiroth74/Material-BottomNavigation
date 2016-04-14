@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
 [ ![Download](https://api.bintray.com/packages/bintray/jcenter/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/images/download.svg) ](https://bintray.com/bintray/jcenter/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/_latestVersion)
 
-Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
+Lightweight Bottom Navigation component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
 
 This project is also inspired by https://github.com/roughike/BottomBar
 
