@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/background_light">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bbn_item1"
         android:icon="@drawable/ic_cloud_off_white_24dp"
@@ -14,5 +12,4 @@
         android:id="@+id/bbn_item3"
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
-
 </menu>
