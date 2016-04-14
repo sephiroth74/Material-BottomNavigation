@@ -39,6 +39,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BottomNavigation.DEBUG = BuildConfig.DEBUG;
+
         setContentView(getActivityLayoutResId());
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
