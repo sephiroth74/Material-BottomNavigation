@@ -79,7 +79,8 @@ class MenuParser {
         public int getColorInactive() {
             if (0 == colorInactive) {
                 if (shifting && !tablet) {
-                    colorInactive = ContextCompat.getColor(context, R.color.bbn_item_shifting_color_inactive);
+                    int color = getColorActive();
+                    colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
                 } else {
                     int color = getColorActive();
                     colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
