@@ -1,7 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -17,6 +16,7 @@ import android.view.animation.Interpolator;
 import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
 
+import static android.util.Log.DEBUG;
 import static android.util.Log.INFO;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
@@ -34,7 +34,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     private long animationDuration;
     private final int colorActive;
     private final int colorInactive;
-    private final ArgbEvaluator evaluator;
 
     private final int paddingTopActive;
     private final int paddingTopInactive;
@@ -54,8 +53,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     public BottomNavigationFixedItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
         super(parent, expanded, menu);
 
-        this.evaluator = new ArgbEvaluator();
-
         final Resources res = getResources();
         this.paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active);
         this.paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive);
@@ -70,6 +67,8 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         this.centerY = paddingTopActive;
         this.canvasTextScale = expanded ? TEXT_SCALE_ACTIVE : 1f;
         this.iconTranslation = expanded ? 0 : (paddingTopInactive - paddingTopActive);
+
+        log(TAG, DEBUG, "colors: %x, %x", colorInactive, colorActive);
 
         this.textPaint.setColor(Color.WHITE);
         this.textPaint.setHinting(Paint.HINTING_ON);
@@ -111,14 +110,15 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
 
     private void updateLayoutOnAnimation(final float fraction, final boolean expanded) {
         if (expanded) {
-            icon.setColorFilter(
-                (Integer) evaluator.evaluate(fraction, colorInactive, colorActive), PorterDuff.Mode.SRC_ATOP);
-            textPaint.setColor((Integer) evaluator.evaluate(fraction, colorInactive, colorActive));
+            final int color = (Integer) evaluator.evaluate(fraction, colorInactive, colorActive);
+            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            textPaint.setColor(color);
+            icon.setAlpha(Color.alpha(color));
         } else {
-
-            icon.setColorFilter(
-                (Integer) evaluator.evaluate(fraction, colorActive, colorInactive), PorterDuff.Mode.SRC_ATOP);
-            textPaint.setColor((Integer) evaluator.evaluate(fraction, colorActive, colorInactive));
+            final int color = (Integer) evaluator.evaluate(fraction, colorActive, colorInactive);
+            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            textPaint.setColor(color);
+            icon.setAlpha(Color.alpha(color));
         }
     }
 

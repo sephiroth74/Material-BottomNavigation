@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.animation.ArgbEvaluator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -16,17 +17,20 @@ import it.sephiroth.android.library.bottonnavigation.R;
  * Created by crugnola on 4/6/16.
  */
 abstract class BottomNavigationItemViewAbstract extends View {
+    public static final float ALPHA_MAX = 255f;
     private BottomNavigationItem item;
     private final int rippleColor;
     private boolean expanded;
     protected final Paint textPaint;
     protected boolean textDirty;
+    protected final ArgbEvaluator evaluator;
     private final BadgeProvider provider;
     protected Drawable badge;
     protected Drawable icon;
 
     public BottomNavigationItemViewAbstract(final BottomNavigation parent, final boolean expanded, final MenuParser.Menu menu) {
         super(parent.getContext());
+        this.evaluator = new ArgbEvaluator();
         this.rippleColor = menu.getRippleColor();
         this.textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.textDirty = true;
