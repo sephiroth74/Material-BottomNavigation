@@ -162,7 +162,7 @@ The xml menu supports the following attributes in the &lt;menu&gt; tag:
 Badges
 =================
 
-![Badges](art/badges1.png)
+![Badges](https://raw.githubusercontent.com/sephiroth74/Material-BottomNavigation/master/art/badges1.png)
 
 There's a basic support for badges using the default implementation.
 In order to display a badge in the current BottomNavigation view, all you have to do is:
