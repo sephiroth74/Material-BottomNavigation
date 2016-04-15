@@ -36,57 +36,61 @@ Usage
 =================
 Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:
 
-	<?xml version="1.0" encoding="utf-8"?>
-	<android.support.design.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
-    	xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:app="http://schemas.android.com/apk/res-auto"
-    	xmlns:tools="http://schemas.android.com/tools"
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-	    android:fitsSystemWindows="true">
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+	android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-		...your content...
+	...your content...
 
-	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
-    	    android:id="@+id/BottomNavigation"
-	        android:layout_width="match_parent"
-    	    android:layout_height="wrap_content"
-	        android:layout_gravity="bottom"
-    	    app:bbn_entries="@menu/bottombar_menu_4items"
-	        app:bbn_scrollEnabled="true"
-	        app:bbn_badgeProvider="@string/bbn_badgeProvider"
-    	    app:layout_behavior="@string/bbn_phone_view_behavior" />
-	</android.support.design.widget.CoordinatorLayout>
+    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+	    android:id="@+id/BottomNavigation"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+	    app:bbn_entries="@menu/bottombar_menu_4items"
+        app:bbn_scrollEnabled="true"
+        app:bbn_badgeProvider="@string/bbn_badgeProvider"
+	    app:layout_behavior="@string/bbn_phone_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>
+```
 
 All the menu main configurations are defined within the xml menu resource itself. Here's an example of a menu with 4 items:
 
-	<?xml version="1.0" encoding="utf-8"?>
-	<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    	xmlns:app="http://schemas.android.com/apk/res-auto"
-	    android:background="@android:color/black"
-	    app:bbn_badgeColor="#FFFF0000"
-    	app:bbn_rippleColor="#33ffffff">
-	    <item
-    	    android:id="@+id/bbn_item1"
-        	android:color="@color/colorPrimary"
-	        android:icon="@drawable/ic_cloud_off_white_24dp"
-    	    android:title="Cloud Sync" />
-	    <item
-    	    android:id="@+id/bbn_item2"
-	        android:color="@android:color/holo_green_dark"
-    	    android:icon="@drawable/ic_cast_connected_white_24dp"
-	        android:title="Chromecast" />
-    	<item
-	        android:id="@+id/bbn_item3"
-    	    android:color="@android:color/holo_orange_dark"
-	        android:icon="@drawable/ic_mail_white_24dp"
-    	    android:title="Mail" />
-	    <item
-    	    android:id="@+id/action4"
-        	android:color="#FF5252"
-	        android:icon="@drawable/ic_format_list_numbered_white_24dp"
-    	    android:title="List" />
-	</menu>
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/black"
+    app:bbn_badgeColor="#FFFF0000"
+	app:bbn_rippleColor="#33ffffff">
+    <item
+	    android:id="@+id/bbn_item1"
+    	android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_cloud_off_white_24dp"
+	    android:title="Cloud Sync" />
+    <item
+	    android:id="@+id/bbn_item2"
+        android:color="@android:color/holo_green_dark"
+	    android:icon="@drawable/ic_cast_connected_white_24dp"
+        android:title="Chromecast" />
+	<item
+        android:id="@+id/bbn_item3"
+	    android:color="@android:color/holo_orange_dark"
+        android:icon="@drawable/ic_mail_white_24dp"
+	    android:title="Mail" />
+    <item
+	    android:id="@+id/action4"
+    	android:color="#FF5252"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+	    android:title="List" />
+</menu>
+```
 
 
 Examples
@@ -113,14 +117,16 @@ Dimensions and paddings follow the Google giudelines<br />
 
 The View supports tablet mode too (Left or Right). In order to enable tablet mode this is the configuration that should be used:
 
-	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
-    	    android:id="@+id/BottomNavigation"
-	        android:layout_width="match_parent"
-    	    android:layout_height="wrap_content"
-	        android:layout_gravity="start"
-    	    app:bbn_entries="@menu/bottombar_menu_3items"
-    	    app:bbn_badgeProvider="@string/bbn_badgeProvider"
-    	    app:layout_behavior="@string/bbn_tablet_view_behavior" />
+```xml
+<it.sephiroth.android.library.bottomnavigation.BottomNavigation
+    android:id="@+id/BottomNavigation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    app:bbn_entries="@menu/bottombar_menu_3items"
+    app:bbn_badgeProvider="@string/bbn_badgeProvider"
+    app:layout_behavior="@string/bbn_tablet_view_behavior" />
+```
 
 
 
@@ -130,25 +136,27 @@ Styling
 The xml menu supports the following attributes in the &lt;menu&gt; tag:
 
 
-    <declare-styleable name="BottomNavigationMenu">
-        <!-- menu default background color -->
-        <attr name="android:background" />
-        
-        <!-- default badge color -->
-        <attr name="bbn_badgeColor" format="color" />
+```xml
+<declare-styleable name="BottomNavigationMenu">
+    <!-- menu default background color -->
+    <attr name="android:background" />
+    
+    <!-- default badge color -->
+    <attr name="bbn_badgeColor" format="color" />
 
-        <!-- animation duration for the menu items -->
-        <attr name="bbn_itemAnimationDuration" format="integer" />
+    <!-- animation duration for the menu items -->
+    <attr name="bbn_itemAnimationDuration" format="integer" />
 
-        <!-- ripple selector color -->
-        <attr name="bbn_rippleColor" format="color" />
+    <!-- ripple selector color -->
+    <attr name="bbn_rippleColor" format="color" />
 
-        <!-- menu item active color -->
-        <attr name="bbn_itemColorActive" format="color" />
+    <!-- menu item active color -->
+    <attr name="bbn_itemColorActive" format="color" />
 
-        <!-- menu item inactive color -->
-        <attr name="bbn_itemColorInactive" format="color" />
-    </declare-styleable>
+    <!-- menu item inactive color -->
+    <attr name="bbn_itemColorInactive" format="color" />
+</declare-styleable>
+```
 
 
 Badges
@@ -159,29 +167,34 @@ Badges
 There's a basic support for badges using the default implementation.
 In order to display a badge in the current BottomNavigation view, all you have to do is:
 
-            final BadgeProvider provider = bottomNavigationView.getBadgeProvider();
-            provider.show(R.id.bbn_item3);
+```java
+    final BadgeProvider provider = bottomNavigationView.getBadgeProvider();
+    provider.show(R.id.bbn_item3);
+```
             
 This code will show a little circle badge on the menu item with the id "bbn_item3". <br />
 You can define the default badge color inside the menu xml itself:
 
-	<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    	xmlns:app="http://schemas.android.com/apk/res-auto"
-	    app:bbn_badgeColor="#FFFF0000">
-	    
-	    <item
-    	    android:id="@+id/bbn_item1"
-        	android:color="@color/colorPrimary"
-	        android:icon="@drawable/ic_cloud_off_white_24dp"
-    	    android:title="Cloud Sync" />
-    	    
-		...
-	</menu>
+```xml
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bbn_badgeColor="#FFFF0000">
+    
+    <item
+        android:id="@+id/bbn_item1"
+        android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_cloud_off_white_24dp"
+        android:title="Cloud Sync" />
+        
+    ...
+</menu>
+```
 
 Then you can hide the badge using:
 
-	bottomNavigation.getBadgeProvider().remove(R.id.bbn_item3);
-
+```java
+    bottomNavigation.getBadgeProvider().remove(R.id.bbn_item3);
+```
 
 Badges Customization
 =================
@@ -190,14 +203,16 @@ You can use your own [Drawable](http://developer.android.com/reference/android/g
 Once you've setup your new class you can tell the BottomNavigation view to use your class by specifying it in the "bbn_badgeProvider" attribute of your xml file. <br />
 For instance:
 
-	    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
-        android:id="@id/BottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        app:bbn_badgeProvider="my.custom.BadgeProviderCustom"
-        app:bbn_entries="@menu/bottombar_menu_4items"
-        app:layout_behavior="@string/bbn_phone_view_behavior" />
+```xml
+<it.sephiroth.android.library.bottomnavigation.BottomNavigation
+    android:id="@id/BottomNavigation"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    app:bbn_badgeProvider="my.custom.BadgeProviderCustom"
+    app:bbn_entries="@menu/bottombar_menu_4items"
+    app:layout_behavior="@string/bbn_phone_view_behavior" />
+```
 
 This will make your `my.custom.BadgeProviderCustom` the default BadgeProvider.
 
