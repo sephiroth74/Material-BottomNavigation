@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Material Bottom Navigation by sephiroth74</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Material Bottom Navigation</h1>
+      <h2 class="project-tagline">Bottom Navigation widget component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html</h2>
+      <a href="https://github.com/sephiroth74/Material-BottomNavigation" class="btn">View on GitHub</a>
+      <a href="https://github.com/sephiroth74/Material-BottomNavigation/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sephiroth74/Material-BottomNavigation/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="material-bottomnavigation" class="anchor" href="#material-bottomnavigation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Material-BottomNavigation</h1>
+
+<p><a href="https://android-arsenal.com/details/1/3414"><img src="https://img.shields.io/badge/Android%20Arsenal-MaterialBottomNavigation-green.svg?style=true" alt="Android Arsenal"></a>
+<a href="https://travis-ci.org/sephiroth74/Material-BottomNavigation"><img src="https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master" alt="Build Status"></a>
+<a href="https://bintray.com/bintray/jcenter/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/_latestVersion"> <img src="https://api.bintray.com/packages/bintray/jcenter/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/images/download.svg" alt="Download"> </a></p>
+
+<p>Lightweight Bottom Navigation component inspired by the Google Material Design Guidelines at <a href="https://www.google.com/design/spec/components/bottom-navigation.html">https://www.google.com/design/spec/components/bottom-navigation.html</a></p>
+
+<p>This project is also inspired by <a href="https://github.com/roughike/BottomBar">https://github.com/roughike/BottomBar</a></p>
+
+<h1>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table of contents</h1>
+
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#sizing">Sizing</a></li>
+<li><a href="#styling">Styling</a></li>
+<li>
+<a href="#badges">Badges</a><br>
+
+<ul>
+<li><a href="#badges-customization">Badges Customization</a></li>
+</ul>
+</li>
+<li>
+<a href="https://github.com/sephiroth74/Material-BottomNavigation/wiki">Wiki</a>
+
+<ul>
+<li><a href="https://github.com/sephiroth74/Material-BottomNavigation/wiki/Custom-Layout-Behavior">Custom Layout Behavior</a></li>
+</ul>
+</li>
+<li><a href="#license">License</a></li>
+</ul>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>In your project's <code>build.gradle</code> file add the following line to the <code>dependencies</code> group:</p>
+
+<pre><code>compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.5'
+</code></pre>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>Usage of the BottomNavigation widget is very easy. Just place it in your layout.xml like this:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">android</span>.support.design.widget.CoordinatorLayout <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/CoordinatorLayout01<span class="pl-pds">"</span></span>
+    <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">android</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res/android<span class="pl-pds">"</span></span>
+    <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">app</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res-auto<span class="pl-pds">"</span></span>
+    <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">tools</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/tools<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">fitsSystemWindows</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>&gt;
+
+    ...your content...
+
+    &lt;<span class="pl-ent">it</span>.sephiroth.android.library.bottomnavigation.BottomNavigation
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/BottomNavigation<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>wrap_content<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_gravity</span>=<span class="pl-s"><span class="pl-pds">"</span>bottom<span class="pl-pds">"</span></span>
+        <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_entries</span>=<span class="pl-s"><span class="pl-pds">"</span>@menu/bottombar_menu_4items<span class="pl-pds">"</span></span>
+        <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_scrollEnabled</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+        <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_badgeProvider</span>=<span class="pl-s"><span class="pl-pds">"</span>@string/bbn_badgeProvider<span class="pl-pds">"</span></span>
+        <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">layout_behavior</span>=<span class="pl-s"><span class="pl-pds">"</span>@string/bbn_phone_view_behavior<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">android</span>.support.design.widget.CoordinatorLayout&gt;</pre></div>
+
+<p>All the menu main configurations are defined within the xml menu resource itself. Here's an example of a menu with 4 items:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">menu</span> <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">android</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res/android<span class="pl-pds">"</span></span>
+    <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">app</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res-auto<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">background</span>=<span class="pl-s"><span class="pl-pds">"</span>@android:color/black<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_badgeColor</span>=<span class="pl-s"><span class="pl-pds">"</span>#FFFF0000<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_rippleColor</span>=<span class="pl-s"><span class="pl-pds">"</span>#33ffffff<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">item</span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/bbn_item1<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">color</span>=<span class="pl-s"><span class="pl-pds">"</span>@color/colorPrimary<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">icon</span>=<span class="pl-s"><span class="pl-pds">"</span>@drawable/ic_cloud_off_white_24dp<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">title</span>=<span class="pl-s"><span class="pl-pds">"</span>Cloud Sync<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">item</span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/bbn_item2<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">color</span>=<span class="pl-s"><span class="pl-pds">"</span>@android:color/holo_green_dark<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">icon</span>=<span class="pl-s"><span class="pl-pds">"</span>@drawable/ic_cast_connected_white_24dp<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">title</span>=<span class="pl-s"><span class="pl-pds">"</span>Chromecast<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">item</span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/bbn_item3<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">color</span>=<span class="pl-s"><span class="pl-pds">"</span>@android:color/holo_orange_dark<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">icon</span>=<span class="pl-s"><span class="pl-pds">"</span>@drawable/ic_mail_white_24dp<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">title</span>=<span class="pl-s"><span class="pl-pds">"</span>Mail<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">item</span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/action4<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">color</span>=<span class="pl-s"><span class="pl-pds">"</span>#FF5252<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">icon</span>=<span class="pl-s"><span class="pl-pds">"</span>@drawable/ic_format_list_numbered_white_24dp<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">title</span>=<span class="pl-s"><span class="pl-pds">"</span>List<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">menu</span>&gt;</pre></div>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h1>
+
+<table>
+<thead>
+<tr>
+<th align="center">4 shifting items menu</th>
+<th align="center">3 fixed items menu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img src="art/video1.gif" alt="Video 1"></td>
+<td align="center"><img src="art/video2.gif" alt="Video 2"></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th align="center">4 items no background</th>
+<th align="center">Tablet mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">4 items without changing background. <br>Menu show/hide feature is also disabled</td>
+<td align="center">Menu can be easily setup for (left or right) tablet support.</td>
+</tr>
+<tr>
+<td align="center"><img src="art/video3.gif" alt="Video 3"></td>
+<td align="center"><img src="art/tablet.png" alt="Tablet Mode"></td>
+</tr>
+</tbody>
+</table>
+
+<h1>
+<a id="sizing" class="anchor" href="#sizing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sizing</h1>
+
+<p>Dimensions and paddings follow the Google giudelines<br>
+<img src="art/sizing.png" alt="Sizing"></p>
+
+<h1>
+<a id="tablets" class="anchor" href="#tablets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tablets</h1>
+
+<p>The View supports tablet mode too (Left or Right). In order to enable tablet mode this is the configuration that should be used:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">it</span>.sephiroth.android.library.bottomnavigation.BottomNavigation
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/BottomNavigation<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>wrap_content<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_gravity</span>=<span class="pl-s"><span class="pl-pds">"</span>start<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_entries</span>=<span class="pl-s"><span class="pl-pds">"</span>@menu/bottombar_menu_3items<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_badgeProvider</span>=<span class="pl-s"><span class="pl-pds">"</span>@string/bbn_badgeProvider<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">layout_behavior</span>=<span class="pl-s"><span class="pl-pds">"</span>@string/bbn_tablet_view_behavior<span class="pl-pds">"</span></span> /&gt;</pre></div>
+
+<h1>
+<a id="styling" class="anchor" href="#styling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Styling</h1>
+
+<p>The xml menu supports the following attributes in the &lt;menu&gt; tag:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">declare-styleable</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>BottomNavigationMenu<span class="pl-pds">"</span></span>&gt;
+    <span class="pl-c">&lt;!-- menu default background color --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>android:background<span class="pl-pds">"</span></span> /&gt;
+
+    <span class="pl-c">&lt;!-- default badge color --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>bbn_badgeColor<span class="pl-pds">"</span></span> <span class="pl-e">format</span>=<span class="pl-s"><span class="pl-pds">"</span>color<span class="pl-pds">"</span></span> /&gt;
+
+    <span class="pl-c">&lt;!-- animation duration for the menu items --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>bbn_itemAnimationDuration<span class="pl-pds">"</span></span> <span class="pl-e">format</span>=<span class="pl-s"><span class="pl-pds">"</span>integer<span class="pl-pds">"</span></span> /&gt;
+
+    <span class="pl-c">&lt;!-- ripple selector color --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>bbn_rippleColor<span class="pl-pds">"</span></span> <span class="pl-e">format</span>=<span class="pl-s"><span class="pl-pds">"</span>color<span class="pl-pds">"</span></span> /&gt;
+
+    <span class="pl-c">&lt;!-- menu item active color --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>bbn_itemColorActive<span class="pl-pds">"</span></span> <span class="pl-e">format</span>=<span class="pl-s"><span class="pl-pds">"</span>color<span class="pl-pds">"</span></span> /&gt;
+
+    <span class="pl-c">&lt;!-- menu item inactive color --&gt;</span>
+    &lt;<span class="pl-ent">attr</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>bbn_itemColorInactive<span class="pl-pds">"</span></span> <span class="pl-e">format</span>=<span class="pl-s"><span class="pl-pds">"</span>color<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">declare-styleable</span>&gt;</pre></div>
+
+<h1>
+<a id="badges" class="anchor" href="#badges" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Badges</h1>
+
+<p><img src="art/badges1.png" alt="Badges"></p>
+
+<p>There's a basic support for badges using the default implementation.
+In order to display a badge in the current BottomNavigation view, all you have to do is:</p>
+
+<div class="highlight highlight-source-java"><pre>    <span class="pl-k">final</span> <span class="pl-smi">BadgeProvider</span> provider <span class="pl-k">=</span> bottomNavigationView<span class="pl-k">.</span>getBadgeProvider();
+    provider<span class="pl-k">.</span>show(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>bbn_item3);</pre></div>
+
+<p>This code will show a little circle badge on the menu item with the id "bbn_item3". <br>
+You can define the default badge color inside the menu xml itself:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">menu</span> <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">android</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res/android<span class="pl-pds">"</span></span>
+    <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">app</span>=<span class="pl-s"><span class="pl-pds">"</span>http://schemas.android.com/apk/res-auto<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_badgeColor</span>=<span class="pl-s"><span class="pl-pds">"</span>#FFFF0000<span class="pl-pds">"</span></span>&gt;
+
+    &lt;<span class="pl-ent">item</span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/bbn_item1<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">color</span>=<span class="pl-s"><span class="pl-pds">"</span>@color/colorPrimary<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">icon</span>=<span class="pl-s"><span class="pl-pds">"</span>@drawable/ic_cloud_off_white_24dp<span class="pl-pds">"</span></span>
+        <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">title</span>=<span class="pl-s"><span class="pl-pds">"</span>Cloud Sync<span class="pl-pds">"</span></span> /&gt;
+
+    ...
+&lt;/<span class="pl-ent">menu</span>&gt;</pre></div>
+
+<p>Then you can hide the badge using:</p>
+
+<div class="highlight highlight-source-java"><pre>    bottomNavigation<span class="pl-k">.</span>getBadgeProvider()<span class="pl-k">.</span>remove(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>bbn_item3);</pre></div>
+
+<h1>
+<a id="badges-customization" class="anchor" href="#badges-customization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Badges Customization</h1>
+
+<p>You can use your own <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> by extending the <code>BadgeProvider</code> class. 
+Once you've setup your new class you can tell the BottomNavigation view to use your class by specifying it in the "bbn_badgeProvider" attribute of your xml file. <br>
+For instance:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">it</span>.sephiroth.android.library.bottomnavigation.BottomNavigation
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@id/BottomNavigation<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>match_parent<span class="pl-pds">"</span></span>
+    <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_gravity</span>=<span class="pl-s"><span class="pl-pds">"</span>bottom<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_badgeProvider</span>=<span class="pl-s"><span class="pl-pds">"</span>my.custom.BadgeProviderCustom<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">bbn_entries</span>=<span class="pl-s"><span class="pl-pds">"</span>@menu/bottombar_menu_4items<span class="pl-pds">"</span></span>
+    <span class="pl-e">app</span><span class="pl-e">:</span><span class="pl-e">layout_behavior</span>=<span class="pl-s"><span class="pl-pds">"</span>@string/bbn_phone_view_behavior<span class="pl-pds">"</span></span> /&gt;</pre></div>
+
+<p>This will make your <code>my.custom.BadgeProviderCustom</code> the default BadgeProvider.</p>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2016 Alessandro Crugnola</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sephiroth74/Material-BottomNavigation">Material Bottom Navigation</a> is maintained by <a href="https://github.com/sephiroth74">sephiroth74</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
