@@ -62,21 +62,22 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             params.topMargin = statusbarHeight;
         }
 
-        if (null != getBottomNavigation() && null == savedInstanceState) {
-            getBottomNavigation().setDefaultSelectedIndex(0);
-
-            final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
-            provider.show(R.id.bbn_item3);
-            provider.show(R.id.bbn_item4);
-        }
-
+        initializeBottomNavigation(savedInstanceState);
         initializeUI(savedInstanceState);
     }
 
     protected int getActivityLayoutResId() {return R.layout.activity_main;}
 
-    protected void initializeUI(final Bundle savedInstanceState) {
+    protected void initializeBottomNavigation(final Bundle savedInstanceState) {
+        if (null == savedInstanceState) {
+            getBottomNavigation().setDefaultSelectedIndex(0);
+            final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
+            provider.show(R.id.bbn_item3);
+            provider.show(R.id.bbn_item4);
+        }
+    }
 
+    protected void initializeUI(final Bundle savedInstanceState) {
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         assert floatingActionButton != null;
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +89,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 ).show();
             }
         });
-
     }
 
     @Override
@@ -123,6 +123,10 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             case R.id.item9:
                 startActivity(new Intent(this, MainActivityCustomBehavior.class));
                 return true;
+            case R.id.item10:
+                startActivity(new Intent(this, MainActivityCustomBadge.class));
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);
