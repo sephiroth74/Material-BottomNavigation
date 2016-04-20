@@ -52,14 +52,14 @@ public class BadgeProvider {
 
     Drawable getBadge(@IdRes final int itemId) {
         if (map.contains(itemId)) {
-            return newDrawable(itemId);
+            return newDrawable(itemId, navigation.menu.getBadgeColor());
         }
         return null;
     }
 
     @SuppressWarnings ("unused")
-    protected Drawable newDrawable(@IdRes final int itemId) {
-        return new BadgeDrawable(navigation.menu.getBadgeColor(), badgeSize);
+    protected Drawable newDrawable(@IdRes final int itemId, final int preferredColor) {
+        return new BadgeDrawable(preferredColor, badgeSize);
     }
 
     /**

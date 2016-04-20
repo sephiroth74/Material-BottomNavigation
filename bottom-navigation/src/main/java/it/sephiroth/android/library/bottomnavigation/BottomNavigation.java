@@ -336,10 +336,36 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
+    /**
+     * Returns the current menu items count
+     *
+     * @return number of items in the current menu
+     */
+    public int getMenuItemCount() {
+        if (null != menu) {
+            return menu.getItemsCount();
+        }
+        return 0;
+    }
+
+    /**
+     * Returns the id of the item at the specified position
+     *
+     * @param position the position inside the menu
+     * @return the item ID
+     */
+    @IdRes
+    public int getMenuItemId(final int position) {
+        if (null != menu) {
+            return menu.getItemAt(position).getId();
+        }
+        return 0;
+    }
+
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        log(TAG, INFO, "onMeasure: %d", gravity);
+        // log(TAG, INFO, "onMeasure: %d", gravity);
 
         if (MiscUtils.isGravityBottom(gravity)) {
             final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
