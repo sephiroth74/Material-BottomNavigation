@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
 <br />
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/it.sephiroth.android.library.bottomnavigation/bottom-navigation/badge.svg)](https://maven-badges.herokuapp.com/maven-central/it.sephiroth.android.library.bottomnavigation/bottom-navigation)
-[ ![Download](https://api.bintray.com/packages/sephiroth74/maven/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/images/download.svg) ](https://bintray.com/sephiroth74/maven/it.sephiroth.android.library.bottomnavigation%3Abottom-navigation/_latestVersion)
 
 Lightweight Bottom Navigation library component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
 
