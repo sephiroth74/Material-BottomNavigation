@@ -492,6 +492,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         // Main background
         layerDrawable = (LayerDrawable) ContextCompat.getDrawable(getContext(), bgResId);
+        layerDrawable.mutate();
         backgroundDrawable = (ColorDrawable) layerDrawable.findDrawableByLayerId(R.id.bbn_background);
         setBackground(layerDrawable);
 

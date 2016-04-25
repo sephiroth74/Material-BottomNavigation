@@ -40,6 +40,7 @@ abstract class BottomNavigationItemViewAbstract extends View {
 
     void setItem(BottomNavigationItem item) {
         final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
+        drawable.mutate();
         MiscUtils.setDrawableColor(drawable, rippleColor);
 
         this.item = item;
