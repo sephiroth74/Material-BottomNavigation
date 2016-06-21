@@ -4,4 +4,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="simple_card_image_width">90dp</dimen>
     <dimen name="simple_card_image_height">120dp</dimen>
+
+    <item name="app_gravity" format="integer" type="integer">80</item>
 </resources>
