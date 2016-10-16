@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
-        versionCode 1
-        versionName VERSION_NAME
+        versionCode 32
+        versionName project.VERSION_NAME
     }
 
     buildTypes {
@@ -38,7 +38,7 @@ dependencies {
     compile 'com.infstory:proguard-annotations:1.0.2'
 }
 
-
+apply from: 'bintray_3_4.gradle'
 //apply from: '../checkstyle.gradle'
 //apply from: 'https://raw.githubusercontent.com/sephiroth74/gradle-mvn-push/master/gradle-mvn-push.gradle'
 //uploadArchives.dependsOn 'check'

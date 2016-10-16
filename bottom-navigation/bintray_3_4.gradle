@@ -1,0 +1,25 @@
+//apply plugin: 'bintray-release'
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'jjhesk'
+    groupId = 'com.hkm.ui'
+    artifactId = 'bottom-navigation'
+    version = project.VERSION_NAME
+    uploadName = 'bottom-navigation'
+    description = "BottomNavigation component inspired by the Google Material Design Guidelines at"
+    website = 'https://github.com/HKMOpen/Material-BottomNavigation'
+    autoPublish = true
+    dryRun = false
+    issueTracker = "${website}/issues"
+    licences = ["MIT"]
+    bintrayUser = userOrg
+}
+
+if (hasProperty('APIBKI')) {
+    publish.bintrayKey = property('APIBKI')
+} else {
+    publish.bintrayKey = '17479d176480ed0232fe101b6555654a2624d7a0'
+}
+
+apply plugin: 'maven'
