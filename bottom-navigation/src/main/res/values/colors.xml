@@ -9,4 +9,7 @@
 
     <!-- fixed item inactive color (only alpha will be used) -->
     <color name="bbn_item_shifting_color_inactive">#99000000</color>
+
+    <color name="bbn_topShadowEndColor">#AA000000</color>
+    <color name="bbn_topShadowCenterColor">#66000000</color>
 </resources>

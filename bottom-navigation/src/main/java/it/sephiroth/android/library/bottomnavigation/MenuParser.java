@@ -15,9 +15,6 @@ import java.util.List;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
-import static android.util.Log.VERBOSE;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
-
 /**
  * Created by alessandro crugnola on 4/3/16 at 7:59 PM.
  * Project: MaterialBottomNavigation
@@ -35,6 +32,8 @@ class MenuParser {
         private int colorInactive;
         private int itemAnimationDuration;
         private boolean shifting;
+        private boolean tablet;
+        private int badgeColor;
 
         public Menu(final Context context) {
             this.context = context;
@@ -44,9 +43,20 @@ class MenuParser {
             return itemAnimationDuration;
         }
 
+        @Override
+        public String toString() {
+            return String.format("Menu{background:%x, colorActive:%x, colorInactive:%x, shifting:%b, tablet:%b}",
+                background, colorActive, colorInactive, shifting, tablet
+            );
+        }
+
+        public int getBadgeColor() {
+            return badgeColor;
+        }
+
         public int getBackground() {
             if (0 == background) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     return MiscUtils.getColor(context, R.attr.colorPrimary);
                 } else {
                     return MiscUtils.getColor(context, android.R.attr.windowBackground);
@@ -57,7 +67,7 @@ class MenuParser {
 
         public int getColorActive() {
             if (0 == colorActive) {
-                if (shifting) {
+                if (shifting && !tablet) {
                     colorActive = MiscUtils.getColor(context, android.R.attr.colorForegroundInverse);
                 } else {
                     colorActive = MiscUtils.getColor(context, android.R.attr.colorForeground);
@@ -68,8 +78,9 @@ class MenuParser {
 
         public int getColorInactive() {
             if (0 == colorInactive) {
-                if (shifting) {
-                    colorInactive = ContextCompat.getColor(context, R.color.bbn_item_shifting_color_inactive);
+                if (shifting && !tablet) {
+                    int color = getColorActive();
+                    colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
                 } else {
                     int color = getColorActive();
                     colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
@@ -79,8 +90,8 @@ class MenuParser {
         }
 
         public int getRippleColor() {
-            if (-1 == rippleColor) {
-                if (shifting) {
+            if (0 == rippleColor) {
+                if (shifting && !tablet) {
                     rippleColor = ContextCompat.getColor(context, R.color.bbn_shifting_item_ripple_color);
                 } else {
                     rippleColor = ContextCompat.getColor(context, R.color.bbn_fixed_item_ripple_color);
@@ -121,6 +132,14 @@ class MenuParser {
         public boolean hasChangingColor() {
             return items[0].hasColor();
         }
+
+        void setTabletMode(final boolean tablet) {
+            this.tablet = tablet;
+        }
+
+        public boolean isTablet() {
+            return tablet;
+        }
     }
 
     static class MenuItem {
@@ -160,18 +179,15 @@ class MenuParser {
         menu = new Menu(context);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationMenu);
 
-        for (int i = 0; i < attrs.getAttributeCount(); i++) {
-            log(TAG, VERBOSE, "attr: %s", attrs.getAttributeName(i));
-        }
-
         menu.itemAnimationDuration = a.getInt(
             R.styleable.BottomNavigationMenu_bbn_itemAnimationDuration,
             context.getResources().getInteger(R.integer.bbn_item_animation_duration)
         );
         menu.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0);
-        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, -1);
+        menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
+        menu.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED);
 
         a.recycle();
     }

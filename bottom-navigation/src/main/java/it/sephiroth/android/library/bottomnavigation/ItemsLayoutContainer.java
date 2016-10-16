@@ -1,6 +1,8 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.ViewGroup;
 
 import proguard.annotation.Keep;
@@ -22,6 +24,8 @@ public interface ItemsLayoutContainer {
     void setLayoutParams(ViewGroup.LayoutParams params);
 
     void setOnItemClickListener(OnItemClickListener listener);
+
+    View findViewById(@IdRes final int id);
 
     void removeAll();
 }

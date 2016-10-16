@@ -13,8 +13,27 @@ import org.hamcrest.Matchers;
  */
 public class BottomNavigationMatcher {
 
+    static BoundedMatcher<View, BottomNavigation> withExpandStatus(final boolean expanded) {
+        return withExpandStatus(Matchers.is(expanded));
+    }
+
     static BoundedMatcher<View, BottomNavigation> withSelection(final int selection) {
         return withSelection(Matchers.is(selection));
+    }
+
+    static BoundedMatcher<View, BottomNavigation> withExpandStatus(final Matcher<Boolean> boolMatcher) {
+        return new BoundedMatcher<View, BottomNavigation>(BottomNavigation.class) {
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("with expand status: ");
+                boolMatcher.describeTo(description);
+            }
+
+            @Override
+            protected boolean matchesSafely(final BottomNavigation item) {
+                return boolMatcher.matches(item.isExpanded());
+            }
+        };
     }
 
     static BoundedMatcher<View, BottomNavigation> withSelection(final Matcher<Integer> intMatcher) {

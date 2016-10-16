@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bbn_default_view_behavior"
+        translatable="false">it.sephiroth.android.library.bottomnavigation.TabletBehavior</string>
+</resources>

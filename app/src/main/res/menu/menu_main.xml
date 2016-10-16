@@ -37,4 +37,28 @@
         android:orderInCategory="100"
         android:title="5 items no bg"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item7"
+        android:orderInCategory="100"
+        android:title="Tablet Demo 1"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item8"
+        android:orderInCategory="100"
+        android:title="Tablet Demo 2"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item9"
+        android:orderInCategory="100"
+        android:title="Custom Behavior"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item10"
+        android:orderInCategory="100"
+        android:title="@string/app_name_custom_badges"
+        app:showAsAction="never" />
 </menu>

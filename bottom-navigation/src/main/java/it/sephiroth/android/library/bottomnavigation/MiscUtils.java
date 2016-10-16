@@ -1,9 +1,11 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,12 +13,14 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -43,7 +47,10 @@ public final class MiscUtils {
      * @return true if the current theme has the translucent statusbar
      */
     @TargetApi (19)
-    public static boolean hasTranslucentStatusBar(final Activity activity) {
+    public static boolean hasTranslucentStatusBar(@Nullable final Activity activity) {
+        if (null == activity) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 19) {
             return
                 ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -60,7 +67,10 @@ public final class MiscUtils {
      * @return true if the activity has the translucent navigation enabled
      */
     @TargetApi (19)
-    public static boolean hasTranslucentNavigation(final Activity activity) {
+    public static boolean hasTranslucentNavigation(@Nullable final Activity activity) {
+        if (null == activity) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 19) {
             return
                 ((activity.getWindow().getAttributes().flags & LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
@@ -95,6 +105,20 @@ public final class MiscUtils {
         }
     }
 
+    @SuppressLint ("RtlHardcoded")
+    static boolean isGravitiyLeft(final int gravity) {
+        return gravity == Gravity.LEFT;
+    }
+
+    @SuppressLint ("RtlHardcoded")
+    static boolean isGravityRight(final int gravity) {
+        return gravity == Gravity.RIGHT;
+    }
+
+    static boolean isGravityBottom(final int gravity) {
+        return gravity == Gravity.BOTTOM;
+    }
+
     protected static void switchColor(
         final BottomNavigation navigation,
         final View v,
@@ -104,7 +128,7 @@ public final class MiscUtils {
 
         backgroundOverlay.clearAnimation();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {
                 currentAnimator.cancel();
@@ -127,7 +151,7 @@ public final class MiscUtils {
 
         final Object animator;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
 
             Animator currentAnimator = (Animator) backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator);
             if (null != currentAnimator) {
@@ -207,4 +231,17 @@ public final class MiscUtils {
             Log.println(level, tag, String.format(message, arguments));
         }
     }
+
+    @Nullable
+    static Activity getActivity(@Nullable Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return getActivity(((ContextWrapper) context).getBaseContext());
+        }
+        return null;
+    }
+
 }

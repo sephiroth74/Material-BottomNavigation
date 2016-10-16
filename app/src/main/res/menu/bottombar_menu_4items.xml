@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/black"
+    app:bbn_itemColorActive="#FFFFFFFF"
+    app:bbn_itemColorInactive="#7FFFFFFF"
+    app:bbn_badgeColor="#FFCC0000"
     app:bbn_rippleColor="#33ffffff">
 
     <item
@@ -20,7 +22,7 @@
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
     <item
-        android:id="@+id/action4"
+        android:id="@+id/bbn_item4"
         android:color="#FF5252"
         android:icon="@drawable/ic_format_list_numbered_white_24dp"
         android:title="List" />

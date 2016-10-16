@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="bbn_backgroundOverlay_animator" type="id" />
+
+    <!-- id for the items layout container -->
+    <item name="bbn_layoutManager" type="id" />
 </resources>

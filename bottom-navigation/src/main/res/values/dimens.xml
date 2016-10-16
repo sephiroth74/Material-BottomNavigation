@@ -4,8 +4,12 @@
     <!-- default BottomNavigation height -->
     <dimen name="bbn_bottom_navigation_height">56dp</dimen>
 
+    <!-- default BottomNavigation width (for tablets) -->
+    <dimen name="bbn_bottom_navigation_width">72dp</dimen>
+
     <!-- default BottomNavigation elevation -->
     <dimen name="bbn_elevation">8dp</dimen>
+    <dimen name="bbn_elevation_tablet">0dp</dimen>
 
     <!-- top shadow size -->
     <dimen name="bbn_top_shadow_height">6dp</dimen>
@@ -31,4 +35,11 @@
     <dimen name="bbn_fixed_item_padding_horizontal">12dp</dimen>
     <dimen name="bbn_fixed_text_size_inactive">12dp</dimen>
     <dimen name="bbn_fixed_item_icon_size">24dp</dimen>
+
+    <!-- tablet -->
+    <dimen name="bbn_tablet_item_icon_size">24dp</dimen>
+    <dimen name="bbn_tablet_item_height">72dp</dimen>
+    <dimen name="bbn_tablet_layout_padding_top">0dp</dimen>
+
+    <dimen name="bbn_badge_size">8dp</dimen>
 </resources>

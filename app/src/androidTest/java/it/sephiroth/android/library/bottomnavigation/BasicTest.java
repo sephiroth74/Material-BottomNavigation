@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -29,7 +30,20 @@ public class BasicTest {
 
     @Test
     public void changeSelection() {
+        SystemClock.sleep(200);
         onView(withId(R.id.bbn_item2)).perform(click());
         onView(withId(R.id.BottomNavigation)).check(matches(BottomNavigationMatcher.withSelection(1)));
+    }
+
+    @Test
+    public void checkExpandedStatus() {
+        SystemClock.sleep(200);
+        onView(withId(android.R.id.content)).perform(ViewActionsCompat.swipeUp(CustomSwipe.MEDIUM));
+        SystemClock.sleep(500);
+        onView(withId(R.id.BottomNavigation)).check(matches(BottomNavigationMatcher.withExpandStatus(false)));
+
+        onView(withId(android.R.id.content)).perform(ViewActionsCompat.swipeDown(CustomSwipe.MEDIUM));
+        SystemClock.sleep(500);
+        onView(withId(R.id.BottomNavigation)).check(matches(BottomNavigationMatcher.withExpandStatus(true)));
     }
 }
