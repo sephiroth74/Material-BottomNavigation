@@ -1,14 +1,10 @@
 # Material Bottom Navigation Library
-
+[ ![Download](https://api.bintray.com/packages/jjhesk/maven/bottom-navigation/images/download.svg) ](https://bintray.com/jjhesk/maven/bottom-navigation/_latestVersion)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialBottomNavigation-green.svg?style=true)](https://android-arsenal.com/details/1/3414)
-[![Build Status](https://travis-ci.org/sephiroth74/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/sephiroth74/Material-BottomNavigation)
+[![Build Status](https://travis-ci.org/jjhesk/Material-BottomNavigation.svg?branch=master)](https://travis-ci.org/jjhesk/Material-BottomNavigation)
 <br />
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/it.sephiroth.android.library.bottomnavigation/bottom-navigation/badge.svg)](https://maven-badges.herokuapp.com/maven-central/it.sephiroth.android.library.bottomnavigation/bottom-navigation)
-
 Lightweight Bottom Navigation library component inspired by the Google Material Design Guidelines at https://www.google.com/design/spec/components/bottom-navigation.html
-
 This project is also inspired by https://github.com/roughike/BottomBar
-
 
 Table of contents
 =================
@@ -29,9 +25,9 @@ Installation
 =================
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
-
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.7'
-
+```
+compile 'com.hkm.ui:bottom-navigation:1.0.11'
+```
 
 Usage
 =================

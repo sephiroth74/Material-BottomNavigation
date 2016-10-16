@@ -64,7 +64,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 public class BottomNavigation extends FrameLayout implements OnItemClickListener {
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
-    @SuppressWarnings ("checkstyle:staticvariablename")
+    @SuppressWarnings("checkstyle:staticvariablename")
     public static boolean DEBUG = false;
 
     static final int PENDING_ACTION_NONE = 0x0;
@@ -175,6 +175,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private boolean attached;
 
+    private boolean background_color_animation_enabled;
+
     private BadgeProvider badgeProvider;
 
     public BottomNavigation(final Context context) {
@@ -191,7 +193,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         initialize(context, attrs, defStyleAttr, 0);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BottomNavigation(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initialize(context, attrs, defStyleAttr, defStyleRes);
@@ -256,8 +258,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             if (null != activity) {
                 final SystemBarTintManager systembarTint = new SystemBarTintManager(activity);
                 if (MiscUtils.hasTranslucentNavigation(activity)
-                    && systembarTint.getConfig().isNavigationAtBottom()
-                    && systembarTint.getConfig().hasNavigtionBar()) {
+                        && systembarTint.getConfig().isNavigationAtBottom()
+                        && systembarTint.getConfig().hasNavigtionBar()) {
                     bottomInset = systembarTint.getConfig().getNavigationBarHeight();
                 } else {
                     bottomInset = 0;
@@ -269,6 +271,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         backgroundOverlay = new View(getContext());
         backgroundOverlay.setLayoutParams(params);
+        background_color_animation_enabled = true;
         addView(backgroundOverlay);
     }
 
@@ -290,7 +293,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return MiscUtils.isGravitiyLeft(gravity) || MiscUtils.isGravityRight(gravity);
     }
 
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
             setSelectedItemInternal(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
@@ -299,7 +302,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     public int getSelectedIndex() {
         if (null != itemsContainer) {
             return itemsContainer.getSelectedIndex();
@@ -307,11 +310,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return -1;
     }
 
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     public void setExpanded(boolean expanded, boolean animate) {
         log(TAG, INFO, "setExpanded(%b, %b)", expanded, animate);
         mPendingAction = (expanded ? PENDING_ACTION_EXPANDED : PENDING_ACTION_COLLAPSED)
-            | (animate ? PENDING_ACTION_ANIMATE_ENABLED : 0);
+                | (animate ? PENDING_ACTION_ANIMATE_ENABLED : 0);
         requestLayout();
     }
 
@@ -389,12 +392,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
     }
 
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     public int getNavigationHeight() {
         return defaultHeight;
     }
 
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     public int getNavigationWidth() {
         return defaultWidth;
     }
@@ -484,7 +487,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         final boolean tablet = isTablet(gravity);
         final int elevation = getResources().getDimensionPixelSize(!tablet ? R.dimen.bbn_elevation : R.dimen.bbn_elevation_tablet);
         final int bgResId = !tablet ? R.drawable.bbn_background
-            : (MiscUtils.isGravityRight(gravity) ? R.drawable.bbn_background_tablet_right : R.drawable.bbn_background_tablet_left);
+                : (MiscUtils.isGravityRight(gravity) ? R.drawable.bbn_background_tablet_right : R.drawable.bbn_background_tablet_left);
         final int paddingBottom = !tablet ? shadowHeight : 0;
 
         // View elevation
@@ -494,7 +497,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         layerDrawable = (LayerDrawable) ContextCompat.getDrawable(getContext(), bgResId);
         layerDrawable.mutate();
         backgroundDrawable = (ColorDrawable) layerDrawable.findDrawableByLayerId(R.id.bbn_background);
-        setBackground(layerDrawable);
+      //    setBackground(layerDrawable);
 
         // Padding bottom
         setPadding(0, paddingBottom, 0, 0);
@@ -515,7 +518,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 removeView((View) itemsContainer);
                 itemsContainer = null;
             } else if ((menu.isShifting() && !ShiftingLayout.class.isInstance(itemsContainer))
-                || (!menu.isShifting() && !FixedLayout.class.isInstance(itemsContainer))) {
+                    || (!menu.isShifting() && !FixedLayout.class.isInstance(itemsContainer))) {
                 removeView((View) itemsContainer);
                 itemsContainer = null;
             } else {
@@ -525,8 +528,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         if (null == itemsContainer) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                menu.isTablet() ? defaultWidth : MATCH_PARENT,
-                menu.isTablet() ? MATCH_PARENT : defaultHeight
+                    menu.isTablet() ? defaultWidth : MATCH_PARENT,
+                    menu.isTablet() ? MATCH_PARENT : defaultHeight
             );
 
             if (menu.isTablet()) {
@@ -562,35 +565,52 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         setSelectedItemInternal(parent, view, index, animate, true);
     }
 
+    public interface ClassBackgroundLayoutEnabled {
+        void onLayout(View background, boolean animation_enabled);
+    }
+
+    /**
+     * android:configChanges="orientation|screenSize|keyboardHidden"
+     */
+    public void overrideBackgroundLayoutAnimation(View background_change) {
+        background_color_animation_enabled = false;
+        removeView(backgroundOverlay);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+        background_change.setLayoutParams(params);
+        addView(background_change);
+    }
+
     private void setSelectedItemInternal(
-        final ItemsLayoutContainer layoutContainer,
-        final View view, final int index,
-        final boolean animate,
-        final boolean fromUser) {
+            final ItemsLayoutContainer layoutContainer,
+            final View view, final int index,
+            final boolean animate,
+            final boolean fromUser) {
 
         final BottomNavigationItem item = menu.getItemAt(index);
 
         if (layoutContainer.getSelectedIndex() != index) {
             layoutContainer.setSelectedIndex(index, animate);
 
-            if (item.hasColor() && !menu.isTablet()) {
-                if (animate) {
-                    MiscUtils.animate(
-                        this,
-                        view,
-                        backgroundOverlay,
-                        backgroundDrawable,
-                        item.getColor(),
-                        backgroundColorAnimation
-                    );
-                } else {
-                    MiscUtils.switchColor(
-                        this,
-                        view,
-                        backgroundOverlay,
-                        backgroundDrawable,
-                        item.getColor()
-                    );
+            if (background_color_animation_enabled) {
+                if (item.hasColor() && !menu.isTablet()) {
+                    if (animate) {
+                        MiscUtils.animate(
+                                this,
+                                view,
+                                backgroundOverlay,
+                                backgroundDrawable,
+                                item.getColor(),
+                                backgroundColorAnimation
+                        );
+                    } else {
+                        MiscUtils.switchColor(
+                                this,
+                                view,
+                                backgroundOverlay,
+                                backgroundDrawable,
+                                item.getColor()
+                        );
+                    }
                 }
             }
 
@@ -617,7 +637,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         log(TAG, INFO, "invalidateBadge: %d", itemId);
         if (null != itemsContainer) {
             final BottomNavigationItemViewAbstract viewAbstract =
-                (BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId);
+                    (BottomNavigationItemViewAbstract) itemsContainer.findViewById(itemId);
             if (null != viewAbstract) {
                 viewAbstract.invalidateBadge();
             }
@@ -641,8 +661,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         } else {
             // Assume stock behavior in this package (if we have one)
             fullName = !TextUtils.isEmpty(WIDGET_PACKAGE_NAME)
-                ? (WIDGET_PACKAGE_NAME + '.' + name)
-                : name;
+                    ? (WIDGET_PACKAGE_NAME + '.' + name)
+                    : name;
         }
 
         try {
@@ -697,7 +717,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
-            = new Parcelable.Creator<SavedState>() {
+                = new Parcelable.Creator<SavedState>() {
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }

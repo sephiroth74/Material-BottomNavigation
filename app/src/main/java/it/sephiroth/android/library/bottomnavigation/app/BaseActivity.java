@@ -3,12 +3,15 @@ package it.sephiroth.android.library.bottomnavigation.app;
 import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.app.blury.RealtimeBlurView;
 
 /**
  * Created by crugnola on 4/11/16.
@@ -30,6 +33,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             mBottomNavigation.setOnMenuItemClickListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
+            RealtimeBlurView view = new RealtimeBlurView(this);
+            view.setOverlayColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhiteBlur));
+            view.setBlurRadius(15f);
+            mBottomNavigation.overrideBackgroundLayoutAnimation(view);
         }
     }
 
@@ -48,13 +55,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         return getSystemBarTint().getConfig().getStatusBarHeight();
     }
 
-    @TargetApi (19)
+    @TargetApi(19)
     public boolean hasTranslucentStatusBar() {
         if (!mTranslucentStatusSet) {
             if (Build.VERSION.SDK_INT >= 19) {
                 mTranslucentStatus =
-                    ((getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                        == WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        ((getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                                == WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else {
                 mTranslucentStatus = false;
             }
@@ -63,17 +70,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         return mTranslucentStatus;
     }
 
-    @TargetApi (19)
+    @TargetApi(19)
     public boolean hasTranslucentNavigation() {
         if (!mTranslucentNavigationSet) {
             final SystemBarTintManager.SystemBarConfig config = getSystemBarTint().getConfig();
             if (Build.VERSION.SDK_INT >= 19) {
                 boolean themeConfig =
-                    ((getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-                        == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                        ((getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                                == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
                 mTranslucentNavigation = themeConfig && config.hasNavigtionBar() && config.isNavigationAtBottom()
-                    && config.getNavigationBarHeight() > 0;
+                        && config.getNavigationBarHeight() > 0;
             }
             mTranslucentNavigationSet = true;
         }
