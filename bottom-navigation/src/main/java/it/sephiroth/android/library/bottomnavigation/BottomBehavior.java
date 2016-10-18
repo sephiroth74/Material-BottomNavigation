@@ -201,7 +201,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, BottomNavigation child, View dependency) {
+    public boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation child, View dependency) {
         // log(TAG, ERROR, "onDependentViewChanged(%s)", dependency);
 
         boolean isFab = isFloatingActionButton(dependency);
@@ -225,6 +225,20 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         if (null != dependent) {
+            if (dependent instanceof SnackBarDependentView) {
+                // I don't like this, but
+                // it prevents the fab to layout before the snackbar
+                child.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != fabDependentView) {
+                            fabDependentView.offset = (int) -(height - child.getTranslationY());
+                            fabDependentView.onDependentViewChanged(parent, child);
+                        }
+                    }
+                });
+            }
+
             return dependent.onDependentViewChanged(parent, child);
         }
 
@@ -397,8 +411,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
-    public class FabDependentView extends DependentView<View> {
-        private final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
+    public static class FabDependentView extends DependentView<View> {
+        private static final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
         public int offset = 0;
 
         protected FabDependentView(final View child, final int height, final int bottomInset) {
@@ -432,8 +446,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
-    private class SnackBarDependentView extends DependentView<SnackbarLayout> {
-        private final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
+    private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
+        private static final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
         private int snackbarHeight = -1;
 
         SnackBarDependentView(final SnackbarLayout child, final int height, final int bottomInset) {
@@ -461,22 +475,6 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
             final float maxScroll = Math.max(0, navigation.getTranslationY() - bottomInset);
             layoutParams.bottomMargin = (int) (height - maxScroll);
-
-            if (null != fabDependentView) {
-
-                // I don't like this, but
-                // it prevents the fab to layout before the snackbar
-                child.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != fabDependentView) {
-                            fabDependentView.offset = (int) -(height - navigation.getTranslationY());
-                            fabDependentView.onDependentViewChanged(parent, navigation);
-                        }
-                    }
-                });
-            }
-
             child.requestLayout();
             return true;
         }
