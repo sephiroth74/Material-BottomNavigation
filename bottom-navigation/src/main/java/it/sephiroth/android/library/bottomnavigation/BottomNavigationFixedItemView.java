@@ -17,7 +17,6 @@ import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
 
 import static android.util.Log.DEBUG;
-import static android.util.Log.INFO;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
@@ -114,31 +113,39 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             textPaint.setColor(color);
             icon.setAlpha(Color.alpha(color));
+
+            //            if (fraction == 1) {
+            //                log(TAG, VERBOSE, "[%s] updateLayoutOnAnimation(color: %x, alpha: %d)", getItem().getTitle(), color, icon.getAlpha());
+            //            }
+
         } else {
             final int color = (Integer) evaluator.evaluate(fraction, colorActive, colorInactive);
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             textPaint.setColor(color);
             icon.setAlpha(Color.alpha(color));
+
+            //            if (fraction == 1) {
+            //                log(TAG, VERBOSE, "[%s] updateLayoutOnAnimation(color: %x, alpha: %d)", getItem().getTitle(), color, icon.getAlpha());
+            //            }
         }
     }
 
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
-        log(TAG, INFO, "onLayout(%b)", changed);
-
         super.onLayout(changed, left, top, right, bottom);
 
         if (null == this.icon) {
             this.icon = getItem().getIcon(getContext()).mutate();
             this.icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
             this.icon.setBounds(0, 0, iconSize, iconSize);
+
+            //            log(TAG, VERBOSE, "[%s] onLayout(color: %x)", getItem().getTitle(), color);
         }
 
         if (changed) {
             int w = right - left;
             centerX = (w - iconSize) / 2;
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
-
         }
 
         if (textDirty || changed) {
@@ -148,8 +155,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     }
 
     private void measureText() {
-        log(TAG, INFO, "measureText");
-
         final int width = getWidth();
         final int height = getHeight();
 
