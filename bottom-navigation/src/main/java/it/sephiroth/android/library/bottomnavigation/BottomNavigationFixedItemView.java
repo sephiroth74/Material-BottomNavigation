@@ -129,7 +129,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         super.onLayout(changed, left, top, right, bottom);
 
         if (null == this.icon) {
-            this.icon = getItem().getIcon(getContext());
+            this.icon = getItem().getIcon(getContext()).mutate();
             this.icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
             this.icon.setBounds(0, 0, iconSize, iconSize);
         }

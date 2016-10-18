@@ -132,7 +132,7 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         super.onLayout(changed, left, top, right, bottom);
 
         if (null == this.icon) {
-            this.icon = getItem().getIcon(getContext());
+            this.icon = getItem().getIcon(getContext()).mutate();
             icon.setBounds(0, 0, iconSize, iconSize);
             icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
             icon.setAlpha((int) (isExpanded() ? maxAlpha * ALPHA_MAX : minAlpha * ALPHA_MAX));
