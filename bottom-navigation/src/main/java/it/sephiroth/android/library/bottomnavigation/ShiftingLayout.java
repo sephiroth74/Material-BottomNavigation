@@ -161,10 +161,13 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);
             itemWidthMax = (int) (maxActiveItemWidth * ratio);
 
-            MiscUtils.log(TAG, Log.DEBUG, "computing sizes...");
-            MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMin(dp): " + itemWidthMin / density);
-            MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMax(dp): " + itemWidthMax / density);
-            MiscUtils.log(TAG, Log.VERBOSE, "total items size(dp): " + (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax) / density);
+            if (BottomNavigation.DEBUG) {
+                MiscUtils.log(TAG, Log.DEBUG, "computing sizes...");
+                MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMin(dp): " + itemWidthMin / density);
+                MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMax(dp): " + itemWidthMax / density);
+                MiscUtils.log(TAG, Log.VERBOSE, "total items size(dp): "
+                    + (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax) / density);
+            }
 
             if (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax > screenWidth) {
                 itemWidthMax = screenWidth - (itemWidthMin * (menu.getItemsCount() - 1)); // minActiveItemWidth?
@@ -178,10 +181,14 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             itemWidthMin = maxInactiveItemWidth;
         }
 
-        MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
-        MiscUtils.log(TAG, Log.VERBOSE, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
-
-        MiscUtils.log(TAG, Log.VERBOSE, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
+        if (BottomNavigation.DEBUG) {
+            MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): "
+                + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
+            MiscUtils.log(TAG, Log.VERBOSE, "inactive size (dp): "
+                + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
+            MiscUtils.log(TAG, Log.VERBOSE, "itemWidth(dp): "
+                + (itemWidthMin / density) + ", " + (itemWidthMax / density));
+        }
 
         setTotalSize(itemWidthMin, itemWidthMax);
 

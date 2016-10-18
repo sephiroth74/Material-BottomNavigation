@@ -113,20 +113,11 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             textPaint.setColor(color);
             icon.setAlpha(Color.alpha(color));
-
-            //            if (fraction == 1) {
-            //                log(TAG, VERBOSE, "[%s] updateLayoutOnAnimation(color: %x, alpha: %d)", getItem().getTitle(), color, icon.getAlpha());
-            //            }
-
         } else {
             final int color = (Integer) evaluator.evaluate(fraction, colorActive, colorInactive);
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             textPaint.setColor(color);
             icon.setAlpha(Color.alpha(color));
-
-            //            if (fraction == 1) {
-            //                log(TAG, VERBOSE, "[%s] updateLayoutOnAnimation(color: %x, alpha: %d)", getItem().getTitle(), color, icon.getAlpha());
-            //            }
         }
     }
 
@@ -141,8 +132,6 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
             this.icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             this.icon.setBounds(0, 0, iconSize, iconSize);
             this.icon.setAlpha(Color.alpha(color));
-
-            //            log(TAG, VERBOSE, "[%s] onLayout(color: %x)", getItem().getTitle(), color);
         }
 
         if (changed) {
