@@ -95,8 +95,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     private int offset;
 
     final HashMap<View, DependentView> dependentViewHashMap = new HashMap<>();
-    FabDependentView fabDependentView;
-    SnackBarDependentView snackbarDependentView;
+    protected FabDependentView fabDependentView;
+    protected SnackBarDependentView snackbarDependentView;
     private OnExpandStatusChangeListener listener;
 
     public BottomBehavior() {
@@ -188,6 +188,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         } else if (SnackbarLayout.class.isInstance(dependency)) {
             snackbarDependentView = null;
             if (null != fabDependentView) {
+                fabDependentView.offset = (int) -(height - child.getTranslationY());
                 fabDependentView.onDependentViewChanged(parent, child);
             }
         }
@@ -201,6 +202,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, BottomNavigation child, View dependency) {
+        // log(TAG, ERROR, "onDependentViewChanged(%s)", dependency);
+
         boolean isFab = isFloatingActionButton(dependency);
         boolean isSnackBack = SnackbarLayout.class.isInstance(dependency);
 
@@ -210,7 +213,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             if (!isFab && !isSnackBack) {
                 dependent = new GenericDependentView(dependency, height, bottomInset);
             } else if (isFab) {
-                dependent = new FabDependentView(dependency, height, bottomInset);
+                dependent = createFabDependentView(dependency, height, bottomInset);
                 fabDependentView = (FabDependentView) dependent;
             } else {
                 dependent = new SnackBarDependentView((SnackbarLayout) dependency, height, bottomInset);
@@ -226,6 +229,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         return true;
+    }
+
+    protected FabDependentView createFabDependentView(final View dependency, final int height, final int bottomInset) {
+        return new FabDependentView(dependency, height, bottomInset);
     }
 
     @Override
@@ -346,27 +353,33 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
-    abstract static class DependentView<V extends View> {
-        final V child;
-        final MarginLayoutParams layoutParams;
-        final int bottomMargin;
-        final int height;
-        final int bottomInset;
+    public abstract static class DependentView<V extends View> {
+        protected final V child;
+        protected final MarginLayoutParams layoutParams;
+        protected final int bottomMargin;
+        protected int height;
+        protected final int bottomInset;
+        protected final float originalPosition;
 
         DependentView(V child, final int height, final int bottomInset) {
             this.child = child;
+            this.originalPosition = child.getTranslationY();
             this.layoutParams = (MarginLayoutParams) child.getLayoutParams();
             this.bottomMargin = layoutParams.bottomMargin;
             this.height = height;
             this.bottomInset = bottomInset;
         }
 
-        void onDestroy() { }
+        protected void onDestroy() {
+            layoutParams.bottomMargin = bottomMargin;
+            child.setTranslationY(originalPosition);
+            child.requestLayout();
+        }
 
         abstract boolean onDependentViewChanged(CoordinatorLayout parent, BottomNavigation navigation);
     }
 
-    static class GenericDependentView extends DependentView<View> {
+    public static class GenericDependentView extends DependentView<View> {
         private static final String TAG = BottomBehavior.TAG + "." + GenericDependentView.class.getSimpleName();
 
         GenericDependentView(final View child, final int height, final int bottomInset) {
@@ -375,43 +388,52 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         @Override
-        void onDestroy() { }
-
-        @Override
-        boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
-            log(TAG, VERBOSE, "onDependentViewChanged");
-            layoutParams.bottomMargin = bottomMargin + height;
+        protected boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
+            log(TAG, INFO, "onDependentViewChanged");
+            //layoutParams.bottomMargin = bottomMargin + height;
+            child.setTranslationY(originalPosition + bottomMargin + height);
+            child.postInvalidate();
             return true;
         }
     }
 
-    private static class FabDependentView extends DependentView<View> {
-        private static final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
+    public class FabDependentView extends DependentView<View> {
+        private final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
+        public int offset = 0;
 
-        FabDependentView(final View child, final int height, final int bottomInset) {
+        protected FabDependentView(final View child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
-            log(TAG, INFO, "new FabDependentView");
+            log(TAG, INFO, "new FabDependentView(bottomMargin: %d, originalPosition: %g)", bottomMargin, originalPosition);
         }
 
         @Override
-        boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
+        protected boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
+            log(TAG, INFO, "onDependentViewChanged");
             final float t = Math.max(0, navigation.getTranslationY() - height);
 
+            final float pos;
             if (bottomInset > 0) {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - t);
+                pos = (bottomMargin + height - t);
             } else {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - navigation.getTranslationY());
+                pos = (bottomMargin + height - navigation.getTranslationY());
             }
-            child.requestLayout();
+
+            child.setTranslationY(originalPosition - pos - offset);
+
+            log(TAG, VERBOSE, "translationY: %g", child.getTranslationY());
+
+            child.postInvalidate();
             return true;
         }
 
         @Override
-        void onDestroy() { }
+        protected void onDestroy() {
+            super.onDestroy();
+        }
     }
 
-    private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
-        private static final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
+    private class SnackBarDependentView extends DependentView<SnackbarLayout> {
+        private final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
         private int snackbarHeight = -1;
 
         SnackBarDependentView(final SnackbarLayout child, final int height, final int bottomInset) {
@@ -420,7 +442,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
         @Override
         boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
-            log(TAG, VERBOSE, "onDependentViewChanged");
+            log(TAG, INFO, "onDependentViewChanged");
 
             if (Build.VERSION.SDK_INT < 21) {
                 int index1 = parent.indexOfChild(child);
@@ -437,24 +459,32 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
                 snackbarHeight = child.getHeight();
             }
 
-            log(TAG, VERBOSE, "snack.height:%d, nav.height: %d, snack.y:%g, nav.y:%g, expanded: %b",
-                snackbarHeight,
-                height,
-                child.getTranslationY(),
-                navigation.getTranslationY(),
-                expanded
-            );
-
             final float maxScroll = Math.max(0, navigation.getTranslationY() - bottomInset);
             layoutParams.bottomMargin = (int) (height - maxScroll);
-            child.requestLayout();
 
+            if (null != fabDependentView) {
+
+                // I don't like this, but
+                // it prevents the fab to layout before the snackbar
+                child.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != fabDependentView) {
+                            fabDependentView.offset = (int) -(height - navigation.getTranslationY());
+                            fabDependentView.onDependentViewChanged(parent, navigation);
+                        }
+                    }
+                });
+            }
+
+            child.requestLayout();
             return true;
         }
 
         @Override
-        void onDestroy() {
+        protected void onDestroy() {
             log(TAG, INFO, "onDestroy");
+            super.onDestroy();
             //scrollEnabled = true;
         }
     }
