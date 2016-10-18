@@ -71,12 +71,11 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
             log(TAG, VERBOSE, "colors: %x, %x", colorInactive, colorActive);
             log(TAG, VERBOSE, "alphas: %g, %g", minAlpha, maxAlpha);
         }
-
     }
 
     @Override
     protected void onStatusChanged(final boolean expanded, final int size, final boolean animate) {
-        log(TAG, INFO, "onStatusChanged(%b, %d)", expanded, size);
+        log(TAG, INFO, "[%s] onStatusChanged(%b, %d)", getItem().getTitle(), expanded, size);
 
         if (!animate) {
             updateLayoutOnAnimation(size, 1, expanded);
@@ -107,23 +106,23 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
 
     private void updateLayoutOnAnimation(final int size, final float fraction, final boolean expanded) {
         getLayoutParams().width = size;
+        final int color;
 
         if (expanded) {
-            final int color = (Integer) evaluator.evaluate(fraction, colorInactive, colorActive);
-            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            color = (Integer) evaluator.evaluate(fraction, colorInactive, colorActive);
             icon.setAlpha((int) ((minAlpha + (fraction * (maxAlpha - minAlpha))) * ALPHA_MAX));
             textPaint.setAlpha((int) (((fraction * (maxAlpha))) * ALPHA_MAX));
         } else {
-            final int color = (Integer) evaluator.evaluate(fraction, colorActive, colorInactive);
+            color = (Integer) evaluator.evaluate(fraction, colorActive, colorInactive);
             final float alpha = 1.0F - fraction;
-            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             icon.setAlpha((int) ((minAlpha + (alpha * (maxAlpha - minAlpha))) * ALPHA_MAX));
             textPaint.setAlpha((int) (((alpha * (maxAlpha))) * ALPHA_MAX));
         }
+
+        icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void measureText() {
-        log(TAG, INFO, "measureText");
         this.textWidth = textPaint.measureText(getItem().getTitle());
     }
 

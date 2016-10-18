@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivityTablet extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
@@ -56,10 +57,8 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
 
         final CoordinatorLayout mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
-        if (translucentStatus)
-
-        {
-            Log.d(TAG, "hasTranslucentStatusBar");
+        if (translucentStatus) {
+            MiscUtils.log(TAG, Log.DEBUG, "hasTranslucentStatusBar");
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
             params.topMargin = -statusbarHeight;
 
@@ -67,13 +66,7 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
             params.topMargin = statusbarHeight;
         }
 
-        if (null !=
-
-            getBottomNavigation()
-
-            )
-
-        {
+        if (null != getBottomNavigation()) {
             getBottomNavigation().setDefaultSelectedIndex(0);
         }
 
@@ -81,13 +74,13 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
 
     @Override
     public void onMenuItemSelect(final int itemId, final int position) {
-        Log.i(TAG, "onMenuItemSelect(" + itemId + ", " + position + ")");
+        MiscUtils.log(TAG, Log.INFO, "onMenuItemSelect(" + itemId + ", " + position + ")");
         getBottomNavigation().getBadgeProvider().remove(itemId);
     }
 
     @Override
     public void onMenuItemReselect(@IdRes final int itemId, final int position) {
-        Log.i(TAG, "onMenuItemReselect(" + itemId + ", " + position + ")");
+        MiscUtils.log(TAG, Log.INFO, "onMenuItemReselect(" + itemId + ", " + position + ")");
 
         final FragmentManager manager = getSupportFragmentManager();
         MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);

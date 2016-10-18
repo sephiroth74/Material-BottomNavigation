@@ -58,8 +58,8 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         int width = (r - l);
         int left = (width - totalChildrenSize) / 2;
 
-        Log.v(TAG, "width: " + width);
-        Log.v(TAG, "left: " + left);
+        MiscUtils.log(TAG, Log.VERBOSE, "width: " + width);
+        MiscUtils.log(TAG, Log.VERBOSE, "left: " + left);
 
         for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
@@ -81,13 +81,13 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
-        Log.v(TAG, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
+        MiscUtils.log(TAG, Log.VERBOSE, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
         child.layout(left, top, left + width, top + height);
     }
 
     @Override
     public void setSelectedIndex(final int index, final boolean animate) {
-        Log.i(TAG, "setSelectedIndex: " + index);
+        MiscUtils.log(TAG, Log.INFO, "setSelectedIndex: " + index);
 
         if (selectedIndex == index) {
             return;
@@ -114,7 +114,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     public void populate(@NonNull final MenuParser.Menu menu) {
-        Log.i(TAG, "populate: " + menu);
+        MiscUtils.log(TAG, Log.INFO, "populate: " + menu);
 
         if (hasFrame) {
             populateInternal(menu);
@@ -129,32 +129,32 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void populateInternal(@NonNull final MenuParser.Menu menu) {
-        Log.d(TAG, "populateInternal");
+        MiscUtils.log(TAG, Log.DEBUG, "populateInternal");
 
         final BottomNavigation parent = (BottomNavigation) getParent();
         final float density = getResources().getDisplayMetrics().density;
         final int screenWidth = parent.getWidth();
 
-        Log.v(TAG, "density: " + density);
-        Log.v(TAG, "screenWidth: " + screenWidth);
-        Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
+        MiscUtils.log(TAG, Log.VERBOSE, "density: " + density);
+        MiscUtils.log(TAG, Log.VERBOSE, "screenWidth: " + screenWidth);
+        MiscUtils.log(TAG, Log.VERBOSE, "screenWidth(dp): " + (screenWidth / density));
 
         int proposedWidth = Math.min(Math.max(screenWidth / menu.getItemsCount(), minActiveItemWidth), maxActiveItemWidth);
-        Log.v(TAG, "proposedWidth: " + proposedWidth);
-        Log.v(TAG, "proposedWidth(dp): " + proposedWidth / density);
+        MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth: " + proposedWidth);
+        MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth(dp): " + proposedWidth / density);
 
         if (proposedWidth * menu.getItemsCount() > screenWidth) {
             proposedWidth = screenWidth / menu.getItemsCount();
         }
 
-        Log.v(TAG, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
-        Log.v(TAG, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
+        MiscUtils.log(TAG, Log.VERBOSE, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
+        MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
 
         this.itemFinalWidth = proposedWidth;
 
         for (int i = 0; i < menu.getItemsCount(); i++) {
             final BottomNavigationItem item = menu.getItemAt(i);
-            Log.d(TAG, "item: " + item);
+            MiscUtils.log(TAG, Log.DEBUG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(proposedWidth, getHeight());
 

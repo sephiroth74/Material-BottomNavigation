@@ -70,7 +70,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        Log.i(TAG, "onSizeChanged(" + w + ", " + h + ")");
+        MiscUtils.log(TAG, Log.INFO, "onSizeChanged(" + w + ", " + h + ")");
         super.onSizeChanged(w, h, oldw, oldh);
         hasFrame = true;
 
@@ -86,7 +86,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
-        // Log.v(TAG, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
+        // MiscUtils.log(TAG, Log.VERBOSE, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
         child.layout(left, top, left + width, top + height);
     }
 
@@ -97,7 +97,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     public void setSelectedIndex(final int index, final boolean animate) {
-        Log.i(TAG, "setSelectedIndex: " + index);
+        MiscUtils.log(TAG, Log.INFO, "setSelectedIndex: " + index);
 
         if (selectedIndex == index) {
             return;
@@ -128,7 +128,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     public void populate(@NonNull final MenuParser.Menu menu) {
-        Log.i(TAG, "populate: " + menu);
+        MiscUtils.log(TAG, Log.INFO, "populate: " + menu);
 
         if (hasFrame) {
             populateInternal(menu);
@@ -138,33 +138,33 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void populateInternal(@NonNull final MenuParser.Menu menu) {
-        Log.d(TAG, "populateInternal");
+        MiscUtils.log(TAG, Log.DEBUG, "populateInternal");
 
         final BottomNavigation parent = (BottomNavigation) getParent();
         final float density = getResources().getDisplayMetrics().density;
         final int screenWidth = parent.getWidth();
 
-        Log.v(TAG, "density: " + density);
-        Log.v(TAG, "screenWidth(dp): " + (screenWidth / density));
+        MiscUtils.log(TAG, Log.VERBOSE, "density: " + density);
+        MiscUtils.log(TAG, Log.VERBOSE, "screenWidth(dp): " + (screenWidth / density));
 
         int itemWidthMin;
         int itemWidthMax;
 
         final int totalWidth = maxInactiveItemWidth * (menu.getItemsCount() - 1) + maxActiveItemWidth;
-        Log.v(TAG, "totalWidth(dp): " + totalWidth / density);
+        MiscUtils.log(TAG, Log.VERBOSE, "totalWidth(dp): " + totalWidth / density);
 
         if (totalWidth > screenWidth) {
             float ratio = (float) screenWidth / totalWidth;
             ratio = (float) ((double) Math.round(ratio * ROUND_DECIMALS) / ROUND_DECIMALS) + RATIO_MIN_INCREASE;
-            Log.v(TAG, "ratio: " + ratio);
+            MiscUtils.log(TAG, Log.VERBOSE, "ratio: " + ratio);
 
             itemWidthMin = (int) Math.max(maxInactiveItemWidth * ratio, minInactiveItemWidth);
             itemWidthMax = (int) (maxActiveItemWidth * ratio);
 
-            Log.d(TAG, "computing sizes...");
-            Log.v(TAG, "itemWidthMin(dp): " + itemWidthMin / density);
-            Log.v(TAG, "itemWidthMax(dp): " + itemWidthMax / density);
-            Log.v(TAG, "total items size(dp): " + (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax) / density);
+            MiscUtils.log(TAG, Log.DEBUG, "computing sizes...");
+            MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMin(dp): " + itemWidthMin / density);
+            MiscUtils.log(TAG, Log.VERBOSE, "itemWidthMax(dp): " + itemWidthMax / density);
+            MiscUtils.log(TAG, Log.VERBOSE, "total items size(dp): " + (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax) / density);
 
             if (itemWidthMin * (menu.getItemsCount() - 1) + itemWidthMax > screenWidth) {
                 itemWidthMax = screenWidth - (itemWidthMin * (menu.getItemsCount() - 1)); // minActiveItemWidth?
@@ -178,16 +178,16 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
             itemWidthMin = maxInactiveItemWidth;
         }
 
-        Log.v(TAG, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
-        Log.v(TAG, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
+        MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
+        MiscUtils.log(TAG, Log.VERBOSE, "inactive size (dp): " + maxInactiveItemWidth / density + ", " + minInactiveItemWidth / density);
 
-        Log.v(TAG, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
+        MiscUtils.log(TAG, Log.VERBOSE, "itemWidth(dp): " + (itemWidthMin / density) + ", " + (itemWidthMax / density));
 
         setTotalSize(itemWidthMin, itemWidthMax);
 
         for (int i = 0; i < menu.getItemsCount(); i++) {
             final BottomNavigationItem item = menu.getItemAt(i);
-            Log.d(TAG, "item: " + item);
+            MiscUtils.log(TAG, Log.DEBUG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidthMin, getHeight());
 

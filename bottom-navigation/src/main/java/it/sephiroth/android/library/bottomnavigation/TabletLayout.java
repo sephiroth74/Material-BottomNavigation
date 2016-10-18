@@ -66,13 +66,13 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
-        Log.v(TAG, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
+        MiscUtils.log(TAG, Log.VERBOSE, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
         child.layout(left, top, left + width, top + height);
     }
 
     @Override
     public void setSelectedIndex(final int index, final boolean animate) {
-        Log.i(TAG, "setSelectedIndex: " + index);
+        MiscUtils.log(TAG, Log.INFO, "setSelectedIndex: " + index);
 
         if (selectedIndex == index) {
             return;
@@ -99,7 +99,7 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
 
     @Override
     public void populate(@NonNull final MenuParser.Menu menu) {
-        Log.i(TAG, "populate: " + menu);
+        MiscUtils.log(TAG, Log.INFO, "populate: " + menu);
 
         if (hasFrame) {
             populateInternal(menu);
@@ -114,13 +114,13 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void populateInternal(@NonNull final MenuParser.Menu menu) {
-        Log.d(TAG, "populateInternal");
+        MiscUtils.log(TAG, Log.DEBUG, "populateInternal");
 
         final BottomNavigation parent = (BottomNavigation) getParent();
 
         for (int i = 0; i < menu.getItemsCount(); i++) {
             final BottomNavigationItem item = menu.getItemAt(i);
-            Log.d(TAG, "item: " + item);
+            MiscUtils.log(TAG, Log.DEBUG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getWidth(), itemHeight);
 

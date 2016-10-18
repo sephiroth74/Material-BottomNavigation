@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -66,8 +67,8 @@ public class MainActivityFragment extends Fragment {
             actionbarHeight = 0;
         }
 
-        Log.d(TAG, "navigationHeight: " + navigationHeight);
-        Log.d(TAG, "actionbarHeight: " + actionbarHeight);
+        MiscUtils.log(TAG, Log.VERBOSE, "navigationHeight: " + navigationHeight);
+        MiscUtils.log(TAG, Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
 
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
@@ -85,9 +86,9 @@ public class MainActivityFragment extends Fragment {
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
 
-                        Log.d(TAG, "scrollable: " + scrollable);
-                        Log.d(TAG, "bottomNagivation: " + navigation.getNavigationHeight());
-                        Log.d(TAG, "finalNavigationHeight: " + navigationHeight);
+                        MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
+                        MiscUtils.log(TAG, Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
+                        MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
 
                         int totalHeight;
 
@@ -98,8 +99,8 @@ public class MainActivityFragment extends Fragment {
                             totalHeight = navigation.getNavigationHeight();
                         }
 
-                        Log.d(TAG, "totalHeight: " + totalHeight);
-                        Log.d(TAG, "bottomMargin: " + params.bottomMargin);
+                        MiscUtils.log(TAG, Log.VERBOSE, "totalHeight: " + totalHeight);
+                        MiscUtils.log(TAG, Log.VERBOSE, "bottomMargin: " + params.bottomMargin);
 
                         createAdater(totalHeight);
                     } else {
