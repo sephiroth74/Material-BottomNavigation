@@ -29,6 +29,8 @@ import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
+    private SystemBarConfig config;
+    private ToolbarScrollHelper scrollHelper;
 
     public MainActivityFragment() { }
 
@@ -49,8 +51,8 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        BaseActivity activity = (BaseActivity) getActivity();
-        final SystemBarConfig config = activity.getSystemBarTint().getConfig();
+        final BaseActivity activity = (BaseActivity) getActivity();
+        config = activity.getSystemBarTint().getConfig();
 
         final int navigationHeight;
         final int actionbarHeight;
@@ -102,10 +104,10 @@ public class MainActivityFragment extends Fragment {
                         MiscUtils.log(TAG, Log.VERBOSE, "totalHeight: " + totalHeight);
                         MiscUtils.log(TAG, Log.VERBOSE, "bottomMargin: " + params.bottomMargin);
 
-                        createAdater(totalHeight);
+                        createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
                         params.bottomMargin -= navigationHeight;
-                        createAdater(navigationHeight);
+                        createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
                     mRecyclerView.requestLayout();
                 }
@@ -113,15 +115,20 @@ public class MainActivityFragment extends Fragment {
         } else {
             final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
             params.bottomMargin -= navigationHeight;
-            createAdater(navigationHeight);
+            createAdater(navigationHeight, activity.hasAppBarLayout());
+        }
+
+        if (!activity.hasAppBarLayout()) {
+            scrollHelper = new ToolbarScrollHelper(activity, activity.getToolbar());
+            scrollHelper.initialize(mRecyclerView);
         }
     }
 
-    private void createAdater(int height) {
-        Log.i(getClass().getSimpleName(), "createAdapter(" + height + ")");
+    private void createAdater(int height, final boolean hasAppBarLayout) {
+        MiscUtils.log(getClass().getSimpleName(), Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(new Adapter(getContext(), height, createData()));
+        mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout, createData()));
     }
 
     public void scrollToTop() {
@@ -148,10 +155,12 @@ public class MainActivityFragment extends Fragment {
         private final Picasso picasso;
         private final int navigationHeight;
         private final Book[] data;
+        private final boolean hasAppBarLayout;
 
-        public Adapter(final Context context, final int navigationHeight, final Book[] data) {
+        public Adapter(final Context context, final int navigationHeight, final boolean hasAppBarLayout, final Book[] data) {
             this.navigationHeight = navigationHeight;
             this.data = data;
+            this.hasAppBarLayout = hasAppBarLayout;
             this.picasso = Picasso.with(context);
         }
 
@@ -164,8 +173,11 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
+            ((MarginLayoutParams) holder.itemView.getLayoutParams()).topMargin = 0;
             if (position == getItemCount() - 1) {
                 ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom + navigationHeight;
+            } else if (position == 0 && !hasAppBarLayout) {
+                ((MarginLayoutParams) holder.itemView.getLayoutParams()).topMargin = scrollHelper.getToolbarHeight();
             } else {
                 ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom;
             }

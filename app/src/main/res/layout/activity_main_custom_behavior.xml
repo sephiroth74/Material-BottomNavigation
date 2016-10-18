@@ -67,7 +67,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         app:bbn_badgeProvider="@string/bbn_badgeProvider"
-        app:bbn_entries="@menu/bottombar_menu_4items"
+        app:bbn_entries="@menu/bottombar_menu_5items"
         app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.behaviors.BottomNavigationCustomBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

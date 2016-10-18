@@ -3,12 +3,16 @@ package it.sephiroth.android.library.bottomnavigation.app;
 import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+
+import static it.sephiroth.android.library.bottomnavigation.app.R.id.AppBarLayout01;
 
 /**
  * Created by crugnola on 4/11/16.
@@ -31,6 +35,18 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             mBottomNavigation.setOnMenuItemClickListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
         }
+    }
+
+    public AppBarLayout getAppBarLayout() {
+        return (AppBarLayout) findViewById(AppBarLayout01);
+    }
+
+    public Toolbar getToolbar() {
+        return (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    public boolean hasAppBarLayout() {
+        return getToolbar().getParent() instanceof AppBarLayout;
     }
 
     public BottomNavigation getBottomNavigation() {
