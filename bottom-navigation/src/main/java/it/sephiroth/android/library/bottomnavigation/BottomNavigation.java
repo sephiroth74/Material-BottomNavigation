@@ -428,8 +428,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         marginLayoutParams.bottomMargin = -bottomInset;
 
         final ViewGroup.LayoutParams params = rippleOverlay.getLayoutParams();
-        params.width = w;
-        params.height = h;
+        final int size = Math.min(w, h);
+        params.width = size * 2;
+        params.height = size * 2;
 
     }
 
@@ -537,6 +538,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private void initializeContainer(final MenuParser.Menu menu) {
         log(TAG, INFO, "initializeContainer");
         if (null != itemsContainer) {
+
+            // remove the layout listener
+            ((ViewGroup) itemsContainer).removeOnLayoutChangeListener(mLayoutChangedListener);
+
             if (menu.isTablet() && !TabletLayout.class.isInstance(itemsContainer)) {
                 removeView((View) itemsContainer);
                 itemsContainer = null;
@@ -568,6 +573,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             itemsContainer.setLayoutParams(params);
             addView((View) itemsContainer);
         }
+
+        // add the layout listener
+        ((ViewGroup) itemsContainer).addOnLayoutChangeListener(mLayoutChangedListener);
     }
 
     private void initializeItems(final MenuParser.Menu menu) {
@@ -584,6 +592,26 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         MiscUtils.setDrawableColor(rippleOverlay.getBackground(), menu.getRippleColor());
     }
 
+    private MyLayoutChangedListener mLayoutChangedListener = new MyLayoutChangedListener();
+
+    class MyLayoutChangedListener implements OnLayoutChangeListener {
+        public BottomNavigationItemViewAbstract view;
+        private final Rect outRect = new Rect();
+
+        @Override
+        public void onLayoutChange(final View v, final int left, final int top, final int right, final int bottom, final int oldLeft, final int oldTop, final int oldRight, final int oldBottom) {
+            if (null == view || !view.isExpanded()) {
+                return;
+            }
+
+            view.getHitRect(outRect);
+            final int centerX = rippleOverlay.getWidth() / 2;
+            final int centerY = rippleOverlay.getHeight() / 2;
+            rippleOverlay.setTranslationX(outRect.centerX() - centerX);
+            rippleOverlay.setTranslationY(outRect.centerY() - centerY);
+        }
+    }
+
     @Override
     public void onItemPressed(final ItemsLayoutContainer parent, final View view, final boolean pressed) {
         if (Build.VERSION.SDK_INT < 21) {
@@ -596,13 +624,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             return;
         }
 
-        Rect outRect = new Rect();
-        view.getHitRect(outRect);
-
-        final int centerX = rippleOverlay.getWidth() / 2;
-        final int centerY = rippleOverlay.getHeight() / 2;
-        rippleOverlay.setTranslationX(outRect.centerX() - centerX);
-        rippleOverlay.setTranslationY(outRect.centerY() - centerY);
+        mLayoutChangedListener.view = (BottomNavigationItemViewAbstract) view;
         rippleOverlay.setHovered(true);
         rippleOverlay.setPressed(true);
     }
