@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -131,6 +132,22 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
             view.setClickable(true);
             view.setTypeface(parent.typeface);
             final int finalI = i;
+            view.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(final View v, final MotionEvent event) {
+                    final int action = event.getActionMasked();
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        if (null != listener) {
+                            listener.onItemPressed(TabletLayout.this, v, true);
+                        }
+                    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                        if (null != listener) {
+                            listener.onItemPressed(TabletLayout.this, v, false);
+                        }
+                    }
+                    return false;
+                }
+            });
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {

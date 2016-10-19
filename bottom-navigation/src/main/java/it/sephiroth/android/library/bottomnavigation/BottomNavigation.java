@@ -22,8 +22,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -125,6 +128,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * This is where the color animation is happening
      */
     private View backgroundOverlay;
+
+    /**
+     * View used to show the press ripple overlay. I don't use the drawable in item view itself
+     * because the ripple background will be clipped inside its bounds
+     */
+    private View rippleOverlay;
 
     /**
      * current menu
@@ -270,6 +279,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         backgroundOverlay = new View(getContext());
         backgroundOverlay.setLayoutParams(params);
         addView(backgroundOverlay);
+
+        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
+        drawable.mutate();
+        MiscUtils.setDrawableColor(drawable, Color.WHITE);
+
+        rippleOverlay = new View(getContext());
+        rippleOverlay.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        rippleOverlay.setBackground(drawable);
+        rippleOverlay.setClickable(false);
+        rippleOverlay.setFocusable(false);
+        rippleOverlay.setFocusableInTouchMode(false);
+        addView(rippleOverlay);
     }
 
     int getPendingAction() {
@@ -405,6 +426,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onSizeChanged(w, h, oldw, oldh);
         MarginLayoutParams marginLayoutParams = (MarginLayoutParams) getLayoutParams();
         marginLayoutParams.bottomMargin = -bottomInset;
+
+        final ViewGroup.LayoutParams params = rippleOverlay.getLayoutParams();
+        params.width = w;
+        params.height = h;
+
     }
 
     public boolean isAttachedToWindow() {
@@ -554,12 +580,38 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         if (menu.getItemAt(defaultSelectedIndex).hasColor()) {
             backgroundDrawable.setColor(menu.getItemAt(defaultSelectedIndex).getColor());
         }
+
+        MiscUtils.setDrawableColor(rippleOverlay.getBackground(), menu.getRippleColor());
+    }
+
+    @Override
+    public void onItemPressed(final ItemsLayoutContainer parent, final View view, final boolean pressed) {
+        if (Build.VERSION.SDK_INT < 21) {
+            return;
+        }
+
+        if (!pressed) {
+            rippleOverlay.setPressed(false);
+            rippleOverlay.setHovered(false);
+            return;
+        }
+
+        Rect outRect = new Rect();
+        view.getHitRect(outRect);
+
+        final int centerX = rippleOverlay.getWidth() / 2;
+        final int centerY = rippleOverlay.getHeight() / 2;
+        rippleOverlay.setTranslationX(outRect.centerX() - centerX);
+        rippleOverlay.setTranslationY(outRect.centerY() - centerY);
+        rippleOverlay.setHovered(true);
+        rippleOverlay.setPressed(true);
     }
 
     @Override
     public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index, boolean animate) {
         log(TAG, INFO, "onItemClick: %d", index);
         setSelectedItemInternal(parent, view, index, animate, true);
+
     }
 
     private void setSelectedItemInternal(

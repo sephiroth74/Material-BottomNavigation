@@ -4,7 +4,7 @@
     app:bbn_itemAnimationDuration="200"
     app:bbn_itemColorActive="@android:color/black"
     app:bbn_itemColorInactive="#AA000000"
-    app:bbn_rippleColor="#66ffffff">
+    app:bbn_rippleColor="#ccffffff">
 
     <item
         android:id="@+id/bbn_item1"
