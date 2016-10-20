@@ -20,7 +20,6 @@ import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 import static android.util.Log.INFO;
-import static android.util.Log.VERBOSE;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
@@ -46,15 +45,12 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MiscUtils.log(TAG, INFO, "screen density: %g", getResources().getDisplayMetrics().density);
-
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
 
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
         if (translucentStatus) {
-            MiscUtils.log(TAG, VERBOSE, "hasTranslucentStatusBar");
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coordinatorLayout.getLayoutParams();
             params.topMargin = -statusbarHeight;
 
@@ -125,6 +121,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 return true;
             case R.id.item10:
                 startActivity(new Intent(this, MainActivityCustomBadge.class));
+                return true;
+            case R.id.item11:
+                startActivity(new Intent(this, MainActivityNoHide.class));
                 return true;
 
         }

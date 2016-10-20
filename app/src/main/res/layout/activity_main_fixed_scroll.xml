@@ -25,8 +25,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="@integer/app_gravity"
         app:bbn_badgeProvider="@string/bbn_badgeProvider"
-        app:bbn_entries="@menu/bottombar_menu_3items_no_background"
-        app:layout_behavior="@string/bbn_default_view_behavior" />
+        app:bbn_entries="@menu/bottombar_menu_3items"
+        app:bbn_scrollEnabled="false"
+        app:layout_behavior="@string/bbn_phone_view_behavior" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

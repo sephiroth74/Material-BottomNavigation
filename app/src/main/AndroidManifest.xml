@@ -29,6 +29,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:name=".MainActivityNoHide"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent2" />
+
+        <activity
             android:name=".MainActivityTablet"
             android:label="@string/app_name_tablet"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent">

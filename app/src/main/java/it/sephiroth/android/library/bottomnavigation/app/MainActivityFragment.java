@@ -85,12 +85,14 @@ public class MainActivityFragment extends Fragment {
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
                     final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
+                    MiscUtils.log(TAG, Log.VERBOSE, "behavior: %s", behavior);
+                    MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
+                    MiscUtils.log(TAG, Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
+
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
 
                         MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
-                        MiscUtils.log(TAG, Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
-                        MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
 
                         int totalHeight;
 
@@ -106,7 +108,7 @@ public class MainActivityFragment extends Fragment {
 
                         createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
-                        params.bottomMargin -= navigationHeight;
+                        params.bottomMargin -= navigationHeight - navigation.getNavigationHeight();
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
                     mRecyclerView.requestLayout();
