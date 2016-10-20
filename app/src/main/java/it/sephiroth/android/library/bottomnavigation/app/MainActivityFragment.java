@@ -108,7 +108,7 @@ public class MainActivityFragment extends Fragment {
 
                         createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
-                        params.bottomMargin -= navigationHeight - navigation.getNavigationHeight();
+                        params.bottomMargin -= navigationHeight;
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
                     mRecyclerView.requestLayout();
