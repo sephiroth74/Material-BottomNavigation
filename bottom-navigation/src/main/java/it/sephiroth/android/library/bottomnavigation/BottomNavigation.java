@@ -599,16 +599,23 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         private final Rect outRect = new Rect();
 
         @Override
-        public void onLayoutChange(final View v, final int left, final int top, final int right, final int bottom, final int oldLeft, final int oldTop, final int oldRight, final int oldBottom) {
+        public void onLayoutChange(final View unused, final int left, final int top, final int right, final int bottom, final int oldLeft, final int oldTop, final int oldRight, final int oldBottom) {
             if (null == view || !view.isExpanded()) {
                 return;
             }
 
             view.getHitRect(outRect);
+            log(TAG, VERBOSE, "rect: %s", outRect);
+
             final int centerX = rippleOverlay.getWidth() / 2;
             final int centerY = rippleOverlay.getHeight() / 2;
             rippleOverlay.setTranslationX(outRect.centerX() - centerX);
             rippleOverlay.setTranslationY(outRect.centerY() - centerY);
+        }
+
+        public void forceLayout(final View v) {
+            view = (BottomNavigationItemViewAbstract) v;
+            onLayoutChange(view, view.getLeft(), view.getTop(), view.getRight(), view.getBottom(), 0, 0, 0, 0);
         }
     }
 
@@ -624,7 +631,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             return;
         }
 
-        mLayoutChangedListener.view = (BottomNavigationItemViewAbstract) view;
+        mLayoutChangedListener.forceLayout(view);
         rippleOverlay.setHovered(true);
         rippleOverlay.setPressed(true);
     }
@@ -633,7 +640,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index, boolean animate) {
         log(TAG, INFO, "onItemClick: %d", index);
         setSelectedItemInternal(parent, view, index, animate, true);
-
+        mLayoutChangedListener.forceLayout(view);
     }
 
     private void setSelectedItemInternal(
