@@ -132,20 +132,11 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final float density = getResources().getDisplayMetrics().density;
         final int screenWidth = parent.getWidth();
 
-        // MiscUtils.log(TAG, Log.VERBOSE, "density: " + density);
-        // MiscUtils.log(TAG, Log.VERBOSE, "screenWidth: " + screenWidth);
-        // MiscUtils.log(TAG, Log.VERBOSE, "screenWidth(dp): " + (screenWidth / density));
-
         int proposedWidth = Math.min(Math.max(screenWidth / menu.getItemsCount(), minActiveItemWidth), maxActiveItemWidth);
-        // MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth: " + proposedWidth);
-        // MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth(dp): " + proposedWidth / density);
 
         if (proposedWidth * menu.getItemsCount() > screenWidth) {
             proposedWidth = screenWidth / menu.getItemsCount();
         }
-
-        // MiscUtils.log(TAG, Log.VERBOSE, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
-        // MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
 
         this.itemFinalWidth = proposedWidth;
 
