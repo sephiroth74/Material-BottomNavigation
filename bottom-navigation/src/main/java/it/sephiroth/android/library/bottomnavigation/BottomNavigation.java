@@ -599,7 +599,16 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         private final Rect outRect = new Rect();
 
         @Override
-        public void onLayoutChange(final View unused, final int left, final int top, final int right, final int bottom, final int oldLeft, final int oldTop, final int oldRight, final int oldBottom) {
+        public void onLayoutChange(
+            final View unused,
+            final int left,
+            final int top,
+            final int right,
+            final int bottom,
+            final int oldLeft,
+            final int oldTop,
+            final int oldRight,
+            final int oldBottom) {
             if (null == view) {
                 return;
             }
