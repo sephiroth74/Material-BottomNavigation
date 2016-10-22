@@ -135,6 +135,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private View rippleOverlay;
 
+    private boolean enabledRippleBackground;
+
     /**
      * current menu
      */
@@ -391,7 +393,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // log(TAG, INFO, "onMeasure: %d", gravity);
+        log(TAG, INFO, "onMeasure: %d", gravity);
 
         if (MiscUtils.isGravityBottom(gravity)) {
             final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -431,12 +433,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onSizeChanged(w, h, oldw, oldh);
         MarginLayoutParams marginLayoutParams = (MarginLayoutParams) getLayoutParams();
         marginLayoutParams.bottomMargin = -bottomInset;
-
-        final ViewGroup.LayoutParams params = rippleOverlay.getLayoutParams();
-        final int size = Math.min(w, h);
-        params.width = size * 2;
-        params.height = size * 2;
-
     }
 
     public boolean isAttachedToWindow() {
@@ -499,6 +495,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 throw new IllegalArgumentException("BottomNavigation expects 3 to 5 items. " + menu.getItemsCount() + " found");
             }
 
+            enabledRippleBackground = menu.getItemsCount() < 4;
+
             menu.setTabletMode(isTablet(gravity));
 
             initializeBackgroundColor(menu);
@@ -545,6 +543,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         if (null != itemsContainer) {
 
             // remove the layout listener
+            log(TAG, VERBOSE, "remove listener from: %s", itemsContainer);
             ((ViewGroup) itemsContainer).removeOnLayoutChangeListener(mLayoutChangedListener);
 
             if (menu.isTablet() && !TabletLayout.class.isInstance(itemsContainer)) {
@@ -580,6 +579,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
 
         // add the layout listener
+        log(TAG, VERBOSE, "attach listener to: %s", itemsContainer);
         ((ViewGroup) itemsContainer).addOnLayoutChangeListener(mLayoutChangedListener);
     }
 
@@ -640,14 +640,19 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
 
         if (!pressed) {
-            rippleOverlay.setPressed(false);
+            if (enabledRippleBackground) {
+                rippleOverlay.setPressed(false);
+            }
             rippleOverlay.setHovered(false);
             return;
         }
 
         mLayoutChangedListener.forceLayout(view);
         rippleOverlay.setHovered(true);
-        rippleOverlay.setPressed(true);
+
+        if (enabledRippleBackground) {
+            rippleOverlay.setPressed(true);
+        }
     }
 
     @Override
