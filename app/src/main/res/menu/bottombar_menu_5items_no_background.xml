@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/colorAccent">
+    android:background="?attr/colorPrimaryDark">
 
     <item
         android:id="@+id/bbn_item1"
