@@ -139,27 +139,27 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
         switch (type) {
             case MENU_TYPE_3_ITEMS:
-                navigation.setMenuItems(R.menu.bottombar_menu_3items);
+                navigation.inflateMenu(R.menu.bottombar_menu_3items);
                 break;
 
             case MENU_TYPE_3_ITEMS_NO_BACKGROUND:
-                navigation.setMenuItems(R.menu.bottombar_menu_3items_no_background);
+                navigation.inflateMenu(R.menu.bottombar_menu_3items_no_background);
                 break;
 
             case MENU_TYPE_4_ITEMS:
-                navigation.setMenuItems(R.menu.bottombar_menu_4items);
+                navigation.inflateMenu(R.menu.bottombar_menu_4items);
                 break;
 
             case MENU_TYPE_4_ITEMS_NO_BACKGROUND:
-                navigation.setMenuItems(R.menu.bottombar_menu_4items_no_background);
+                navigation.inflateMenu(R.menu.bottombar_menu_4items_no_background);
                 break;
 
             case MENU_TYPE_5_ITEMS:
-                navigation.setMenuItems(R.menu.bottombar_menu_5items);
+                navigation.inflateMenu(R.menu.bottombar_menu_5items);
                 break;
 
             case MENU_TYPE_5_ITEMS_NO_BACKGROUND:
-                navigation.setMenuItems(R.menu.bottombar_menu_5items_no_background);
+                navigation.inflateMenu(R.menu.bottombar_menu_5items_no_background);
                 break;
         }
 

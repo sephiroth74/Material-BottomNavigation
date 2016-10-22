@@ -347,7 +347,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.listener = listener;
     }
 
-    public void setMenuItems(@MenuRes final int menuResId) {
+    /**
+     * Inflate a menu resource into this navigation component
+     *
+     * @param menuResId the menu resource id
+     */
+    public void inflateMenu(@MenuRes final int menuResId) {
         defaultSelectedIndex = 0;
         if (isAttachedToWindow()) {
             setItems(MenuParser.inflateMenu(getContext(), menuResId));
