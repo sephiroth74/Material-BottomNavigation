@@ -23,6 +23,9 @@
         <attr name="bbn_itemColorActive" format="color" />
 
         <attr name="bbn_itemColorInactive" format="color" />
+
+        <!-- item disabled color -->
+        <attr name="bbn_itemColorDisabled" format="color" />
     </declare-styleable>
 
     <!-- attributes for the 'item' tag within the menu resource. -->
