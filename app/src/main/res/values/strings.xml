@@ -3,4 +3,5 @@
     <string name="app_name_tablet">Bottom Navigation (Tablet)</string>
     <string name="app_name_custom_badges">Custom Badges</string>
     <string name="app_name_fixed_scroll">Fixed Scroll</string>
+    <string name="menu_enable_disable_items">Disable Items</string>
 </resources>

@@ -76,15 +76,17 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     protected void initializeUI(final Bundle savedInstanceState) {
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         assert floatingActionButton != null;
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
-                    "Action",
-                    null
-                ).show();
-            }
-        });
+        if (null != floatingActionButton) {
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction(
+                        "Action",
+                        null
+                    ).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -124,6 +126,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 return true;
             case R.id.item11:
                 startActivity(new Intent(this, MainActivityNoHide.class));
+                return true;
+            case R.id.item12:
+                startActivity(new Intent(this, EnableDisableItemsActivity.class));
                 return true;
 
         }
