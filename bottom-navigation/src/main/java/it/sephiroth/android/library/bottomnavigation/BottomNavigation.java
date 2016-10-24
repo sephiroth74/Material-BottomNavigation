@@ -135,6 +135,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private View rippleOverlay;
 
+    /**
+     * Toggle the ripple background animation on item press
+     */
     private boolean enabledRippleBackground;
 
     /**
@@ -495,7 +498,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 throw new IllegalArgumentException("BottomNavigation expects 3 to 5 items. " + menu.getItemsCount() + " found");
             }
 
-            enabledRippleBackground = menu.getItemsCount() < 4;
+            enabledRippleBackground = !menu.getItemAt(0).hasColor() || menu.isTablet();
 
             menu.setTabletMode(isTablet(gravity));
 
