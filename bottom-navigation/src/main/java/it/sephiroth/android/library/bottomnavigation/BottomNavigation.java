@@ -57,7 +57,6 @@ import it.sephiroth.android.library.bottonnavigation.R;
 
 import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
-import static android.util.Log.WARN;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
@@ -420,6 +419,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
         // menu has not been parsed yet
         return false;
+    }
+
+    public String getMenuItemTitle(final int index) {
+        if (null != menu) {
+            return menu.getItemAt(index).getTitle();
+        }
+        // menu has not been parsed yet
+        return null;
     }
 
     @Override
