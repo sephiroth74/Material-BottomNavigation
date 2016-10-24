@@ -748,13 +748,13 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 }
             }
 
-            if (null != listener && fromUser) {
-                listener.onMenuItemSelect(item.getId(), index);
+            if (null != listener) {
+                listener.onMenuItemSelect(item.getId(), index, fromUser);
             }
 
         } else {
-            if (null != listener && fromUser) {
-                listener.onMenuItemReselect(item.getId(), index);
+            if (null != listener) {
+                listener.onMenuItemReselect(item.getId(), index, fromUser);
             }
         }
     }
@@ -819,9 +819,9 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     public interface OnMenuItemSelectionListener {
-        void onMenuItemSelect(@IdRes final int itemId, final int position);
+        void onMenuItemSelect(@IdRes final int itemId, final int position, final boolean fromUser);
 
-        void onMenuItemReselect(@IdRes final int itemId, final int position);
+        void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser);
     }
 
     public interface OnMenuChangedListener {

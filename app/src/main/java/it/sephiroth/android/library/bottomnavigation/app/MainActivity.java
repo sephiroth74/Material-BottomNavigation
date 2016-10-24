@@ -172,18 +172,22 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     }
 
     @Override
-    public void onMenuItemSelect(final int itemId, final int position) {
+    public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
         MiscUtils.log(TAG, INFO, "onMenuItemSelect(" + itemId + ", " + position + ")");
-        getBottomNavigation().getBadgeProvider().remove(itemId);
+        if (fromUser) {
+            getBottomNavigation().getBadgeProvider().remove(itemId);
+        }
     }
 
     @Override
-    public void onMenuItemReselect(@IdRes final int itemId, final int position) {
+    public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
         MiscUtils.log(TAG, INFO, "onMenuItemReselect(" + itemId + ", " + position + ")");
 
-        final FragmentManager manager = getSupportFragmentManager();
-        MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);
-        fragment.scrollToTop();
+        if (fromUser) {
+            final FragmentManager manager = getSupportFragmentManager();
+            MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);
+            fragment.scrollToTop();
+        }
 
     }
 }
