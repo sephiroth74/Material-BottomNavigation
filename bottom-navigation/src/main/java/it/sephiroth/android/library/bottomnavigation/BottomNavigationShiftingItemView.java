@@ -42,7 +42,6 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     private final int colorDisabled;
     private float textX;
     private int textY;
-    private Integer currentColor = 0;
 
     public BottomNavigationShiftingItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
         super(parent, expanded, menu);
@@ -67,7 +66,6 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
         this.textPaint.setSubpixelText(true);
         this.textPaint.setTextSize(textSize);
         this.textPaint.setColor(colorActive);
-        this.currentColor = expanded ? colorActive : colorInactive;
 
         if (!expanded) {
             this.textPaint.setAlpha(0);
@@ -82,8 +80,6 @@ public class BottomNavigationShiftingItemView extends BottomNavigationItemViewAb
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
-
-        this.currentColor = enabled ? (isExpanded() ? colorActive : colorInactive) : colorDisabled;
 
         textPaint.setAlpha(
             (int) ((isExpanded() ? (enabled ? alphaActive : alphaDisabled) : 0) * ALPHA_MAX));

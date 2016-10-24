@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import it.sephiroth.android.library.bottonnavigation.R;
 
+import static android.util.Log.INFO;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
+
 /**
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
@@ -105,7 +108,15 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
-    public void setItemEnabled(final int index, final boolean enabled) { }
+    public void setItemEnabled(final int index, final boolean enabled) {
+        log(TAG, INFO, "setItemEnabled(%d, %b)", index, enabled);
+        final BottomNavigationItemViewAbstract child = (BottomNavigationItemViewAbstract) getChildAt(index);
+        if (null != child) {
+            child.setEnabled(enabled);
+            child.postInvalidate();
+            requestLayout();
+        }
+    }
 
     @Override
     public int getSelectedIndex() {
