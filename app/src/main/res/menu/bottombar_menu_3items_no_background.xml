@@ -8,17 +8,14 @@
     app:bbn_rippleColor="#ccffffff">
     <item
         android:id="@+id/bbn_item1"
-        android:enabled="false"
         android:icon="@drawable/ic_cloud_off_white_24dp"
         android:title="Cloud Sync" />
     <item
         android:id="@+id/bbn_item2"
-        android:enabled="false"
         android:icon="@drawable/ic_cast_connected_white_24dp"
         android:title="Chromecast" />
     <item
         android:id="@+id/bbn_item3"
-        android:enabled="false"
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
 </menu>

@@ -27,6 +27,7 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
     private long animationDuration;
     private final int colorActive;
     private final int colorInactive;
+    private final int colorDisabled;
     private final ArgbEvaluator evaluator;
 
     public BottomNavigationTabletItemView(final BottomNavigation parent, boolean expanded, final MenuParser.Menu menu) {
@@ -37,6 +38,7 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
         this.animationDuration = menu.getItemAnimationDuration();
         this.colorActive = menu.getColorActive();
         this.colorInactive = menu.getColorInactive();
+        this.colorDisabled = menu.getColorDisabled();
     }
 
     @Override
@@ -59,15 +61,14 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
     }
 
     private void updateLayoutOnAnimation(final float fraction, final boolean expanded) {
-        if (expanded) {
-            final int color = (int) evaluator.evaluate(fraction, colorInactive, colorActive);
-            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            icon.setAlpha(Color.alpha(color));
-        } else {
-            int color = (int) evaluator.evaluate(fraction, colorActive, colorInactive);
-            icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            icon.setAlpha(Color.alpha(color));
-        }
+        final boolean enabled = isEnabled();
+        final int dstColor = enabled ? (expanded ? colorActive : colorInactive) : colorDisabled;
+        final int srcColor = enabled ? (expanded ? colorInactive : colorActive) : colorDisabled;
+        final int color = (Integer) evaluator.evaluate(fraction, srcColor, dstColor);
+
+        icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        icon.setAlpha(Color.alpha(color));
+
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
@@ -77,8 +78,12 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
 
         if (null == this.icon) {
             this.icon = getItem().getIcon(getContext()).mutate();
-            this.icon.setColorFilter(isExpanded() ? colorActive : colorInactive, PorterDuff.Mode.SRC_ATOP);
-            this.icon.setAlpha(Color.alpha(isExpanded() ? colorActive : colorInactive));
+            this.icon.setColorFilter(
+                isExpanded() ? (isEnabled() ? colorActive : colorDisabled) : (isEnabled() ? colorInactive : colorDisabled),
+                PorterDuff.Mode.SRC_ATOP
+            );
+            this.icon.setAlpha(Color
+                .alpha(isExpanded() ? (isEnabled() ? colorActive : colorDisabled) : (isEnabled() ? colorInactive : colorDisabled)));
             this.icon.setBounds(0, 0, iconSize, iconSize);
         }
 

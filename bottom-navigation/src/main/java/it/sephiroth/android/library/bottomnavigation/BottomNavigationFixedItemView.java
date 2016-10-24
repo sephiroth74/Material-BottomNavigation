@@ -124,6 +124,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
         icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         icon.setAlpha(Color.alpha(color));
         textPaint.setColor(color);
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     @Override
