@@ -105,6 +105,9 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     @Override
+    public void setItemEnabled(final int index, final boolean enabled) { }
+
+    @Override
     public int getSelectedIndex() {
         return selectedIndex;
     }

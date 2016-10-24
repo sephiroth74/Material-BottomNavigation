@@ -93,7 +93,7 @@ class MenuParser {
         public int getColorDisabled() {
             if (0 == colorDisabled) {
                 int color = getColorActive();
-                colorDisabled = Color.argb(Color.alpha(color) / 3, Color.red(color), Color.green(color), Color.blue(color));
+                colorDisabled = Color.argb(Color.alpha(color) / 5, Color.red(color), Color.green(color), Color.blue(color));
             }
             return colorDisabled;
         }

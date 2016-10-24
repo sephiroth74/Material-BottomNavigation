@@ -28,4 +28,8 @@ public interface ItemsLayoutContainer {
     View findViewById(@IdRes final int id);
 
     void removeAll();
+
+    void requestLayout();
+
+    void setItemEnabled(int index, boolean enabled);
 }

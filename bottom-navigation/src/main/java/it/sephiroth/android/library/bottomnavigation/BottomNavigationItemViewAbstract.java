@@ -36,16 +36,10 @@ abstract class BottomNavigationItemViewAbstract extends View {
     }
 
     void setItem(BottomNavigationItem item) {
-        // we set the ripple drawable directly in the main container
-
-        //        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
-        //        drawable.mutate();
-        //        MiscUtils.setDrawableColor(drawable, rippleColor);
-
         this.item = item;
         this.setId(item.getId());
-        //        this.setBackground(drawable);
         this.setEnabled(item.isEnabled());
+        // this.setBackground(drawable);
         invalidateBadge();
     }
 

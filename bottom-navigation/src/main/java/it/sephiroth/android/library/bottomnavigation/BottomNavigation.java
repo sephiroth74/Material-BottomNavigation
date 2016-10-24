@@ -57,6 +57,7 @@ import it.sephiroth.android.library.bottonnavigation.R;
 
 import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
+import static android.util.Log.WARN;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
@@ -178,6 +179,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * Menu selection listener
      */
     private OnMenuItemSelectionListener listener;
+
+    /**
+     * Menu changed listener
+     */
+    private OnMenuChangedListener menuChangedListener;
 
     /**
      * The user defined layout_gravity
@@ -319,7 +325,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @SuppressWarnings ("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
-            setSelectedItemInternal(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
+            if (isMenuItemEnabled(menu, position)) {
+                setSelectedItemInternal(
+                    itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
+            } else {
+                MiscUtils.log(TAG, WARN, "item at index %d is not enabled", position);
+            }
         } else {
             defaultSelectedIndex = position;
         }
@@ -350,6 +361,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     public void setOnMenuItemClickListener(final OnMenuItemSelectionListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnMenuChangedListener(final OnMenuChangedListener listener) {
+        this.menuChangedListener = listener;
     }
 
     /**
@@ -393,10 +408,27 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return 0;
     }
 
+    public void setMenuItemEnabled(final int index, final boolean enabled) {
+        log(TAG, INFO, "setMenuItemEnabled(%d, %b)", index, enabled);
+        if (null != menu) {
+            menu.getItemAt(index).setEnabled(enabled);
+            if (null != itemsContainer) {
+                itemsContainer.setItemEnabled(index, enabled);
+            }
+        }
+    }
+
+    public boolean getMenuItemEnabled(final int index) {
+        if (null != menu) {
+            return menu.getItemAt(index).isEnabled();
+        }
+        // menu has not been parsed yet
+        return false;
+    }
+
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        log(TAG, INFO, "onMeasure: %d", gravity);
 
         if (MiscUtils.isGravityBottom(gravity)) {
             final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -505,6 +537,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             initializeBackgroundColor(menu);
             initializeContainer(menu);
             initializeItems(menu);
+
+            if (null != menuChangedListener) {
+                menuChangedListener.onMenuChanged(this);
+            }
         }
 
         requestLayout();
@@ -588,10 +624,6 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
     private void initializeItems(final MenuParser.Menu menu) {
         log(TAG, INFO, "initializeItems(%d)", defaultSelectedIndex);
-
-        if (!isMenuItemEnabled(menu, defaultSelectedIndex)) {
-            defaultSelectedIndex = findFirstSelectedIndex(menu);
-        }
 
         itemsContainer.setSelectedIndex(defaultSelectedIndex, false);
         itemsContainer.populate(menu);
@@ -794,6 +826,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         void onMenuItemSelect(@IdRes final int itemId, final int position);
 
         void onMenuItemReselect(@IdRes final int itemId, final int position);
+    }
+
+    public interface OnMenuChangedListener {
+        void onMenuChanged(BottomNavigation parent);
     }
 
     static class SavedState extends BaseSavedState {
