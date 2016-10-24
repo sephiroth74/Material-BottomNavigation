@@ -10,6 +10,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -256,10 +257,21 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         final View directTargetChild, final View target,
         final int nestedScrollAxes) {
 
+        log(TAG, INFO, "onStartNestedScroll: %d", nestedScrollAxes);
+
         offset = 0;
         if (!scrollable || !scrollEnabled) {
             return false;
         }
+
+        if (target instanceof RecyclerView) {
+            if ((nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
+                if (!target.canScrollVertically(-1) && !target.canScrollVertically(1)) {
+                    return false;
+                }
+            }
+        }
+
         return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
     }
 
@@ -276,7 +288,18 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         View target, int dx, int dy, int[] consumed,
         @ScrollDirection int scrollDirection) {
 
+        // stop nested scroll if target is not scrollable
+        // FIXME: not yet verified
+        if (!target.canScrollVertically(scrollDirection)) {
+            ViewCompat.stopNestedScroll(target);
+        }
+
         offset += dy;
+
+        log(
+            TAG, INFO, "onDirectionNestedPreScroll(%d, %s, %b)", scrollDirection, target.getClass().getSimpleName(),
+            target.canScrollVertically(scrollDirection)
+        );
 
         if (offset > scaledTouchSlop) {
             handleDirection(coordinatorLayout, child, ScrollDirection.SCROLL_DIRECTION_UP);
@@ -298,6 +321,23 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         return true;
+    }
+
+    @Override
+    public void onNestedScroll(
+        final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final View target, final int dxConsumed,
+        final int dyConsumed, final int dxUnconsumed,
+        final int dyUnconsumed) {
+        log(TAG, INFO, "onNestedScroll(%s, %d, %d)", target.getClass().getSimpleName(), dyConsumed, dyUnconsumed);
+        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+    }
+
+    @Override
+    public void onNestedPreScroll(
+        final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final View target, final int dx, final int dy,
+        final int[] consumed) {
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+        log(TAG, INFO, "onNestedPreScroll(%s, %d, %d)", target.getClass().getSimpleName(), dy, consumed[1]);
     }
 
     @Override
