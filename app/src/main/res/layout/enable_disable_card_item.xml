@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginTop="3dp"
+    android:padding="8dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
+    app:cardMaxElevation="6dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="0dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:lines="1"
+            android:text="Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textStyle="normal" />
+
+        <View
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@android:id/title"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@android:id/button1"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spacer"
+            android:text="Enabled"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorButton" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@android:id/button2"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@android:id/button1"
+            android:layout_alignBottom="@android:id/button1"
+            android:layout_toRightOf="@android:id/button1"
+            android:text="Selected"
+            android:layout_marginLeft="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorButton" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:checked="true"
+            android:id="@android:id/button3"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@android:id/button2"
+            android:layout_alignBottom="@android:id/button2"
+            android:layout_toRightOf="@android:id/button2"
+            android:text="Animate"
+            android:layout_marginLeft="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorButton" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
