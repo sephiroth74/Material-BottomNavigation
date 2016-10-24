@@ -325,12 +325,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @SuppressWarnings ("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
-            if (isMenuItemEnabled(menu, position)) {
-                setSelectedItemInternal(
-                    itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
-            } else {
-                MiscUtils.log(TAG, WARN, "item at index %d is not enabled", position);
-            }
+            setSelectedItemInternal(
+                itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
         } else {
             defaultSelectedIndex = position;
         }
