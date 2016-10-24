@@ -586,15 +586,38 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private void initializeItems(final MenuParser.Menu menu) {
         log(TAG, INFO, "initializeItems(%d)", defaultSelectedIndex);
 
+        if (!isMenuItemEnabled(menu, defaultSelectedIndex)) {
+            defaultSelectedIndex = findFirstSelectedIndex(menu);
+        }
+
         itemsContainer.setSelectedIndex(defaultSelectedIndex, false);
         itemsContainer.populate(menu);
         itemsContainer.setOnItemClickListener(this);
 
-        if (menu.getItemAt(defaultSelectedIndex).hasColor()) {
+        if (defaultSelectedIndex > -1 && menu.getItemAt(defaultSelectedIndex).hasColor()) {
             backgroundDrawable.setColor(menu.getItemAt(defaultSelectedIndex).getColor());
         }
 
         MiscUtils.setDrawableColor(rippleOverlay.getBackground(), menu.getRippleColor());
+    }
+
+    /**
+     * Checks if the menu item at the passed index is available and enabled
+     */
+    private boolean isMenuItemEnabled(MenuParser.Menu menu, final int index) {
+        if (menu.getItemsCount() > index) {
+            return menu.getItemAt(index).isEnabled();
+        }
+        return false;
+    }
+
+    private int findFirstSelectedIndex(MenuParser.Menu menu) {
+        for (int i = 0; i < menu.getItemsCount(); i++) {
+            if (menu.getItemAt(i).isEnabled()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private MyLayoutChangedListener mLayoutChangedListener = new MyLayoutChangedListener();
