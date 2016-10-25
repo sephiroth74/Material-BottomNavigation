@@ -156,6 +156,9 @@ The xml menu supports the following attributes in the &lt;menu&gt; tag:
 
     <!-- menu item inactive color -->
     <attr name="bbn_itemColorInactive" format="color" />
+
+    <!-- menu item disabled color -->
+    <attr name="bbn_itemColorDisabled" format="color" />
 </declare-styleable>
 ```
 
