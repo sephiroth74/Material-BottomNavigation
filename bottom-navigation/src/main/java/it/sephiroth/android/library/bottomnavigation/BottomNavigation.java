@@ -465,6 +465,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return defaultWidth;
     }
 
+    public int getBottomInset() {
+        return bottomInset;
+    }
+
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         log(TAG, INFO, "onSizeChanged(%d, %d)", w, h);

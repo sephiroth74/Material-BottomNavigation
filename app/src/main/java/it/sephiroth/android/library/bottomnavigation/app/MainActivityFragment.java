@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +30,7 @@ import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private SystemBarConfig config;
     private ToolbarScrollHelper scrollHelper;
 
@@ -45,6 +47,7 @@ public class MainActivityFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView01);
+        mSwipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.SwipeRefreshLayout01);
     }
 
     @Override
@@ -83,7 +86,7 @@ public class MainActivityFragment extends Fragment {
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
 
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
-                    final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+                    final MarginLayoutParams params = (MarginLayoutParams) mSwipeRefreshLayout.getLayoutParams();
 
                     MiscUtils.log(TAG, Log.VERBOSE, "behavior: %s", behavior);
                     MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
@@ -111,11 +114,11 @@ public class MainActivityFragment extends Fragment {
                         params.bottomMargin -= navigationHeight;
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
-                    mRecyclerView.requestLayout();
+                    mSwipeRefreshLayout.requestLayout();
                 }
             });
         } else {
-            final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+            final MarginLayoutParams params = (MarginLayoutParams) mSwipeRefreshLayout.getLayoutParams();
             params.bottomMargin -= navigationHeight;
             createAdater(navigationHeight, activity.hasAppBarLayout());
         }

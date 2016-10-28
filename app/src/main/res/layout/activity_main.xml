@@ -16,6 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
+        app:layout_anchor="@id/BottomNavigation"
+        app:layout_anchorGravity="right|top"
         android:layout_marginRight="@dimen/fab_margin_right"
         android:src="@android:drawable/ic_dialog_email" />
 
