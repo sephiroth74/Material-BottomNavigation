@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
+    CoordinatorLayout mCoordinatorLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private SystemBarConfig config;
     private ToolbarScrollHelper scrollHelper;
@@ -47,7 +50,7 @@ public class MainActivityFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView01);
-        mSwipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.SwipeRefreshLayout01);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.SwipeRefreshLayout01);
     }
 
     @Override
@@ -56,6 +59,7 @@ public class MainActivityFragment extends Fragment {
 
         final BaseActivity activity = (BaseActivity) getActivity();
         config = activity.getSystemBarTint().getConfig();
+        mCoordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.CoordinatorLayout01);
 
         final int navigationHeight;
         final int actionbarHeight;
@@ -145,6 +149,8 @@ public class MainActivityFragment extends Fragment {
         final TextView title;
         final TextView description;
         final ImageView imageView;
+        final Button button1;
+        final Button button2;
         final int marginBottom;
 
         public TwoLinesViewHolder(final View itemView) {
@@ -153,6 +159,8 @@ public class MainActivityFragment extends Fragment {
             description = (TextView) itemView.findViewById(android.R.id.text1);
             imageView = (ImageView) itemView.findViewById(android.R.id.icon);
             marginBottom = ((MarginLayoutParams) itemView.getLayoutParams()).bottomMargin;
+            button1 = (Button) itemView.findViewById(android.R.id.button1);
+            button2 = (Button) itemView.findViewById(android.R.id.button2);
         }
     }
 
@@ -173,6 +181,34 @@ public class MainActivityFragment extends Fragment {
         public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             final View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_card_item, parent, false);
             final TwoLinesViewHolder holder = new TwoLinesViewHolder(view);
+
+            holder.button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Snackbar snackbar =
+                        Snackbar.make(mCoordinatorLayout, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
+                            .setAction(
+                                "Action",
+                                null
+                            );
+                    snackbar.show();
+                }
+            });
+
+            holder.button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Button 2 of item " + holder.getAdapterPosition(),
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction(
+                            "Action",
+                            null
+                        );
+                    snackbar.show();
+                }
+            });
+
             return holder;
         }
 

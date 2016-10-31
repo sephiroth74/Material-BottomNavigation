@@ -3,6 +3,7 @@ package it.sephiroth.android.library.bottomnavigation;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar.SnackbarLayout;
@@ -91,6 +92,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
     private OnExpandStatusChangeListener listener;
 
+    protected SnackBarDependentView snackbarDependentView;
+
     public BottomBehavior() {
         this(null, null);
     }
@@ -146,10 +149,11 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         if (!enabled) {
             return false;
         }
+        return isSnackbar(dependency);
+    }
 
-        //        return SnackbarLayout.class.isInstance(dependency);
-        // return isFloatingActionButton(dependency) || SnackbarLayout.class.isInstance(dependency);
-        return false;
+    private boolean isSnackbar(@NonNull final View view) {
+        return SnackbarLayout.class.isInstance(view);
     }
 
     @Override
@@ -174,15 +178,24 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     }
 
     @Override
-    public void onDependentViewRemoved(CoordinatorLayout parent, BottomNavigation child, View dependency) {}
+    public void onDependentViewRemoved(CoordinatorLayout parent, BottomNavigation child, View dependency) {
+        if (isSnackbar(dependency)) {
+            if (null != snackbarDependentView) {
+                snackbarDependentView.onDestroy();
+            }
+            snackbarDependentView = null;
+        }
+    }
 
     @Override
     public boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation child, View dependency) {
-        return false;
-    }
-
-    protected FabDependentView createFabDependentView(final View dependency, final int height, final int bottomInset) {
-        return new FabDependentView(dependency, height, bottomInset);
+        if (isSnackbar(dependency)) {
+            if (null == snackbarDependentView) {
+                snackbarDependentView = new SnackBarDependentView((SnackbarLayout) dependency, height, bottomInset);
+            }
+            return snackbarDependentView.onDependentViewChanged(parent, child);
+        }
+        return super.onDependentViewChanged(parent, child, dependency);
     }
 
     @Override
@@ -191,8 +204,6 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         final BottomNavigation child,
         final View directTargetChild, final View target,
         final int nestedScrollAxes) {
-
-        log(TAG, INFO, "onStartNestedScroll: %d", nestedScrollAxes);
 
         offset = 0;
         if (!scrollable || !scrollEnabled) {
@@ -358,53 +369,11 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
         GenericDependentView(final View child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
-            if (BottomNavigation.DEBUG) {
-                log(TAG, INFO, "new GenericDependentView(%s)", child.getClass().getSimpleName());
-            }
         }
 
         @Override
         protected boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
-            log(TAG, INFO, "onDependentViewChanged");
-            //layoutParams.bottomMargin = bottomMargin + height;
-            //            child.setTranslationY(originalPosition + bottomMargin + height);
-            //            child.postInvalidate();
             return true;
-        }
-    }
-
-    public static class FabDependentView extends DependentView<View> {
-        private static final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
-        public int offset = 0;
-
-        protected FabDependentView(final View child, final int height, final int bottomInset) {
-            super(child, height, bottomInset);
-            log(TAG, INFO, "new FabDependentView(bottomMargin: %d, originalPosition: %g)", bottomMargin, originalPosition);
-        }
-
-        @Override
-        protected boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
-            // log(TAG, INFO, "onDependentViewChanged");
-            final float t = Math.max(0, navigation.getTranslationY() - height);
-
-            final float pos;
-            if (bottomInset > 0) {
-                pos = (bottomMargin + height - t);
-            } else {
-                pos = (bottomMargin + height - navigation.getTranslationY());
-            }
-
-            child.setTranslationY(originalPosition - pos - offset);
-
-            // log(TAG, VERBOSE, "translationY: %g", child.getTranslationY());
-
-            child.postInvalidate();
-            return true;
-        }
-
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
         }
     }
 
@@ -429,21 +398,23 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
                 }
             }
 
-            //scrollEnabled = false;
-            final boolean expanded = navigation.getTranslationY() == 0;
             if (snackbarHeight == -1) {
                 snackbarHeight = child.getHeight();
             }
 
             final float maxScroll = Math.max(0, navigation.getTranslationY() - bottomInset);
-            layoutParams.bottomMargin = (int) (height - maxScroll);
-            child.requestLayout();
-            return true;
+            final int newBottomMargin = (int) (height - maxScroll);
+
+            if (layoutParams.bottomMargin != newBottomMargin) {
+                layoutParams.bottomMargin = newBottomMargin;
+                child.requestLayout();
+                return true;
+            }
+            return false;
         }
 
         @Override
         protected void onDestroy() {
-            log(TAG, INFO, "onDestroy");
             super.onDestroy();
             //scrollEnabled = true;
         }

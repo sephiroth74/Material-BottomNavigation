@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
+        app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.MainActivity$FabBehavior"
         app:layout_anchor="@id/BottomNavigation"
         app:layout_anchorGravity="right|top"
         android:layout_marginRight="@dimen/fab_margin_right"

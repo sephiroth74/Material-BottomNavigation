@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,15 +23,13 @@ import java.util.List;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
-import static android.util.Log.DEBUG;
 import static android.util.Log.INFO;
-import static android.util.Log.VERBOSE;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int MENU_TYPE_3_ITEMS = 0;
     public static final int MENU_TYPE_3_ITEMS_NO_BACKGROUND = 1;
@@ -94,12 +91,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                             "Action",
                             null
                         );
-                    View snackbarView = snackbar.getView();
-                    CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackbarView.getLayoutParams();
-                    params.setAnchorId(R.id.BottomNavigation);
-                    params.anchorGravity = Gravity.TOP;
-                    params.bottomMargin = getBottomNavigation().getHeight();
-                    snackbarView.setLayoutParams(params);
                     snackbar.show();
                 }
             });
@@ -208,7 +199,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
     }
 
-    public static class FabBehavior extends FloatingActionButton.Behavior {
+    public static class FabBehavior extends CoordinatorLayout.Behavior<FloatingActionButton> {
         public FabBehavior() {
             super();
         }
@@ -220,8 +211,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         @Override
         public void onAttachedToLayoutParams(
             @NonNull final CoordinatorLayout.LayoutParams lp) {
-            log(TAG, INFO, "onAttachedToLayoutParams: %s", lp);
-            super.onAttachedToLayoutParams(lp);
+            //            super.onAttachedToLayoutParams(lp);
         }
 
         @Override
@@ -231,11 +221,8 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             } else if (Snackbar.SnackbarLayout.class.isInstance(dependency)) {
                 return true;
             }
-
             return super.layoutDependsOn(parent, child, dependency);
         }
-
-        int originalPosition = 0;
 
         @Override
         public boolean onDependentViewChanged(
@@ -243,44 +230,30 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             log(TAG, INFO, "onDependentViewChanged: " + dependency);
 
             final List<View> list = parent.getDependencies(child);
-            log(TAG, DEBUG, "list size: %d", list.size());
-            if (list.size() == 2) {
-                log(TAG, VERBOSE, "%s", list.get(0));
-                log(TAG, VERBOSE, "%s", list.get(1));
-                child.setTranslationY(0);
-                return false;
+            int bottomMargin = ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).bottomMargin;
+
+            float t = 0;
+            boolean result = false;
+
+            for (View dep : list) {
+                if (Snackbar.SnackbarLayout.class.isInstance(dep)) {
+                    t += dep.getTranslationY() - dep.getHeight();
+                    result = true;
+                } else if (BottomNavigation.class.isInstance(dep)) {
+                    BottomNavigation navigation = (BottomNavigation) dep;
+                    t += navigation.getTranslationY() - navigation.getHeight() + bottomMargin;
+                    result = true;
+                }
             }
 
-            if (BottomNavigation.class.isInstance(dependency)) {
-                BottomNavigation navigation = (BottomNavigation) dependency;
-                int bottomMargin = ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).bottomMargin;
-                child.setTranslationY(navigation.getTranslationY() - navigation.getHeight() + bottomMargin);
-                //                child.postInvalidate();
-                return false;
-            }
-
-            return false;
+            child.setTranslationY(t);
+            return result;
         }
 
         @Override
         public void onDependentViewRemoved(
             final CoordinatorLayout parent, final FloatingActionButton child, final View dependency) {
-            log(TAG, INFO, "onDependentViewRemoved: %s", dependency);
-
             super.onDependentViewRemoved(parent, child, dependency);
-
-            final List<View> list = parent.getDependencies(child);
-            log(TAG, VERBOSE, "list.size: %d", list.size());
-
-            if (list.size() == 2 && Snackbar.SnackbarLayout.class.isInstance(dependency)) {
-                final View other = list.get(0);
-                if (BottomNavigation.class.isInstance(other)) {
-                    BottomNavigation navigation = (BottomNavigation) other;
-                    int bottomMargin = ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).bottomMargin;
-                    child.setTranslationY(navigation.getTranslationY() - navigation.getNavigationHeight() - bottomMargin);
-                    //                    child.postInvalidate();
-                }
-            }
         }
     }
 }

@@ -31,12 +31,15 @@
         android:id="@+id/fab"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.behaviors.FloatingActionMenuBehavior"
+
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.MainActivityCustomBehavior$FabBehavior"
+        app:layout_anchor="@id/BottomNavigation"
+        app:layout_anchorGravity="right|top"
+
         app:menu_backgroundColor="#ccffffff"
         app:menu_fab_hide_animation="@anim/fab_slide_out_to_right"
         app:menu_fab_show_animation="@anim/fab_slide_in_from_right"
