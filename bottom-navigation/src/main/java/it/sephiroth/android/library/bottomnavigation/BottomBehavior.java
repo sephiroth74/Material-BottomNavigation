@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar.SnackbarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
@@ -140,12 +139,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         );
     }
 
-    protected boolean isFloatingActionButton(View dependency) {
-        return dependency instanceof FloatingActionButton;
-    }
-
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, BottomNavigation child, View dependency) {
+        log(TAG, INFO, "layoutDependsOn: %s", dependency);
+
         if (!enabled) {
             return false;
         }
@@ -211,6 +208,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         if ((nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
+            log(
+                TAG, INFO, "isScrollContainer: %b, canScrollUp: %b, canScrollDown: %b", target.isScrollContainer(),
+                target.canScrollVertically(-1), target.canScrollVertically(1)
+            );
             if (target.isScrollContainer() && (!target.canScrollVertically(-1) && !target.canScrollVertically(1))) {
                 return false;
             }
