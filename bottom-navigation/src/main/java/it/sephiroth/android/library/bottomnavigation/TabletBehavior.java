@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import proguard.annotation.KeepClassMembers;
 
 import static android.util.Log.DEBUG;
 import static android.util.Log.INFO;
-import static android.util.Log.VERBOSE;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
@@ -40,11 +40,12 @@ public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         this.width = bottomNavWidth;
         this.topInset = topInset;
         this.enabled = true;
+
     }
 
     @Override
     public boolean layoutDependsOn(final CoordinatorLayout parent, final BottomNavigation child, final View dependency) {
-        return AppBarLayout.class.isInstance(dependency);
+        return AppBarLayout.class.isInstance(dependency) || Toolbar.class.isInstance(dependency);
     }
 
     @Override
@@ -53,10 +54,6 @@ public class TabletBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
         final int top = Build.VERSION.SDK_INT > 19 ? topInset : translucentStatus ? topInset : 0;
         params.topMargin = Math.max(dependency.getTop() + dependency.getHeight() - top, translucentStatus ? 0 : -top);
-
-        if (BottomNavigation.DEBUG) {
-            log(TAG, VERBOSE, "dependency.top: %d, dependency.height: %d", dependency.getTop(), dependency.getHeight());
-        }
 
         if (translucentStatus) {
             if (params.topMargin < top) {
