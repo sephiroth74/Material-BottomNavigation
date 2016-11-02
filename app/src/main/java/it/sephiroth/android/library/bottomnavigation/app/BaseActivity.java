@@ -95,4 +95,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
         return mTranslucentNavigation;
     }
+
+    public int getNavigationBarHeight() {
+        return getSystemBarTint().getConfig().getNavigationBarHeight();
+    }
 }

@@ -118,6 +118,10 @@ public class MainActivityFragment extends Fragment {
                         params.bottomMargin -= navigationHeight;
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
+
+                    mSwipeRefreshLayout.setProgressViewOffset(false, actionbarHeight,
+                        mSwipeRefreshLayout.getProgressViewEndOffset() + actionbarHeight
+                    );
                     mSwipeRefreshLayout.requestLayout();
                 }
             });
@@ -130,7 +134,21 @@ public class MainActivityFragment extends Fragment {
         if (!activity.hasAppBarLayout()) {
             scrollHelper = new ToolbarScrollHelper(activity, activity.getToolbar());
             scrollHelper.initialize(mRecyclerView);
+            scrollHelper.setEnabled(!getResources().getBoolean(R.bool.is_tablet));
         }
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 500);
+            }
+        });
+
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
