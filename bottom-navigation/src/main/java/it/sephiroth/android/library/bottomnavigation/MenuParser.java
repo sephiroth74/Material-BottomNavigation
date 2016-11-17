@@ -35,6 +35,7 @@ class MenuParser {
         private boolean shifting;
         private boolean tablet;
         private int badgeColor;
+        public boolean forceFixed;
 
         public Menu(final Context context) {
             this.context = context;
@@ -111,7 +112,7 @@ class MenuParser {
 
         public void setItems(final BottomNavigationItem[] items) {
             this.items = items;
-            this.shifting = null != items && items.length > 3;
+            this.shifting = (null != items && items.length > 3 && !forceFixed);
         }
 
         public boolean isShifting() {
@@ -198,7 +199,7 @@ class MenuParser {
         menu.colorDisabled = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
         menu.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED);
-
+        menu.forceFixed = a.getBoolean(R.styleable.BottomNavigationMenu_bbn_alwaysShowLabels, false);
         a.recycle();
     }
 
