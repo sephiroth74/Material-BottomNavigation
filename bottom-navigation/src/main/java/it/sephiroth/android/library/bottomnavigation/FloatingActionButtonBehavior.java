@@ -1,4 +1,4 @@
-package it.sephiroth.android.library.bottomnavigation.app;
+package it.sephiroth.android.library.bottomnavigation;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 import static android.util.Log.INFO;
 import static android.util.Log.WARN;
