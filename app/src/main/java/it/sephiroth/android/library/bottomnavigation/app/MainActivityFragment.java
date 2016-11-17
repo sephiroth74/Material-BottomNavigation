@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +32,6 @@ public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
     CoordinatorLayout mCoordinatorLayout;
-    SwipeRefreshLayout mSwipeRefreshLayout;
     private SystemBarConfig config;
     private ToolbarScrollHelper scrollHelper;
 
@@ -50,7 +48,6 @@ public class MainActivityFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView01);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.SwipeRefreshLayout01);
     }
 
     @Override
@@ -90,65 +87,34 @@ public class MainActivityFragment extends Fragment {
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
 
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
-                    final MarginLayoutParams params = (MarginLayoutParams) mSwipeRefreshLayout.getLayoutParams();
-
-                    MiscUtils.log(TAG, Log.VERBOSE, "behavior: %s", behavior);
-                    MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
-                    MiscUtils.log(TAG, Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
 
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
+                        int systemBottomNavigation = activity.hasTranslucentNavigation() ? activity.getNavigationBarHeight() : 0;
 
                         MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
                         if (scrollable) {
-                            totalHeight = navigationHeight;
-                            params.bottomMargin -= navigationHeight;
+                            if (systemBottomNavigation > 0) {
+                                totalHeight = systemBottomNavigation;
+                            } else {
+                                totalHeight = navigationHeight;
+                            }
                         } else {
                             totalHeight = navigation.getNavigationHeight();
                         }
 
-                        MiscUtils.log(TAG, Log.VERBOSE, "totalHeight: " + totalHeight);
-                        MiscUtils.log(TAG, Log.VERBOSE, "bottomMargin: " + params.bottomMargin);
-
                         createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
-                        params.bottomMargin -= navigationHeight;
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
-
-                    mSwipeRefreshLayout.setProgressViewOffset(false, actionbarHeight,
-                        mSwipeRefreshLayout.getProgressViewEndOffset() + actionbarHeight
-                    );
-                    mSwipeRefreshLayout.requestLayout();
                 }
             });
         } else {
-            final MarginLayoutParams params = (MarginLayoutParams) mSwipeRefreshLayout.getLayoutParams();
-            params.bottomMargin -= navigationHeight;
             createAdater(navigationHeight, activity.hasAppBarLayout());
         }
-
-        if (!activity.hasAppBarLayout()) {
-            scrollHelper = new ToolbarScrollHelper(activity, activity.getToolbar());
-            scrollHelper.initialize(mRecyclerView);
-            scrollHelper.setEnabled(!getResources().getBoolean(R.bool.is_tablet));
-        }
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 500);
-            }
-        });
-
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {

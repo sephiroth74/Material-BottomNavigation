@@ -12,5 +12,5 @@
     android:src="@android:drawable/ic_dialog_email"
     app:layout_anchor="@id/BottomNavigation"
     app:layout_anchorGravity="right|bottom"
-    app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.FloatingActionButtonBehavior"
+    app:layout_behavior="it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior"
     tools:showIn="@layout/activity_main" />
