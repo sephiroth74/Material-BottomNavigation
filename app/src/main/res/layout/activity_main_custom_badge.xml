@@ -26,15 +26,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_margin_bottom"
-        android:layout_marginRight="@dimen/fab_margin_right"
-        android:src="@android:drawable/ic_dialog_email" />
+    <include layout="@layout/floating_action_button_main" />
 
     <it.sephiroth.android.library.bottomnavigation.BottomNavigation
         android:id="@id/BottomNavigation"

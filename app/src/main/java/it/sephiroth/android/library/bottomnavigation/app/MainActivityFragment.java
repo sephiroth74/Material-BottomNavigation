@@ -115,6 +115,11 @@ public class MainActivityFragment extends Fragment {
         } else {
             createAdater(navigationHeight, activity.hasAppBarLayout());
         }
+
+        if (!activity.hasAppBarLayout()) {
+            scrollHelper = new ToolbarScrollHelper(activity, activity.getToolbar());
+            scrollHelper.initialize(mRecyclerView);
+        }
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
