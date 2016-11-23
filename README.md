@@ -22,6 +22,7 @@ Table of contents
     * [Badges Customization](#badges-customization)
   * [Wiki](https://github.com/sephiroth74/Material-BottomNavigation/wiki)
     * [Custom Layout Behavior](https://github.com/sephiroth74/Material-BottomNavigation/wiki/Custom-Layout-Behavior)
+    * [Always Show Labels](https://github.com/sephiroth74/Material-BottomNavigation/wiki/Always-Show-Labels)
   * [License](#license)
 
 
@@ -30,7 +31,7 @@ Installation
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.9'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.0'
 
 
 Usage
@@ -219,6 +220,7 @@ For instance:
 ```
 
 This will make your `my.custom.BadgeProviderCustom` the default BadgeProvider.
+
 
 
 License
