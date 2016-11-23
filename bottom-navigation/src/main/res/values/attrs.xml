@@ -23,6 +23,14 @@
         <attr name="bbn_itemColorActive" format="color" />
 
         <attr name="bbn_itemColorInactive" format="color" />
+
+        <!-- item disabled color -->
+        <attr name="bbn_itemColorDisabled" format="color" />
+
+        <!-- force fixed behavior and always display item labels -->
+        <!-- default implementation is false and the labels are -->
+        <!-- shown only if there are less than 4 items in the menu -->
+        <attr name="bbn_alwaysShowLabels" format="boolean" />
     </declare-styleable>
 
     <!-- attributes for the 'item' tag within the menu resource. -->

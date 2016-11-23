@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
-import com.squareup.picasso.Picasso;
 
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
@@ -28,14 +25,13 @@ import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
-    private static final String TAG = MainActivityFragment.class.getSimpleName();
+public class EnableDisableActivityFragment extends Fragment implements BottomNavigation.OnMenuChangedListener {
+    private static final String TAG = EnableDisableActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
-    CoordinatorLayout mCoordinatorLayout;
     private SystemBarConfig config;
     private ToolbarScrollHelper scrollHelper;
 
-    public MainActivityFragment() { }
+    public EnableDisableActivityFragment() { }
 
     @Override
     public View onCreateView(
@@ -56,7 +52,6 @@ public class MainActivityFragment extends Fragment {
 
         final BaseActivity activity = (BaseActivity) getActivity();
         config = activity.getSystemBarTint().getConfig();
-        mCoordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.CoordinatorLayout01);
 
         final int navigationHeight;
         final int actionbarHeight;
@@ -78,6 +73,7 @@ public class MainActivityFragment extends Fragment {
 
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
+            navigation.setOnMenuChangedListener(this);
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -87,32 +83,40 @@ public class MainActivityFragment extends Fragment {
                         (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
 
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
+                    final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+
+                    MiscUtils.log(TAG, Log.VERBOSE, "behavior: %s", behavior);
+                    MiscUtils.log(TAG, Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
+                    MiscUtils.log(TAG, Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
 
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
-                        int systemBottomNavigation = activity.hasTranslucentNavigation() ? activity.getNavigationBarHeight() : 0;
 
                         MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
                         if (scrollable) {
-                            if (systemBottomNavigation > 0) {
-                                totalHeight = systemBottomNavigation;
-                            } else {
-                                totalHeight = navigationHeight;
-                            }
+                            totalHeight = navigationHeight;
+                            params.bottomMargin -= navigationHeight;
                         } else {
                             totalHeight = navigation.getNavigationHeight();
                         }
 
+                        MiscUtils.log(TAG, Log.VERBOSE, "totalHeight: " + totalHeight);
+                        MiscUtils.log(TAG, Log.VERBOSE, "bottomMargin: " + params.bottomMargin);
+
                         createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
+                        params.bottomMargin -= navigationHeight;
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
+                    mRecyclerView.requestLayout();
                 }
             });
         } else {
+            final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
+            params.bottomMargin -= navigationHeight;
             createAdater(navigationHeight, activity.hasAppBarLayout());
         }
 
@@ -122,82 +126,85 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
+    public void onMenuItemSelect(final int index, final boolean fromUser) {
+        Adapter adapter = (Adapter) mRecyclerView.getAdapter();
+        if (null != adapter) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void onMenuItemReselect(final int index, final boolean fromUser) {
+        Adapter adapter = (Adapter) mRecyclerView.getAdapter();
+        if (null != adapter) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    BottomNavigation getBottomNavigation() {
+        return ((BaseActivity) getActivity()).getBottomNavigation();
+    }
+
     private void createAdater(int height, final boolean hasAppBarLayout) {
+        final BottomNavigation navigation = getBottomNavigation();
         MiscUtils.log(getClass().getSimpleName(), Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout, createData()));
+        mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout));
+
+        if (null != navigation) {
+            refreshAdapter();
+        }
+    }
+
+    private void refreshAdapter() {
+        Adapter adapter = (Adapter) mRecyclerView.getAdapter();
+        if (null != adapter) {
+            adapter.setData(getBottomNavigation());
+        }
     }
 
     public void scrollToTop() {
         mRecyclerView.smoothScrollToPosition(0);
     }
 
+    @Override
+    public void onMenuChanged(final BottomNavigation parent) {
+        refreshAdapter();
+    }
+
     static class TwoLinesViewHolder extends RecyclerView.ViewHolder {
 
         final TextView title;
-        final TextView description;
-        final ImageView imageView;
-        final Button button1;
-        final Button button2;
         final int marginBottom;
+        final CompoundButton switch1;
+        final CompoundButton switch2;
+        final CompoundButton animate;
 
         public TwoLinesViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(android.R.id.title);
-            description = (TextView) itemView.findViewById(android.R.id.text1);
-            imageView = (ImageView) itemView.findViewById(android.R.id.icon);
             marginBottom = ((MarginLayoutParams) itemView.getLayoutParams()).bottomMargin;
-            button1 = (Button) itemView.findViewById(android.R.id.button1);
-            button2 = (Button) itemView.findViewById(android.R.id.button2);
+            switch1 = (CompoundButton) itemView.findViewById(android.R.id.button1);
+            switch2 = (CompoundButton) itemView.findViewById(android.R.id.button2);
+            animate = (CompoundButton) itemView.findViewById(android.R.id.button3);
         }
     }
 
     private class Adapter extends RecyclerView.Adapter<TwoLinesViewHolder> {
-        private final Picasso picasso;
         private final int navigationHeight;
-        private final Book[] data;
         private final boolean hasAppBarLayout;
+        private int count = 0;
+        private BottomNavigation navigation;
 
-        public Adapter(final Context context, final int navigationHeight, final boolean hasAppBarLayout, final Book[] data) {
+        public Adapter(final Context context, final int navigationHeight, final boolean hasAppBarLayout) {
             this.navigationHeight = navigationHeight;
-            this.data = data;
             this.hasAppBarLayout = hasAppBarLayout;
-            this.picasso = Picasso.with(context);
         }
 
         @Override
         public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            final View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_card_item, parent, false);
+            final View view = LayoutInflater.from(getContext()).inflate(R.layout.enable_disable_card_item, parent, false);
             final TwoLinesViewHolder holder = new TwoLinesViewHolder(view);
-
-            holder.button1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Snackbar snackbar =
-                        Snackbar.make(mCoordinatorLayout, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
-                            .setAction(
-                                "Action",
-                                null
-                            );
-                    snackbar.show();
-                }
-            });
-
-            holder.button2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Button 2 of item " + holder.getAdapterPosition(),
-                        Snackbar.LENGTH_LONG
-                    )
-                        .setAction(
-                            "Action",
-                            null
-                        );
-                    snackbar.show();
-                }
-            });
-
             return holder;
         }
 
@@ -212,53 +219,45 @@ public class MainActivityFragment extends Fragment {
                 ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom;
             }
 
-            final Book item = data[position];
-            holder.title.setText(item.title);
-            holder.description.setText("By " + item.author);
-            holder.imageView.setImageBitmap(null);
+            holder.switch1.setOnCheckedChangeListener(null);
+            holder.switch2.setOnCheckedChangeListener(null);
 
-            picasso.cancelRequest(holder.imageView);
+            holder.title.setText(navigation.getMenuItemTitle(position) + " (index: " + position + ")");
+            holder.switch1.setChecked(navigation.getMenuItemEnabled(position));
+            holder.switch2.setChecked(navigation.getSelectedIndex() == position);
 
-            picasso
-                .load(item.imageUrl)
-                .noPlaceholder()
-                .resizeDimen(R.dimen.simple_card_image_width, R.dimen.simple_card_image_height)
-                .centerCrop()
-                .into(holder.imageView);
+            holder.switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(final CompoundButton compoundButton, final boolean checked) {
+                    navigation.setMenuItemEnabled(holder.getAdapterPosition(), checked);
+                    notifyDataSetChanged();
+                }
+            });
+
+            holder.switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(final CompoundButton compoundButton, final boolean checked) {
+                    if(!checked) {
+                        compoundButton.setChecked(true);
+                        return;
+                    }
+                    navigation.setSelectedIndex(holder.getAdapterPosition(), holder.animate.isChecked());
+                    notifyDataSetChanged();
+                }
+            });
+
         }
 
         @Override
         public int getItemCount() {
-            return data.length;
+            return count;
+        }
+
+        public void setData(final BottomNavigation navigation) {
+            this.navigation = navigation;
+            this.count = navigation.getMenuItemCount();
+            notifyDataSetChanged();
         }
     }
 
-    private Book[] createData() {
-        return new Book[]{
-            new Book("The Flight", "Scott Masterson", "http://i.imgur.com/dyyP2iO.jpg"),
-            new Book("Room of Plates", "Ali Conners", "http://i.imgur.com/da6QIlR.jpg"),
-            new Book("The Sleek Boot", "Sandra Adams", "http://i.imgur.com/YHoOJh4.jpg"),
-            new Book("Night Hunting", "Janet Perkins", "http://i.imgur.com/3jxqrKP.jpg"),
-            new Book("Rain and Coffee", "Peter Carlsson", "http://i.imgur.com/AZRynvM.jpg"),
-            new Book("Ocean View", "Trevor Hansen", "http://i.imgur.com/IvhOJcw.jpg"),
-            new Book("Lovers Of The Roof", "Britta Holt", "http://i.imgur.com/pxgI1b4.png"),
-            new Book("Lessons from Delhi", "Mary Johnson", "http://i.imgur.com/oT1WYX9.jpg"),
-            new Book("Mountaineers", "Abbey Christensen", "http://i.imgur.com/CLLDz.jpg"),
-            new Book("Plains In The Night", "David Park", "http://i.imgur.com/7MrSvXE.jpg?1"),
-            new Book("Dear Olivia", "Sylvia Sorensen", "http://i.imgur.com/3mkUuux.jpg"),
-            new Book("Driving Lessons", "Halime Carver", "http://i.imgur.com/LzYAfFL.jpg"),
-        };
-    }
-
-    static class Book {
-        final String title;
-        final String author;
-        final String imageUrl;
-
-        Book(final String title, final String author, final String imageUrl) {
-            this.title = title;
-            this.author = author;
-            this.imageUrl = imageUrl;
-        }
-    }
 }

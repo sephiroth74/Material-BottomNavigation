@@ -42,4 +42,5 @@
     <dimen name="bbn_tablet_layout_padding_top">0dp</dimen>
 
     <dimen name="bbn_badge_size">8dp</dimen>
+    <dimen name="bbn_ripple_radius">52dp</dimen>
 </resources>

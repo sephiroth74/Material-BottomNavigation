@@ -12,4 +12,7 @@
 
     <!-- default badge provider -->
     <string name="bbn_badgeProvider" translatable="false" tools:ignore="UnusedResources">it.sephiroth.android.library.bottomnavigation.BadgeProvider</string>
+
+    <!-- default floating action button behavior -->
+    <string name="bbn_fab_default_behavior" translatable="false" tools:ignore="UnusedResources">it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior</string>
 </resources>

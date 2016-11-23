@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/colorAccent">
+    android:background="?attr/colorPrimaryDark">
 
     <item
         android:id="@+id/bbn_item1"
+        android:enabled="true"
         android:icon="@drawable/ic_cloud_off_white_24dp"
         android:title="Cloud Sync" />
     <item
         android:id="@+id/bbn_item2"
+        android:enabled="true"
         android:icon="@drawable/ic_cast_connected_white_24dp"
         android:title="Chromecast" />
     <item
         android:id="@+id/bbn_item3"
+        android:enabled="true"
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
     <item
         android:id="@+id/bbn_item4"
+        android:enabled="true"
         android:icon="@drawable/ic_format_list_numbered_white_24dp"
         android:title="List" />
     <item
         android:id="@+id/bbn_item5"
+        android:enabled="true"
         android:icon="@drawable/ic_add_circle_white_24dp"
         android:title="Add New" />
 </menu>

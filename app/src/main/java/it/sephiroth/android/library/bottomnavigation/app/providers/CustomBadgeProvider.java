@@ -62,7 +62,7 @@ public class CustomBadgeProvider extends BadgeProvider {
 
             paint.setColor(color);
 
-            textPaint.setColor(Color.BLACK);
+            textPaint.setColor(Color.WHITE);
             textPaint.setTextSize(24);
         }
 

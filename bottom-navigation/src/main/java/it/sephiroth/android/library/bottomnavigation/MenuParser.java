@@ -30,10 +30,12 @@ class MenuParser {
         private int background;
         private int rippleColor;
         private int colorInactive;
+        private int colorDisabled;
         private int itemAnimationDuration;
         private boolean shifting;
         private boolean tablet;
         private int badgeColor;
+        public boolean forceFixed;
 
         public Menu(final Context context) {
             this.context = context;
@@ -45,8 +47,8 @@ class MenuParser {
 
         @Override
         public String toString() {
-            return String.format("Menu{background:%x, colorActive:%x, colorInactive:%x, shifting:%b, tablet:%b}",
-                background, colorActive, colorInactive, shifting, tablet
+            return String.format("Menu{background:%x, colorActive:%x, colorInactive:%x, colorDisabled: %s, shifting:%b, tablet:%b}",
+                background, colorActive, colorInactive, colorDisabled, shifting, tablet
             );
         }
 
@@ -89,6 +91,14 @@ class MenuParser {
             return colorInactive;
         }
 
+        public int getColorDisabled() {
+            if (0 == colorDisabled) {
+                int color = getColorInactive();
+                colorDisabled = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color));
+            }
+            return colorDisabled;
+        }
+
         public int getRippleColor() {
             if (0 == rippleColor) {
                 if (shifting && !tablet) {
@@ -102,7 +112,7 @@ class MenuParser {
 
         public void setItems(final BottomNavigationItem[] items) {
             this.items = items;
-            this.shifting = null != items && items.length > 3;
+            this.shifting = (null != items && items.length > 3 && !forceFixed);
         }
 
         public boolean isShifting() {
@@ -186,9 +196,10 @@ class MenuParser {
         menu.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0);
         menu.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0);
         menu.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0);
+        menu.colorDisabled = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled, 0);
         menu.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0);
         menu.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED);
-
+        menu.forceFixed = a.getBoolean(R.styleable.BottomNavigationMenu_bbn_alwaysShowLabels, false);
         a.recycle();
     }
 

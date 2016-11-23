@@ -22,8 +22,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -127,6 +130,17 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private View backgroundOverlay;
 
     /**
+     * View used to show the press ripple overlay. I don't use the drawable in item view itself
+     * because the ripple background will be clipped inside its bounds
+     */
+    private View rippleOverlay;
+
+    /**
+     * Toggle the ripple background animation on item press
+     */
+    private boolean enabledRippleBackground;
+
+    /**
      * current menu
      */
     MenuParser.Menu menu;
@@ -164,6 +178,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      * Menu selection listener
      */
     private OnMenuItemSelectionListener listener;
+
+    /**
+     * Menu changed listener
+     */
+    private OnMenuChangedListener menuChangedListener;
 
     /**
      * The user defined layout_gravity
@@ -270,6 +289,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         backgroundOverlay = new View(getContext());
         backgroundOverlay.setLayoutParams(params);
         addView(backgroundOverlay);
+
+        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
+        drawable.mutate();
+        MiscUtils.setDrawableColor(drawable, Color.WHITE);
+
+        rippleOverlay = new View(getContext());
+        rippleOverlay.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        rippleOverlay.setBackground(drawable);
+        rippleOverlay.setClickable(false);
+        rippleOverlay.setFocusable(false);
+        rippleOverlay.setFocusableInTouchMode(false);
+        addView(rippleOverlay);
     }
 
     int getPendingAction() {
@@ -293,7 +324,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @SuppressWarnings ("unused")
     public void setSelectedIndex(final int position, final boolean animate) {
         if (null != itemsContainer) {
-            setSelectedItemInternal(itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
+            setSelectedItemInternal(
+                itemsContainer, ((ViewGroup) itemsContainer).getChildAt(position), position, animate, false);
         } else {
             defaultSelectedIndex = position;
         }
@@ -326,7 +358,16 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.listener = listener;
     }
 
-    public void setMenuItems(@MenuRes final int menuResId) {
+    public void setOnMenuChangedListener(final OnMenuChangedListener listener) {
+        this.menuChangedListener = listener;
+    }
+
+    /**
+     * Inflate a menu resource into this navigation component
+     *
+     * @param menuResId the menu resource id
+     */
+    public void inflateMenu(@MenuRes final int menuResId) {
         defaultSelectedIndex = 0;
         if (isAttachedToWindow()) {
             setItems(MenuParser.inflateMenu(getContext(), menuResId));
@@ -362,10 +403,35 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         return 0;
     }
 
+    public void setMenuItemEnabled(final int index, final boolean enabled) {
+        log(TAG, INFO, "setMenuItemEnabled(%d, %b)", index, enabled);
+        if (null != menu) {
+            menu.getItemAt(index).setEnabled(enabled);
+            if (null != itemsContainer) {
+                itemsContainer.setItemEnabled(index, enabled);
+            }
+        }
+    }
+
+    public boolean getMenuItemEnabled(final int index) {
+        if (null != menu) {
+            return menu.getItemAt(index).isEnabled();
+        }
+        // menu has not been parsed yet
+        return false;
+    }
+
+    public String getMenuItemTitle(final int index) {
+        if (null != menu) {
+            return menu.getItemAt(index).getTitle();
+        }
+        // menu has not been parsed yet
+        return null;
+    }
+
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // log(TAG, INFO, "onMeasure: %d", gravity);
 
         if (MiscUtils.isGravityBottom(gravity)) {
             final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -397,6 +463,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     @SuppressWarnings ("unused")
     public int getNavigationWidth() {
         return defaultWidth;
+    }
+
+    public int getBottomInset() {
+        return bottomInset;
+    }
+
+    public int getShadowHeight() {
+        return shadowHeight;
     }
 
     @Override
@@ -467,11 +541,17 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 throw new IllegalArgumentException("BottomNavigation expects 3 to 5 items. " + menu.getItemsCount() + " found");
             }
 
+            enabledRippleBackground = !menu.getItemAt(0).hasColor() || menu.isTablet();
+
             menu.setTabletMode(isTablet(gravity));
 
             initializeBackgroundColor(menu);
             initializeContainer(menu);
             initializeItems(menu);
+
+            if (null != menuChangedListener) {
+                menuChangedListener.onMenuChanged(this);
+            }
         }
 
         requestLayout();
@@ -511,6 +591,11 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     private void initializeContainer(final MenuParser.Menu menu) {
         log(TAG, INFO, "initializeContainer");
         if (null != itemsContainer) {
+
+            // remove the layout listener
+            log(TAG, VERBOSE, "remove listener from: %s", itemsContainer);
+            ((ViewGroup) itemsContainer).removeOnLayoutChangeListener(mLayoutChangedListener);
+
             if (menu.isTablet() && !TabletLayout.class.isInstance(itemsContainer)) {
                 removeView((View) itemsContainer);
                 itemsContainer = null;
@@ -542,6 +627,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             itemsContainer.setLayoutParams(params);
             addView((View) itemsContainer);
         }
+
+        // add the layout listener
+        log(TAG, VERBOSE, "attach listener to: %s", itemsContainer);
+        ((ViewGroup) itemsContainer).addOnLayoutChangeListener(mLayoutChangedListener);
     }
 
     private void initializeItems(final MenuParser.Menu menu) {
@@ -551,8 +640,87 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         itemsContainer.populate(menu);
         itemsContainer.setOnItemClickListener(this);
 
-        if (menu.getItemAt(defaultSelectedIndex).hasColor()) {
+        if (defaultSelectedIndex > -1 && menu.getItemAt(defaultSelectedIndex).hasColor()) {
             backgroundDrawable.setColor(menu.getItemAt(defaultSelectedIndex).getColor());
+        }
+
+        MiscUtils.setDrawableColor(rippleOverlay.getBackground(), menu.getRippleColor());
+    }
+
+    /**
+     * Checks if the menu item at the passed index is available and enabled
+     */
+    private boolean isMenuItemEnabled(MenuParser.Menu menu, final int index) {
+        if (menu.getItemsCount() > index) {
+            return menu.getItemAt(index).isEnabled();
+        }
+        return false;
+    }
+
+    private int findFirstSelectedIndex(MenuParser.Menu menu) {
+        for (int i = 0; i < menu.getItemsCount(); i++) {
+            if (menu.getItemAt(i).isEnabled()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private MyLayoutChangedListener mLayoutChangedListener = new MyLayoutChangedListener();
+
+    class MyLayoutChangedListener implements OnLayoutChangeListener {
+        public BottomNavigationItemViewAbstract view;
+        private final Rect outRect = new Rect();
+
+        @Override
+        public void onLayoutChange(
+            final View unused,
+            final int left,
+            final int top,
+            final int right,
+            final int bottom,
+            final int oldLeft,
+            final int oldTop,
+            final int oldRight,
+            final int oldBottom) {
+            if (null == view) {
+                return;
+            }
+
+            view.getHitRect(outRect);
+            log(TAG, VERBOSE, "rect: %s", outRect);
+
+            final int centerX = rippleOverlay.getWidth() / 2;
+            final int centerY = rippleOverlay.getHeight() / 2;
+            rippleOverlay.setTranslationX(outRect.centerX() - centerX);
+            rippleOverlay.setTranslationY(outRect.centerY() - centerY);
+        }
+
+        public void forceLayout(final View v) {
+            view = (BottomNavigationItemViewAbstract) v;
+            onLayoutChange(view, view.getLeft(), view.getTop(), view.getRight(), view.getBottom(), 0, 0, 0, 0);
+        }
+    }
+
+    @Override
+    public void onItemPressed(final ItemsLayoutContainer parent, final View view, final boolean pressed) {
+        if (Build.VERSION.SDK_INT < 21) {
+            return;
+        }
+
+        if (!pressed) {
+            if (enabledRippleBackground) {
+                rippleOverlay.setPressed(false);
+            }
+            rippleOverlay.setHovered(false);
+            return;
+        }
+
+        mLayoutChangedListener.forceLayout(view);
+        rippleOverlay.setHovered(true);
+
+        if (enabledRippleBackground) {
+            rippleOverlay.setPressed(true);
         }
     }
 
@@ -560,6 +728,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void onItemClick(final ItemsLayoutContainer parent, final View view, final int index, boolean animate) {
         log(TAG, INFO, "onItemClick: %d", index);
         setSelectedItemInternal(parent, view, index, animate, true);
+        mLayoutChangedListener.forceLayout(view);
     }
 
     private void setSelectedItemInternal(
@@ -594,13 +763,13 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
                 }
             }
 
-            if (null != listener && fromUser) {
-                listener.onMenuItemSelect(item.getId(), index);
+            if (null != listener) {
+                listener.onMenuItemSelect(item.getId(), index, fromUser);
             }
 
         } else {
-            if (null != listener && fromUser) {
-                listener.onMenuItemReselect(item.getId(), index);
+            if (null != listener) {
+                listener.onMenuItemReselect(item.getId(), index, fromUser);
             }
         }
     }
@@ -665,9 +834,13 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     }
 
     public interface OnMenuItemSelectionListener {
-        void onMenuItemSelect(@IdRes final int itemId, final int position);
+        void onMenuItemSelect(@IdRes final int itemId, final int position, final boolean fromUser);
 
-        void onMenuItemReselect(@IdRes final int itemId, final int position);
+        void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser);
+    }
+
+    public interface OnMenuChangedListener {
+        void onMenuChanged(BottomNavigation parent);
     }
 
     static class SavedState extends BaseSavedState {

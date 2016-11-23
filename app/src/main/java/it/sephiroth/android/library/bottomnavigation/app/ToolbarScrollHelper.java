@@ -45,6 +45,10 @@ public class ToolbarScrollHelper
         }
     }
 
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
     private int setupToolbar(final Activity activity) {
         SystemBarTintManager manager = new SystemBarTintManager(activity);
         final SystemBarTintManager.SystemBarConfig config = manager.getConfig();

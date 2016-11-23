@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import it.sephiroth.android.library.bottonnavigation.R;
+
+import static android.util.Log.INFO;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**
  * Created by crugnola on 4/4/16.
@@ -58,9 +62,6 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         int width = (r - l);
         int left = (width - totalChildrenSize) / 2;
 
-        MiscUtils.log(TAG, Log.VERBOSE, "width: " + width);
-        MiscUtils.log(TAG, Log.VERBOSE, "left: " + left);
-
         for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
             final LayoutParams params = child.getLayoutParams();
@@ -81,7 +82,6 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     }
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
-        MiscUtils.log(TAG, Log.VERBOSE, "setChildFrame: " + left + ", " + top + ", " + width + ", " + height);
         child.layout(left, top, left + width, top + height);
     }
 
@@ -105,6 +105,17 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
 
         current.setExpanded(false, 0, animate);
         child.setExpanded(true, 0, animate);
+    }
+
+    @Override
+    public void setItemEnabled(final int index, final boolean enabled) {
+        log(TAG, INFO, "setItemEnabled(%d, %b)", index, enabled);
+        final BottomNavigationItemViewAbstract child = (BottomNavigationItemViewAbstract) getChildAt(index);
+        if (null != child) {
+            child.setEnabled(enabled);
+            child.postInvalidate();
+            requestLayout();
+        }
     }
 
     @Override
@@ -135,26 +146,16 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final float density = getResources().getDisplayMetrics().density;
         final int screenWidth = parent.getWidth();
 
-        MiscUtils.log(TAG, Log.VERBOSE, "density: " + density);
-        MiscUtils.log(TAG, Log.VERBOSE, "screenWidth: " + screenWidth);
-        MiscUtils.log(TAG, Log.VERBOSE, "screenWidth(dp): " + (screenWidth / density));
-
         int proposedWidth = Math.min(Math.max(screenWidth / menu.getItemsCount(), minActiveItemWidth), maxActiveItemWidth);
-        MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth: " + proposedWidth);
-        MiscUtils.log(TAG, Log.VERBOSE, "proposedWidth(dp): " + proposedWidth / density);
 
         if (proposedWidth * menu.getItemsCount() > screenWidth) {
             proposedWidth = screenWidth / menu.getItemsCount();
         }
 
-        MiscUtils.log(TAG, Log.VERBOSE, "active size: " + maxActiveItemWidth + ", " + minActiveItemWidth);
-        MiscUtils.log(TAG, Log.VERBOSE, "active size (dp): " + maxActiveItemWidth / density + ", " + minActiveItemWidth / density);
-
         this.itemFinalWidth = proposedWidth;
 
         for (int i = 0; i < menu.getItemsCount(); i++) {
             final BottomNavigationItem item = menu.getItemAt(i);
-            MiscUtils.log(TAG, Log.DEBUG, "item: " + item);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(proposedWidth, getHeight());
 
@@ -165,6 +166,22 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
             view.setClickable(true);
             view.setTypeface(parent.typeface);
             final int finalI = i;
+            view.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(final View v, final MotionEvent event) {
+                    final int action = event.getActionMasked();
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        if (null != listener) {
+                            listener.onItemPressed(FixedLayout.this, v, true);
+                        }
+                    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                        if (null != listener) {
+                            listener.onItemPressed(FixedLayout.this, v, false);
+                        }
+                    }
+                    return false;
+                }
+            });
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {

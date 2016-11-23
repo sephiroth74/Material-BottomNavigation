@@ -4,7 +4,7 @@
     app:bbn_itemColorActive="#FFFFFFFF"
     app:bbn_itemColorInactive="#7FFFFFFF"
     app:bbn_badgeColor="#FFCC0000"
-    app:bbn_rippleColor="#33ffffff">
+    app:bbn_rippleColor="#99FFFFFF">
 
     <item
         android:id="@+id/bbn_item1"

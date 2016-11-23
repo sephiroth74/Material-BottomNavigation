@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
@@ -24,17 +25,22 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     private boolean mTranslucentNavigation;
     private boolean mTranslucentNavigationSet;
     private BottomNavigation mBottomNavigation;
+    private ViewPager mViewPager;
 
     @Override
     public void onContentChanged() {
         super.onContentChanged();
+        mViewPager = (ViewPager) findViewById(R.id.ViewPager01);
         mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-
             mBottomNavigation.setOnMenuItemClickListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
         }
+    }
+
+    public ViewPager getViewPager() {
+        return mViewPager;
     }
 
     public AppBarLayout getAppBarLayout() {
@@ -50,6 +56,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     public BottomNavigation getBottomNavigation() {
+        if (null == mBottomNavigation) {
+            mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+        }
         return mBottomNavigation;
     }
 
@@ -94,5 +103,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             mTranslucentNavigationSet = true;
         }
         return mTranslucentNavigation;
+    }
+
+    public int getNavigationBarHeight() {
+        return getSystemBarTint().getConfig().getNavigationBarHeight();
     }
 }

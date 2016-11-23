@@ -8,4 +8,6 @@ import android.view.View;
  */
 public interface OnItemClickListener {
     void onItemClick(ItemsLayoutContainer parent, View view, int index, boolean animate);
+
+    void onItemPressed(ItemsLayoutContainer parent, View view, boolean pressed);
 }

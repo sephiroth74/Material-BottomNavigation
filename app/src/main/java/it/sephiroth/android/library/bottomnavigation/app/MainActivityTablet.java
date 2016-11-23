@@ -73,13 +73,13 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
     }
 
     @Override
-    public void onMenuItemSelect(final int itemId, final int position) {
+    public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
         MiscUtils.log(TAG, Log.INFO, "onMenuItemSelect(" + itemId + ", " + position + ")");
         getBottomNavigation().getBadgeProvider().remove(itemId);
     }
 
     @Override
-    public void onMenuItemReselect(@IdRes final int itemId, final int position) {
+    public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
         MiscUtils.log(TAG, Log.INFO, "onMenuItemReselect(" + itemId + ", " + position + ")");
 
         final FragmentManager manager = getSupportFragmentManager();

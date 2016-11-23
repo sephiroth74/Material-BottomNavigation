@@ -6,12 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import java.lang.ref.SoftReference;
-
-import it.sephiroth.android.library.bottonnavigation.R;
 
 /**
  * Created by crugnola on 4/6/16.
@@ -39,14 +36,10 @@ abstract class BottomNavigationItemViewAbstract extends View {
     }
 
     void setItem(BottomNavigationItem item) {
-        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector);
-        drawable.mutate();
-        MiscUtils.setDrawableColor(drawable, rippleColor);
-
         this.item = item;
         this.setId(item.getId());
-        this.setBackground(drawable);
         this.setEnabled(item.isEnabled());
+        // this.setBackground(drawable);
         invalidateBadge();
     }
 
