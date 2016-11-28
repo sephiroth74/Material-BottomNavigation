@@ -103,8 +103,12 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationFixedItemView current = (BottomNavigationFixedItemView) getChildAt(oldSelectedIndex);
         final BottomNavigationFixedItemView child = (BottomNavigationFixedItemView) getChildAt(index);
 
-        current.setExpanded(false, 0, animate);
-        child.setExpanded(true, 0, animate);
+        if (null != current) {
+            current.setExpanded(false, 0, animate);
+        }
+        if (null != child) {
+            child.setExpanded(true, 0, animate);
+        }
     }
 
     @Override

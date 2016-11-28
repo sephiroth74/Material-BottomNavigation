@@ -225,7 +225,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         if (null == menu) {
             savedState.selectedIndex = 0;
         } else {
-            savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
+            // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
+            savedState.selectedIndex = getSelectedIndex();
         }
 
         if (null != badgeProvider) {
@@ -737,12 +738,17 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         final boolean animate,
         final boolean fromUser) {
 
-        final BottomNavigationItem item = menu.getItemAt(index);
+        final BottomNavigationItem item;
+        if (index > -1 && index < menu.getItemsCount()) {
+            item = menu.getItemAt(index);
+        } else {
+            item = null;
+        }
 
         if (layoutContainer.getSelectedIndex() != index) {
             layoutContainer.setSelectedIndex(index, animate);
 
-            if (item.hasColor() && !menu.isTablet()) {
+            if ((null != item && item.hasColor()) && !menu.isTablet()) {
                 if (animate) {
                     MiscUtils.animate(
                         this,
@@ -764,12 +770,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             }
 
             if (null != listener) {
-                listener.onMenuItemSelect(item.getId(), index, fromUser);
+                listener.onMenuItemSelect(null != item ? item.getId() : -1, index, fromUser);
             }
 
         } else {
             if (null != listener) {
-                listener.onMenuItemReselect(item.getId(), index, fromUser);
+                listener.onMenuItemReselect(null != item ? item.getId() : -1, index, fromUser);
             }
         }
     }

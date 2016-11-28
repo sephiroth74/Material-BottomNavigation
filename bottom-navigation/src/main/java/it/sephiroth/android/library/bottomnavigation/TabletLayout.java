@@ -92,8 +92,12 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationTabletItemView current = (BottomNavigationTabletItemView) getChildAt(oldSelectedIndex);
         final BottomNavigationTabletItemView child = (BottomNavigationTabletItemView) getChildAt(index);
 
-        current.setExpanded(false, 0, animate);
-        child.setExpanded(true, 0, animate);
+        if (null != current) {
+            current.setExpanded(false, 0, animate);
+        }
+        if (null != child) {
+            child.setExpanded(true, 0, animate);
+        }
     }
 
     @Override
