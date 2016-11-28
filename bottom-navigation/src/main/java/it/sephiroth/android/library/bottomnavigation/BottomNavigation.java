@@ -41,6 +41,7 @@ import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -494,8 +495,17 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         super.onAttachedToWindow();
         attached = true;
 
-        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-        this.gravity = GravityCompat.getAbsoluteGravity(params.gravity, ViewCompat.getLayoutDirection(this));
+        ViewGroup.LayoutParams params = getLayoutParams();
+        final CoordinatorLayout.LayoutParams layoutParams;
+        if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
+            layoutParams = (CoordinatorLayout.LayoutParams) params;
+            this.gravity = GravityCompat.getAbsoluteGravity(layoutParams.gravity, ViewCompat.getLayoutDirection(this));
+        } else {
+            layoutParams = null;
+            // TODO: check the gravity in other viewparent types
+            this.gravity = Gravity.BOTTOM;
+        }
+
         initializeUI(gravity);
 
         if (null != pendingMenu) {
@@ -504,8 +514,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         }
 
         if (null == mBehavior) {
-            if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
-                mBehavior = params.getBehavior();
+            if (null != layoutParams) {
+                mBehavior = layoutParams.getBehavior();
 
                 if (isInEditMode()) {
                     return;
