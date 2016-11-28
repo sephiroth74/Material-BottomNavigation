@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +50,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
     public Toolbar getToolbar() {
         return (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    public boolean hasManagedToolbarScroll() {
+        return hasAppBarLayout() && findViewById(R.id.CoordinatorLayout01) instanceof CoordinatorLayout;
     }
 
     public boolean hasAppBarLayout() {
