@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -60,7 +61,11 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         log(TAG, INFO, "onLayout(change:%b, selectedIndex:%d)", changed, selectedIndex);
 
         if (totalChildrenSize == 0) {
-            totalChildrenSize = minSize * (getChildCount() - 1) + maxSize;
+            if (selectedIndex < 0) {
+                totalChildrenSize = minSize * getChildCount();
+            } else {
+                totalChildrenSize = minSize * (getChildCount() - 1) + maxSize;
+            }
         }
 
         int width = (r - l);
@@ -120,12 +125,19 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationItemViewAbstract current = (BottomNavigationItemViewAbstract) getChildAt(oldSelectedIndex);
         final BottomNavigationItemViewAbstract child = (BottomNavigationItemViewAbstract) getChildAt(index);
 
+        final boolean willAnimate = null != current && null != child;
+
+        if (!willAnimate) {
+            totalChildrenSize = 0;
+            requestLayout();
+        }
+
         if (null != current) {
-            current.setExpanded(false, minSize, animate);
+            current.setExpanded(false, minSize, willAnimate);
         }
 
         if (null != child) {
-            child.setExpanded(true, maxSize, animate);
+            child.setExpanded(true, maxSize, willAnimate);
         }
     }
 
@@ -233,6 +245,7 @@ public class ShiftingLayout extends ViewGroup implements ItemsLayoutContainer {
 
             view.setOnTouchListener(new OnTouchListener() {
                 @Override
+                @SuppressLint ("ClickableViewAccessibility")
                 public boolean onTouch(final View v, final MotionEvent event) {
                     final int action = event.getActionMasked();
                     if (action == MotionEvent.ACTION_DOWN) {

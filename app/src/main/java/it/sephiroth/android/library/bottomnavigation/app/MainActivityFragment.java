@@ -32,6 +32,7 @@ public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
     CoordinatorLayout mCoordinatorLayout;
+    ViewGroup mRoot;
     private SystemBarConfig config;
     private ToolbarScrollHelper scrollHelper;
 
@@ -56,7 +57,10 @@ public class MainActivityFragment extends Fragment {
 
         final BaseActivity activity = (BaseActivity) getActivity();
         config = activity.getSystemBarTint().getConfig();
-        mCoordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.CoordinatorLayout01);
+        mRoot = (ViewGroup) activity.findViewById(R.id.CoordinatorLayout01);
+        if (mRoot instanceof CoordinatorLayout) {
+            mCoordinatorLayout = (CoordinatorLayout) mRoot;
+        }
 
         final int navigationHeight;
         final int actionbarHeight;
@@ -83,10 +87,15 @@ public class MainActivityFragment extends Fragment {
                 public void onGlobalLayout() {
                     navigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                    final CoordinatorLayout.LayoutParams coordinatorLayoutParams =
-                        (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
+                    final ViewGroup.LayoutParams params = navigation.getLayoutParams();
+                    final CoordinatorLayout.Behavior behavior;
 
-                    final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
+                    if (params instanceof CoordinatorLayout.LayoutParams) {
+                        final CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) params;
+                        behavior = coordinatorLayoutParams.getBehavior();
+                    } else {
+                        behavior = null;
+                    }
 
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
@@ -106,7 +115,7 @@ public class MainActivityFragment extends Fragment {
                             totalHeight = navigation.getNavigationHeight();
                         }
 
-                        createAdater(totalHeight, activity.hasAppBarLayout());
+                        createAdater(totalHeight, activity.hasManagedToolbarScroll());
                     } else {
                         createAdater(navigationHeight, activity.hasAppBarLayout());
                     }
@@ -116,7 +125,7 @@ public class MainActivityFragment extends Fragment {
             createAdater(navigationHeight, activity.hasAppBarLayout());
         }
 
-        if (!activity.hasAppBarLayout()) {
+        if (!activity.hasManagedToolbarScroll()) {
             scrollHelper = new ToolbarScrollHelper(activity, activity.getToolbar());
             scrollHelper.initialize(mRecyclerView);
         }
@@ -175,7 +184,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onClick(final View view) {
                     Snackbar snackbar =
-                        Snackbar.make(mCoordinatorLayout, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
+                        Snackbar.make(mRoot, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
                             .setAction(
                                 "Action",
                                 null
@@ -187,7 +196,7 @@ public class MainActivityFragment extends Fragment {
             holder.button2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Button 2 of item " + holder.getAdapterPosition(),
+                    Snackbar snackbar = Snackbar.make(mRoot, "Button 2 of item " + holder.getAdapterPosition(),
                         Snackbar.LENGTH_LONG
                     )
                         .setAction(

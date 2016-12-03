@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -92,8 +93,12 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
         final BottomNavigationTabletItemView current = (BottomNavigationTabletItemView) getChildAt(oldSelectedIndex);
         final BottomNavigationTabletItemView child = (BottomNavigationTabletItemView) getChildAt(index);
 
-        current.setExpanded(false, 0, animate);
-        child.setExpanded(true, 0, animate);
+        if (null != current) {
+            current.setExpanded(false, 0, animate);
+        }
+        if (null != child) {
+            child.setExpanded(true, 0, animate);
+        }
     }
 
     @Override
@@ -148,6 +153,7 @@ public class TabletLayout extends ViewGroup implements ItemsLayoutContainer {
             final int finalI = i;
             view.setOnTouchListener(new OnTouchListener() {
                 @Override
+                @SuppressLint ("ClickableViewAccessibility")
                 public boolean onTouch(final View v, final MotionEvent event) {
                     final int action = event.getActionMasked();
                     if (action == MotionEvent.ACTION_DOWN) {
