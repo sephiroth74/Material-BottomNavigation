@@ -31,7 +31,7 @@ Installation
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.0'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
 
 
 Usage
@@ -162,9 +162,16 @@ The xml menu supports the following attributes in the &lt;menu&gt; tag:
 
     <!-- menu item disabled color -->
     <attr name="bbn_itemColorDisabled" format="color" />
+
+    <!-- force fixed behavior and always display item labels -->
+    <!-- default implementation is false and the labels are -->
+    <!-- shown only if there are less than 4 items in the menu -->
+    <attr name="bbn_alwaysShowLabels" format="boolean" />
 </declare-styleable>
 ```
 
+> **Note:** By default when there are 4 or 5 elements, only the selected item will display the label.
+In order to force all the items to always show their label, use `bbn_alwaysShowLabels` in the menu xml.
 
 Badges
 =================
