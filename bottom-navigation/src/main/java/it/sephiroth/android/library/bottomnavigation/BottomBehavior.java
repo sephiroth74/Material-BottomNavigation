@@ -122,6 +122,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         return scrollable;
     }
 
+    public void setScrollable(final boolean scrollable) {
+        this.scrollable = scrollable;
+    }
+
     public boolean isExpanded() {
         return !hidden;
     }
