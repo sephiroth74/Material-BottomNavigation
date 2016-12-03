@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- default BottomNavigation height -->
     <dimen name="bbn_bottom_navigation_height">56dp</dimen>
@@ -20,7 +20,7 @@
     <dimen name="bbn_shifting_item_padding_top">6dp</dimen>
     <dimen name="bbn_shifting_item_icon_size">24dp</dimen>
     <dimen name="bbn_shifting_text_size">14dp</dimen>
-    <dimen name="bbn_shifting_item_ripple_radius">48dp</dimen>
+    <dimen name="bbn_shifting_item_ripple_radius" tools:ignore="UnusedResources">48dp</dimen>
     <dimen name="bbn_shifting_maxActiveItemWidth">168dp</dimen>
     <dimen name="bbn_shifting_minActiveItemWidth">96dp</dimen>
     <dimen name="bbn_shifting_maxInactiveItemWidth">96dp</dimen>

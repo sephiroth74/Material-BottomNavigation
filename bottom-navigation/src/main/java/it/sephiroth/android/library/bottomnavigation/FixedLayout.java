@@ -1,5 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -172,6 +173,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
             final int finalI = i;
             view.setOnTouchListener(new OnTouchListener() {
                 @Override
+                @SuppressLint ("ClickableViewAccessibility")
                 public boolean onTouch(final View v, final MotionEvent event) {
                     final int action = event.getActionMasked();
                     if (action == MotionEvent.ACTION_DOWN) {

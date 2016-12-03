@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- default ripple color for shifting items -->
     <color name="bbn_shifting_item_ripple_color">#33FFFFFF</color>
@@ -8,7 +8,7 @@
     <color name="bbn_fixed_item_ripple_color">#33000000</color>
 
     <!-- fixed item inactive color (only alpha will be used) -->
-    <color name="bbn_item_shifting_color_inactive">#99000000</color>
+    <color name="bbn_item_shifting_color_inactive" tools:ignore="UnusedResources">#99000000</color>
 
     <color name="bbn_topShadowEndColor">#AA000000</color>
     <color name="bbn_topShadowCenterColor">#66000000</color>
