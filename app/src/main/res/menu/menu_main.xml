@@ -73,4 +73,10 @@
         android:orderInCategory="100"
         android:title="@string/menu_enable_disable_items"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item13"
+        android:orderInCategory="100"
+        android:title="No Coordinator"
+        app:showAsAction="never" />
 </menu>

@@ -48,7 +48,14 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         BottomNavigation.DEBUG = BuildConfig.DEBUG;
 
         setContentView(getActivityLayoutResId());
-        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
+        final ViewGroup root = (ViewGroup) findViewById(R.id.CoordinatorLayout01);
+        final CoordinatorLayout coordinatorLayout;
+        if (root instanceof CoordinatorLayout) {
+            coordinatorLayout = (CoordinatorLayout) root;
+        } else {
+            coordinatorLayout = null;
+        }
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -60,7 +67,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         log(TAG, VERBOSE, "translucentStatus: %b", translucentStatus);
 
         if (translucentStatus) {
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coordinatorLayout.getLayoutParams();
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
             params.topMargin = -statusbarHeight;
 
             params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
@@ -96,8 +103,8 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
-                    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    final View root = findViewById(R.id.CoordinatorLayout01);
+                    Snackbar snackbar = Snackbar.make(root, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction(
                             "Action",
                             null
@@ -184,6 +191,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 return true;
             case R.id.item12:
                 startActivity(new Intent(this, EnableDisableItemsActivity.class));
+                return true;
+            case R.id.item13:
+                startActivity(new Intent(this, MainActivityNoCoordinator.class));
                 return true;
 
         }
