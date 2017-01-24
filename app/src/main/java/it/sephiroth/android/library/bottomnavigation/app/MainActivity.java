@@ -254,7 +254,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         if (fromUser) {
             final FragmentManager manager = getSupportFragmentManager();
             MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);
-            fragment.scrollToTop();
+            if (null != fragment) {
+                fragment.scrollToTop();
+            }
         }
 
     }
