@@ -139,7 +139,9 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
                         @Override
                         public void onPageSelected(final int position) {
-                            getBottomNavigation().setSelectedIndex(position, false);
+                            if (getBottomNavigation().getSelectedIndex() != position) {
+                                getBottomNavigation().setSelectedIndex(position, false);
+                            }
                         }
 
                         @Override
