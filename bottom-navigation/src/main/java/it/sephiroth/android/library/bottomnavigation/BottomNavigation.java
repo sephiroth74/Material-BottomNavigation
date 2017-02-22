@@ -51,7 +51,10 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import it.sephiroth.android.library.bottonnavigation.R;
@@ -225,9 +228,18 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         if (null == menu) {
             savedState.selectedIndex = 0;
+            savedState.disabledIndices = Collections.emptyList();
         } else {
             // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
             savedState.selectedIndex = getSelectedIndex();
+
+            savedState.disabledIndices = new ArrayList<>();
+
+            for (int i = 0; i < menu.getItems().length; i++) {
+                if (!menu.getItems()[i].isEnabled()) {
+                    savedState.disabledIndices.add(i);
+                }
+            }
         }
 
         if (null != badgeProvider) {
@@ -248,6 +260,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         if (null != badgeProvider && null != savedState.badgeBundle) {
             badgeProvider.restore(savedState.badgeBundle);
+        }
+
+        if (null != pendingMenu) {
+            for (int i = 0; i < pendingMenu.getItems().length; i++) {
+                if (savedState.disabledIndices.contains(i)) {
+                    pendingMenu.getItems()[i].setEnabled(false);
+                }
+            }
         }
     }
 
@@ -862,11 +882,14 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     static class SavedState extends BaseSavedState {
         int selectedIndex;
         Bundle badgeBundle;
+        List<Integer> disabledIndices;
 
         public SavedState(Parcel in) {
             super(in);
             selectedIndex = in.readInt();
             badgeBundle = in.readBundle();
+            disabledIndices = new ArrayList<>();
+            in.readList(disabledIndices, SavedState.class.getClassLoader());
         }
 
         public SavedState(final Parcelable superState) {
@@ -878,6 +901,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             super.writeToParcel(out, flags);
             out.writeInt(selectedIndex);
             out.writeBundle(badgeBundle);
+            out.writeList(disabledIndices);
         }
 
         @Override
