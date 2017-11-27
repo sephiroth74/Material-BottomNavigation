@@ -548,8 +548,8 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         this.menu = menu;
 
         if (null != menu) {
-            if (menu.getItemsCount() < 3 || menu.getItemsCount() > 5) {
-                throw new IllegalArgumentException("BottomNavigation expects 3 to 5 items. " + menu.getItemsCount() + " found");
+            if (menu.getItemsCount() < 2 || menu.getItemsCount() > 5) {
+                throw new IllegalArgumentException("BottomNavigation expects 2 to 5 items. " + menu.getItemsCount() + " found");
             }
 
             enabledRippleBackground = !menu.getItemAt(0).hasColor() || menu.isTablet();
