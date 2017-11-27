@@ -32,6 +32,11 @@ Installation
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
 	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+	
+
+If adding AAR file, then you  need to add dependency to your project
+
+	compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
 
 
 Usage
