@@ -195,6 +195,12 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
      */
     private boolean attached;
 
+
+    /**
+     * Set if current item should expand (default true)
+     */
+    private boolean itemExpands = true;
+
     private BadgeProvider badgeProvider;
 
     public BottomNavigation(final Context context) {
@@ -630,7 +636,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
             } else if (menu.isShifting()) {
                 itemsContainer = new ShiftingLayout(getContext());
             } else {
-                itemsContainer = new FixedLayout(getContext());
+                itemsContainer = new FixedLayout(getContext(), itemExpands);
             }
 
             // force the layout manager ID
@@ -847,6 +853,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
         } catch (Exception e) {
             throw new RuntimeException("Could not inflate Behavior subclass " + fullName, e);
         }
+    }
+
+    public void setItemExpands(boolean itemExpands) {
+        this.itemExpands = itemExpands;
     }
 
     public interface OnMenuItemSelectionListener {

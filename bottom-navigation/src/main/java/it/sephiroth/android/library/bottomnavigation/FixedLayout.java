@@ -30,9 +30,25 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
     OnItemClickListener listener;
     private int itemFinalWidth;
     private MenuParser.Menu menu;
+    private boolean itemExpands;
+
 
     public FixedLayout(final Context context) {
         super(context);
+        this.itemExpands = true;
+
+        totalChildrenSize = 0;
+        selectedIndex = 0;
+
+        final Resources res = getResources();
+        maxActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_maxActiveItemWidth);
+        minActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_minActiveItemWidth);
+    }
+
+    public FixedLayout(final Context context, boolean itemExpands) {
+        super(context);
+        this.itemExpands = itemExpands;
+
         totalChildrenSize = 0;
         selectedIndex = 0;
 
@@ -108,7 +124,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
             current.setExpanded(false, 0, animate);
         }
         if (null != child) {
-            child.setExpanded(true, 0, animate);
+            child.setExpanded(itemExpands, 0, animate);
         }
     }
 
