@@ -88,12 +88,10 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
     @Override
     protected void onStatusChanged(final boolean expanded, final int size, final boolean animate) {
 
-        if (!animate) {
-            updateLayoutOnAnimation(1, expanded);
-            setIconTranslation(expanded ? 0 : (paddingTopInactive - paddingTopActive));
-            return;
-        }
+        updateLayoutOnAnimation(1, expanded);
+        // setIconTranslation(expanded ? 0 : (paddingTopInactive - paddingTopActive));
 
+/*
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(animationDuration);
         set.setInterpolator(interpolator);
@@ -112,7 +110,7 @@ public class BottomNavigationFixedItemView extends BottomNavigationItemViewAbstr
             ObjectAnimator.ofFloat(this, "iconTranslation", expanded ? 0 : (paddingTopInactive - paddingTopActive));
 
         set.playTogether(animator1, animator2);
-        set.start();
+        set.start();*/
     }
 
     private void updateLayoutOnAnimation(final float fraction, final boolean expanded) {

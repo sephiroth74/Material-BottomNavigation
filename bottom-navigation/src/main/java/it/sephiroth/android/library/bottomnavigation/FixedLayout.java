@@ -124,7 +124,7 @@ public class FixedLayout extends ViewGroup implements ItemsLayoutContainer {
             current.setExpanded(false, 0, animate);
         }
         if (null != child) {
-            child.setExpanded(itemExpands, 0, animate);
+            child.setExpanded(true, 0, animate);
         }
     }
 
