@@ -1,6 +1,6 @@
 package it.sephiroth.android.library.bottomnavigation.app;
 
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 
 /**
  * Created by crugnola on 10/24/16.

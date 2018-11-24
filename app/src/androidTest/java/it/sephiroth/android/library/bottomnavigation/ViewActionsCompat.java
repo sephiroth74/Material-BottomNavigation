@@ -1,11 +1,11 @@
 package it.sephiroth.android.library.bottomnavigation;
 
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.action.GeneralLocation;
-import android.support.test.espresso.action.GeneralSwipeAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Swiper;
-import android.support.test.espresso.action.ViewActions;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swiper;
+import androidx.test.espresso.action.ViewActions;
 
 /**
  * Created by crugnola on 4/12/16.

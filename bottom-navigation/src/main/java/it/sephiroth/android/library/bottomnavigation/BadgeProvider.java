@@ -2,7 +2,7 @@ package it.sephiroth.android.library.bottomnavigation;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 
 import java.util.HashSet;
 

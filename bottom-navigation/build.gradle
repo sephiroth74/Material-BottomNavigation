@@ -1,8 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 16
@@ -27,15 +28,23 @@ android {
         textOutput "stdout"
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:design:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
-    compile 'com.infstory:proguard-annotations:1.0.2'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    implementation 'com.infstory:proguard-annotations:1.0.2'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 

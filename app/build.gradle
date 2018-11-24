@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "it.sephiroth.android.library.bottomnavigation.app"
@@ -10,15 +11,17 @@ android {
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     lintOptions {
         disable "AppLinksAutoVerifyError", "AppLinksAutoVerifyWarning", "AllowBackup", "IconMissingDensityFolder",
                 "GoogleAppIndexingWarning", "SetTextI18n", "HardcodedText"
@@ -28,44 +31,36 @@ android {
         textOutput "stdout"
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:design:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:cardview-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:gridlayout-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:palette-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:recyclerview-v7:' + SUPPORT_LIBRARY_VERSION
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation project(':bottom-navigation')
 
-    compile 'com.github.clans:fab:1.6.3'
+    testImplementation 'junit:junit:4.12'
 
-    compile project(':bottom-navigation')
-
-    testCompile 'junit:junit:4.12'
-
-
-
-    androidTestCompile 'com.android.support:recyclerview-v7:' + SUPPORT_LIBRARY_VERSION
-    androidTestCompile 'com.android.support:support-annotations:' + SUPPORT_LIBRARY_VERSION
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
-
-    }
-
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
-        exclude module: 'recyclerview-v7'
-        exclude module: 'appcompat-v7'
-        exclude module: 'design'
-        exclude module: 'support-v4'
-        exclude module: 'espresso-core'
-    }
-
+    androidTestImplementation 'androidx.recyclerview:recyclerview:1.0.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
 configurations.all {

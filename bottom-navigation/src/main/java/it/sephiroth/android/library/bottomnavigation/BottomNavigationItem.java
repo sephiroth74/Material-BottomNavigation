@@ -2,7 +2,7 @@ package it.sephiroth.android.library.bottomnavigation;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.content.res.AppCompatResources;
+import androidx.appcompat.content.res.AppCompatResources;
 
 /**
  * Created by alessandro on 4/3/16.

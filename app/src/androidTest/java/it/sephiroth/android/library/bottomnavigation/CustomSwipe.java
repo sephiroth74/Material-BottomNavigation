@@ -17,10 +17,10 @@ package it.sephiroth.android.library.bottomnavigation;
  */
 
 import android.os.SystemClock;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.action.MotionEvents;
-import android.support.test.espresso.action.Swiper;
-import android.support.test.espresso.core.deps.guava.base.Preconditions;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.action.MotionEvents;
+import androidx.test.espresso.action.Swiper;
+import androidx.test.espresso.core.deps.guava.base.Preconditions;
 import android.util.Log;
 import android.view.MotionEvent;
 
