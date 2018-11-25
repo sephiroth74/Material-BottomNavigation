@@ -66,8 +66,8 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
         final int srcColor = enabled ? (expanded ? colorInactive : colorActive) : colorDisabled;
         final int color = (Integer) evaluator.evaluate(fraction, srcColor, dstColor);
 
-        icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        icon.setAlpha(Color.alpha(color));
+        getIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        getIcon().setAlpha(Color.alpha(color));
 
         ViewCompat.postInvalidateOnAnimation(this);
     }
@@ -76,15 +76,15 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        if (null == this.icon) {
-            this.icon = getItem().getIcon(getContext()).mutate();
-            this.icon.setColorFilter(
+        if (null == this.getIcon()) {
+            this.setIcon(getItem().getIcon(getContext()).mutate());
+            this.getIcon().setColorFilter(
                 isExpanded() ? (isEnabled() ? colorActive : colorDisabled) : (isEnabled() ? colorInactive : colorDisabled),
                 PorterDuff.Mode.SRC_ATOP
             );
-            this.icon.setAlpha(Color
+            this.getIcon().setAlpha(Color
                 .alpha(isExpanded() ? (isEnabled() ? colorActive : colorDisabled) : (isEnabled() ? colorInactive : colorDisabled)));
-            this.icon.setBounds(0, 0, iconSize, iconSize);
+            this.getIcon().setBounds(0, 0, iconSize, iconSize);
         }
 
         if (changed) {
@@ -92,14 +92,14 @@ public class BottomNavigationTabletItemView extends BottomNavigationItemViewAbst
             final int h = bottom - top;
             final int centerX = (w - iconSize) / 2;
             final int centerY = (h - iconSize) / 2;
-            icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
+            getIcon().setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize);
         }
     }
 
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        icon.draw(canvas);
+        getIcon().draw(canvas);
         drawBadge(canvas);
     }
 }

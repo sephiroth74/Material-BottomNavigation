@@ -244,18 +244,18 @@ public class MainActivityFragment extends Fragment {
 
     private Book[] createData() {
         return new Book[]{
-            new Book("The Flight", "Scott Masterson", "http://i.imgur.com/dyyP2iO.jpg"),
-            new Book("Room of Plates", "Ali Conners", "http://i.imgur.com/da6QIlR.jpg"),
-            new Book("The Sleek Boot", "Sandra Adams", "http://i.imgur.com/YHoOJh4.jpg"),
-            new Book("Night Hunting", "Janet Perkins", "http://i.imgur.com/3jxqrKP.jpg"),
-            new Book("Rain and Coffee", "Peter Carlsson", "http://i.imgur.com/AZRynvM.jpg"),
-            new Book("Ocean View", "Trevor Hansen", "http://i.imgur.com/IvhOJcw.jpg"),
-            new Book("Lovers Of The Roof", "Britta Holt", "http://i.imgur.com/pxgI1b4.png"),
-            new Book("Lessons from Delhi", "Mary Johnson", "http://i.imgur.com/oT1WYX9.jpg"),
-            new Book("Mountaineers", "Abbey Christensen", "http://i.imgur.com/CLLDz.jpg"),
-            new Book("Plains In The Night", "David Park", "http://i.imgur.com/7MrSvXE.jpg?1"),
-            new Book("Dear Olivia", "Sylvia Sorensen", "http://i.imgur.com/3mkUuux.jpg"),
-            new Book("Driving Lessons", "Halime Carver", "http://i.imgur.com/LzYAfFL.jpg"),
+            new Book("The Flight", "Scott Masterson", "https://i.imgur.com/dyyP2iO.jpg"),
+            new Book("Room of Plates", "Ali Conners", "https://i.imgur.com/da6QIlR.jpg"),
+            new Book("The Sleek Boot", "Sandra Adams", "https://i.imgur.com/YHoOJh4.jpg"),
+            new Book("Night Hunting", "Janet Perkins", "https://i.imgur.com/3jxqrKP.jpg"),
+            new Book("Rain and Coffee", "Peter Carlsson", "https://i.imgur.com/AZRynvM.jpg"),
+            new Book("Ocean View", "Trevor Hansen", "https://i.imgur.com/IvhOJcw.jpg"),
+            new Book("Lovers Of The Roof", "Britta Holt", "https://i.imgur.com/pxgI1b4.png"),
+            new Book("Lessons from Delhi", "Mary Johnson", "https://i.imgur.com/oT1WYX9.jpg"),
+            new Book("Mountaineers", "Abbey Christensen", "https://i.imgur.com/CLLDz.jpg"),
+            new Book("Plains In The Night", "David Park", "https://i.imgur.com/7MrSvXE.jpg?1"),
+            new Book("Dear Olivia", "Sylvia Sorensen", "https://i.imgur.com/3mkUuux.jpg"),
+            new Book("Driving Lessons", "Halime Carver", "https://i.imgur.com/LzYAfFL.jpg"),
         };
     }
 
