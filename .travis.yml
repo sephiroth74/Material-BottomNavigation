@@ -44,7 +44,7 @@ install:
     - ./gradlew androidDependencies
 
 script:
-  - ./gradlew clean build checkstyleDebug -PdisablePreDex
+  - ./gradlew clean build lint assemble
 
 cache:
   directories:
