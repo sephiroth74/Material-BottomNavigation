@@ -260,7 +260,7 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes);
         final int menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0);
-        pendingMenu = MenuParser.inflateMenu(context, menuResId);
+        pendingMenu = MenuParser.Companion.inflateMenu(context, menuResId);
         badgeProvider = parseBadgeProvider(this, context, array.getString(R.styleable.BottomNavigation_bbn_badgeProvider));
         array.recycle();
 
@@ -372,10 +372,10 @@ public class BottomNavigation extends FrameLayout implements OnItemClickListener
     public void inflateMenu(@MenuRes final int menuResId) {
         defaultSelectedIndex = 0;
         if (isAttachedToWindow()) {
-            setItems(MenuParser.inflateMenu(getContext(), menuResId));
+            setItems(MenuParser.Companion.inflateMenu(getContext(), menuResId));
             pendingMenu = null;
         } else {
-            pendingMenu = MenuParser.inflateMenu(getContext(), menuResId);
+            pendingMenu = MenuParser.Companion.inflateMenu(getContext(), menuResId);
         }
     }
 
