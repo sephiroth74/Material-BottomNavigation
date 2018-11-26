@@ -37,7 +37,7 @@ internal abstract class BottomNavigationItemViewAbstract(parent: BottomNavigatio
         private set
 
     protected var textDirty: Boolean = true
-    private val provider: BadgeProvider
+    private val provider: BadgeProvider?
     protected var badge: Drawable? = null
     protected var icon: Drawable? = null
 
@@ -47,7 +47,7 @@ internal abstract class BottomNavigationItemViewAbstract(parent: BottomNavigatio
     }
 
     fun invalidateBadge() {
-        val d = provider.getBadge(id)
+        val d = provider?.getBadge(id)
 
         if (badge !== d) {
             if (null != badge) {

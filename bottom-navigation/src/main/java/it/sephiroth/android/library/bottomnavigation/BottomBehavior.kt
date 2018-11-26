@@ -11,8 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation.PENDING_ACTION_ANIMATE_ENABLED
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation.PENDING_ACTION_NONE
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_ANIMATE_ENABLED
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_NONE
 import it.sephiroth.android.library.bottonnavigation.R
 import proguard.annotation.Keep
 import proguard.annotation.KeepClassMembers

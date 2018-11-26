@@ -48,7 +48,7 @@ open class BadgeProvider(private val navigation: BottomNavigation) {
 
     internal fun getBadge(@IdRes itemId: Int): Drawable? {
         return if (map.contains(itemId)) {
-            newDrawable(itemId, navigation.menu.badgeColor)
+            newDrawable(itemId, navigation.menu!!.badgeColor)
         } else null
     }
 
