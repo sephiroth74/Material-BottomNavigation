@@ -86,10 +86,9 @@ object MiscUtils {
 
     @TargetApi(21)
     fun setDrawableColor(drawable: Drawable, color: Int) {
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= 21 && drawable is RippleDrawable) {
             if (RippleDrawable::class.java.isInstance(drawable)) {
-                val rippleDrawable = drawable as RippleDrawable
-                rippleDrawable.setColor(ColorStateList.valueOf(color))
+                drawable.setColor(ColorStateList.valueOf(color))
             }
         } else {
             DrawableCompat.setTint(drawable, color)

@@ -140,9 +140,9 @@ class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemPressed(this@FixedLayout, v, true)
+                    itemClickListener?.onItemDown(this@FixedLayout, v, true, event.x, event.y)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemPressed(this@FixedLayout, v, false)
+                    itemClickListener?.onItemDown(this@FixedLayout, v, false, event.x, event.y)
                 }
                 false
             }

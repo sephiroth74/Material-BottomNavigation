@@ -22,6 +22,7 @@
 
 package it.sephiroth.android.library.bottomnavigation
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
@@ -40,6 +41,7 @@ import android.util.Log.INFO
 import android.util.Log.VERBOSE
 import android.view.Gravity
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
@@ -53,10 +55,10 @@ import androidx.core.view.ViewCompat
 import com.readystatesoftware.systembartint.SystemBarTintManager
 import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
-import timber.log.Timber
 import java.lang.ref.SoftReference
 import java.lang.reflect.Constructor
 import java.util.*
+import kotlin.math.min
 
 /**
  * Created by alessandro crugnola on 4/2/16.
@@ -119,7 +121,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * View used to show the press ripple overlay. I don't use the drawable in item view itself
      * because the ripple background will be clipped inside its bounds
      */
-    private var rippleOverlay: View? = null
+    private lateinit var rippleOverlay: View
 
     /**
      * Toggle the ripple background animation on item press
@@ -174,6 +176,16 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * The user defined layout_gravity
      */
     private var gravity: Int = 0
+
+    /**
+     * animation duration for the ripple reveal animation on item press
+     */
+    private var rippleRevealAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+    /**
+     * item press reveal animation
+     */
+    private var circleRevealAnim: Animator? = null
 
     /**
      * View is attached
@@ -272,12 +284,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
-        Timber.i("onRestoreInstanceState")
+        log(INFO, "onRestoreInstanceState")
         val savedState = state as SavedState
         super.onRestoreInstanceState(savedState.superState)
 
         defaultSelectedIndex = savedState.selectedIndex
-        Timber.v("defaultSelectedIndex: \$defaultSelectedIndex")
+        log(VERBOSE, "defaultSelectedIndex: $defaultSelectedIndex")
 
         if (null != badgeProvider && null != savedState.badgeBundle) {
             badgeProvider!!.restore(savedState.badgeBundle!!)
@@ -305,12 +317,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             val activity = MiscUtils.getActivity(context)
             if (null != activity) {
                 val systembarTint = SystemBarTintManager(activity)
-                if (MiscUtils.hasTranslucentNavigation(activity)
-                    && systembarTint.config.isNavigationAtBottom
-                    && systembarTint.config.hasNavigtionBar()) {
-                    bottomInset = systembarTint.config.navigationBarHeight
+                bottomInset = if (MiscUtils.hasTranslucentNavigation(activity)
+                                  && systembarTint.config.isNavigationAtBottom
+                                  && systembarTint.config.hasNavigtionBar()) {
+                    systembarTint.config.navigationBarHeight
                 } else {
-                    bottomInset = 0
+                    0
                 }
                 topInset = systembarTint.config.statusBarHeight
             }
@@ -326,12 +338,15 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         MiscUtils.setDrawableColor(drawable, Color.WHITE)
 
         rippleOverlay = View(getContext())
-        rippleOverlay!!.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-        rippleOverlay!!.background = drawable
-        rippleOverlay!!.isClickable = false
-        rippleOverlay!!.isFocusable = false
-        rippleOverlay!!.isFocusableInTouchMode = false
-        addView(rippleOverlay)
+        rippleOverlay.let {
+            it.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            it.background = drawable
+            it.isClickable = false
+            it.isFocusable = false
+            it.isFocusableInTouchMode = false
+            it.alpha = 0f
+            addView(it)
+        }
     }
 
     internal fun resetPendingAction() {
@@ -339,7 +354,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun setLayoutParams(params: ViewGroup.LayoutParams) {
-        Timber.v("setLayoutParams: \$params")
+        log(VERBOSE, "setLayoutParams: $params")
         super.setLayoutParams(params)
     }
 
@@ -400,7 +415,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun setMenuItemEnabled(index: Int, enabled: Boolean) {
-        Timber.i("setMenuItemEnabled(%d, %b)", index, enabled)
+        log(INFO, "setMenuItemEnabled($index, $enabled)", index, enabled)
         if (null != menu) {
             menu!!.getItemAt(index).isEnabled = enabled
             if (null != itemsContainer) {
@@ -449,10 +464,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        MiscUtils.log(INFO, "onSizeChanged(%d, %d)", w, h)
+        log(INFO, "onSizeChanged(%d, %d)", w, h)
         super.onSizeChanged(w, h, oldw, oldh)
         val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
         marginLayoutParams.bottomMargin = -bottomInset
+
+        rippleOverlay.layoutParams.width = min(w, h)
+        rippleOverlay.layoutParams.height = min(w, h)
     }
 
     override fun isAttachedToWindow(): Boolean {
@@ -503,7 +521,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun setItems(menu: MenuParser.Menu?) {
-        Timber.i("setItems: %s", menu)
+        log(INFO, "setItems: $menu")
 
         this.menu = menu
 
@@ -529,7 +547,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun initializeUI(gravity: Int) {
-        Timber.v("initializeUI(%d)", gravity)
+        log(VERBOSE, "initializeUI($gravity)")
         val layerDrawable: LayerDrawable
 
         val tablet = isTablet(gravity)
@@ -557,19 +575,15 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun initializeBackgroundColor(menu: MenuParser.Menu) {
-        Timber.v("initializeBackgroundColor")
-
         val color = menu.getBackground()
-        Timber.v("background: %x", color)
+        log(VERBOSE, "background: $color")
         backgroundDrawable!!.color = color
     }
 
     private fun initializeContainer(menu: MenuParser.Menu) {
-        Timber.v("initializeContainer")
         if (null != itemsContainer) {
 
             // remove the layout listener
-            Timber.v("remove listener from: %s", itemsContainer)
             (itemsContainer as ViewGroup).removeOnLayoutChangeListener(mLayoutChangedListener)
 
             if (menu.isTablet && itemsContainer !is TabletLayout) {
@@ -602,12 +616,11 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
 
         // add the layout listener
-        Timber.v("attach listener to: %s", itemsContainer)
         (itemsContainer as ViewGroup).addOnLayoutChangeListener(mLayoutChangedListener)
     }
 
     private fun initializeItems(menu: MenuParser.Menu) {
-        Timber.v("initializeItems(%d)", defaultSelectedIndex)
+        log(VERBOSE, "initializeItems($defaultSelectedIndex)")
 
         itemsContainer!!.setSelectedIndex(defaultSelectedIndex, false)
         itemsContainer!!.populate(menu)
@@ -617,7 +630,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             backgroundDrawable!!.color = menu.getItemAt(defaultSelectedIndex).color
         }
 
-        MiscUtils.setDrawableColor(rippleOverlay!!.background, menu.getRippleColor())
+        MiscUtils.setDrawableColor(rippleOverlay.background, menu.getRippleColor())
     }
 
     /**
@@ -656,12 +669,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 return
             }
 
-            view!!.getHitRect(outRect)
-
-            val centerX = rippleOverlay!!.width / 2
-            val centerY = rippleOverlay!!.height / 2
-            rippleOverlay!!.translationX = (outRect.centerX() - centerX).toFloat()
-            rippleOverlay!!.translationY = (outRect.centerY() - centerY).toFloat()
+            view?.let {
+                it.getHitRect(outRect)
+                val centerX = rippleOverlay.width / 2
+                val centerY = rippleOverlay.height / 2
+                rippleOverlay.translationX = (outRect.centerX() - centerX).toFloat()
+                rippleOverlay.translationY = (outRect.centerY() - centerY).toFloat()
+            }
         }
 
         fun forceLayout(v: View) {
@@ -670,29 +684,57 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
     }
 
-    override fun onItemPressed(parent: ItemsLayoutContainer, view: View, pressed: Boolean) {
-        if (Build.VERSION.SDK_INT < 21) {
+    override fun onItemDown(parent: ItemsLayoutContainer, view: View,
+                            pressed: Boolean, x: Float, y: Float) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return
         }
 
         if (!pressed) {
             if (enabledRippleBackground) {
-                rippleOverlay!!.isPressed = false
+
+                circleRevealAnim?.let {
+                    if (it.isRunning) {
+                        it.addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationRepeat(p0: Animator?) {}
+                            override fun onAnimationStart(p0: Animator?) {}
+                            override fun onAnimationCancel(p0: Animator?) {}
+
+                            override fun onAnimationEnd(p0: Animator?) {
+                                rippleOverlay.animate().alpha(0f).setDuration(rippleRevealAnimationDuration).start()
+                            }
+                        })
+                    } else {
+                        rippleOverlay.animate().alpha(0f).setDuration(rippleRevealAnimationDuration).start()
+                    }
+                }
+
+                rippleOverlay.isPressed = false
             }
-            rippleOverlay!!.isHovered = false
+            rippleOverlay.isHovered = false
             return
-        }
+        } else {
+            mLayoutChangedListener.forceLayout(view)
+            rippleOverlay.isHovered = true
 
-        mLayoutChangedListener.forceLayout(view)
-        rippleOverlay!!.isHovered = true
+            if (enabledRippleBackground) {
+                rippleOverlay.alpha = 1f
+                rippleOverlay.isPressed = true
 
-        if (enabledRippleBackground) {
-            rippleOverlay!!.isPressed = true
+                circleRevealAnim?.removeAllListeners()
+                circleRevealAnim?.cancel()
+                circleRevealAnim =
+                        ViewAnimationUtils.createCircularReveal(rippleOverlay, rippleOverlay.width / 2, rippleOverlay.height / 2, 0f, (rippleOverlay.width / 2).toFloat())
+                circleRevealAnim?.duration = rippleRevealAnimationDuration
+                circleRevealAnim?.start()
+
+
+            }
         }
     }
 
     override fun onItemClick(parent: ItemsLayoutContainer, view: View, index: Int, animate: Boolean) {
-        Timber.v("onItemClick: %d", index)
+        log(VERBOSE, "onItemClick: $index")
         setSelectedItemInternal(parent, view, index, animate, true)
         mLayoutChangedListener.forceLayout(view)
     }
@@ -719,27 +761,21 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                             backgroundOverlay!!,
                             backgroundDrawable!!,
                             item.color,
-                            backgroundColorAnimation
-                                     )
+                            backgroundColorAnimation)
                 } else {
                     MiscUtils.switchColor(
                             this,
                             view,
                             backgroundOverlay!!,
                             backgroundDrawable!!,
-                            item.color
-                                         )
+                            item.color)
                 }
             }
 
-            if (null != listener) {
-                listener!!.onMenuItemSelect(item?.id ?: -1, index, fromUser)
-            }
+            listener?.onMenuItemSelect(item?.id ?: -1, index, fromUser)
 
         } else {
-            if (null != listener) {
-                listener!!.onMenuItemReselect(item?.id ?: -1, index, fromUser)
-            }
+            listener?.onMenuItemReselect(item?.id ?: -1, index, fromUser)
         }
     }
 
@@ -752,7 +788,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun invalidateBadge(itemId: Int) {
-        Timber.v("invalidateBadge: %d", itemId)
+        log(VERBOSE, "invalidateBadge: $itemId")
         if (null != itemsContainer) {
             val viewAbstract = itemsContainer!!.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
             viewAbstract?.invalidateBadge()
@@ -824,7 +860,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         private val S_CONSTRUCTORS = ThreadLocal<MutableMap<String, Constructor<BadgeProvider>>>()
 
         internal fun parseBadgeProvider(navigation: BottomNavigation, context: Context, name: String?): BadgeProvider {
-            Timber.v("parseBadgeProvider: %s", name)
+            log(VERBOSE, "parseBadgeProvider: $name")
 
             if (name.isNullOrEmpty()) {
                 return BadgeProvider(navigation)

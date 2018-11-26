@@ -125,27 +125,24 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final ViewPager viewPager = getViewPager();
         if (null != viewPager) {
 
-            getBottomNavigation().setOnMenuChangedListener(new BottomNavigation.OnMenuChangedListener() {
-                @Override
-                public void onMenuChanged(final BottomNavigation parent) {
+            getBottomNavigation().setOnMenuChangedListener(parent -> {
 
-                    viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
-                    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(
-                            final int position, final float positionOffset, final int positionOffsetPixels) { }
+                viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(
+                        final int position, final float positionOffset, final int positionOffsetPixels) { }
 
-                        @Override
-                        public void onPageSelected(final int position) {
-                            if (getBottomNavigation().getSelectedIndex() != position) {
-                                getBottomNavigation().setSelectedIndex(position, false);
-                            }
+                    @Override
+                    public void onPageSelected(final int position) {
+                        if (getBottomNavigation().getSelectedIndex() != position) {
+                            getBottomNavigation().setSelectedIndex(position, false);
                         }
+                    }
 
-                        @Override
-                        public void onPageScrollStateChanged(final int state) { }
-                    });
-                }
+                    @Override
+                    public void onPageScrollStateChanged(final int state) { }
+                });
             });
 
         }
@@ -242,7 +239,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         if (fromUser) {
             getBottomNavigation().getBadgeProvider().remove(itemId);
             if (null != getViewPager()) {
-                getViewPager().setCurrentItem(position);
+//                getViewPager().setCurrentItem(position);
             }
         }
     }
