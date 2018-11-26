@@ -107,10 +107,6 @@ Examples
 | 4 items without changing background. <br />Menu show/hide feature is also disabled | Menu can be easily setup for (left or right) tablet support. |
 | ![Video 3](art/video3.gif) | ![Tablet Mode](art/tablet.png) |
 
-<br />
-**For a Live demo** [click here](https://appetize.io/app/19up38k8e7vbqgq6gpg8p873t8?device=nexus5&scale=100&orientation=portrait&osVersion=7.0)
-
-
 Sizing
 =================
 

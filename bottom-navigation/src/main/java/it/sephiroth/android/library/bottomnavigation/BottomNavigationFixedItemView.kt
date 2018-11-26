@@ -1,7 +1,5 @@
 package it.sephiroth.android.library.bottomnavigation
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Color
@@ -22,7 +20,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         BottomNavigationItemViewAbstract(parent, expanded, menu) {
     private val iconSize: Int
 
-    var centerY: Int = 0
+    private var centerY: Int = 0
         set(value) {
             field = value
             ViewCompat.postInvalidateOnAnimation(this)
@@ -79,8 +77,10 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         this.colorInactive = menu.getColorInactive()
         this.colorDisabled = menu.getColorDisabled()
         this.centerY = paddingTopActive
-        this.canvasTextScale = if (expanded) TEXT_SCALE_ACTIVE else 1f
-        this.iconTranslation = (if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat()
+        this.canvasTextScale = 1f
+        this.iconTranslation = 0f
+//        this.canvasTextScale = if (expanded) TEXT_SCALE_ACTIVE else 1f
+//        this.iconTranslation = (if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat()
 
         this.textPaint.color = Color.WHITE
         this.textPaint.hinting = Paint.HINTING_ON
@@ -102,28 +102,30 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
     }
 
     override fun onStatusChanged(expanded: Boolean, size: Int, animate: Boolean) {
-        if (!animate) {
-            updateLayoutOnAnimation(1f, expanded)
-            iconTranslation = ((if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat())
-            return
-        }
-
-        val set = AnimatorSet()
-        set.duration = animationDuration
-        set.interpolator = interpolator
-
-        val animator1 = ObjectAnimator.ofFloat(this, "textScale", if (expanded) TEXT_SCALE_ACTIVE else 1f)
-
-        animator1.addUpdateListener { animation ->
-            val fraction = animation.animatedFraction
-            updateLayoutOnAnimation(fraction, expanded)
-        }
-
-        val animator2 =
-                ObjectAnimator.ofFloat(this, "iconTranslation", if (expanded) 0f else (paddingTopInactive - paddingTopActive).toFloat())
-
-        set.playTogether(animator1, animator2)
-        set.start()
+        updateLayoutOnAnimation(1f, expanded)
+//        if (!animate) {
+//            updateLayoutOnAnimation(1f, expanded)
+//            iconTranslation = ((if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat())
+//            return
+//        }
+//
+//        val set = AnimatorSet()
+//        set.duration = animationDuration
+//        set.interpolator = interpolator
+//
+//        val animator1 = ObjectAnimator.ofFloat(this, "textScale", if (expanded) TEXT_SCALE_ACTIVE else 1f)
+//
+//        animator1.addUpdateListener { animation ->
+//            val fraction = animation.animatedFraction
+//            updateLayoutOnAnimation(fraction, expanded)
+//        }
+//
+//        val animator2 =
+//                ObjectAnimator.ofFloat(this, "iconTranslation", if (expanded) 0f else (paddingTopInactive - paddingTopActive).toFloat())
+//
+//        set.playTogether(animator1, animator2)
+//        set.start()
+//        updateLayoutOnAnimation(1f, expanded)
     }
 
     private fun updateLayoutOnAnimation(fraction: Float, expanded: Boolean) {
@@ -132,8 +134,8 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         val srcColor = if (enabled) if (expanded) colorInactive else colorActive else colorDisabled
         val color = evaluator.evaluate(fraction, srcColor, dstColor) as Int
 
-        icon!!.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        icon!!.alpha = Color.alpha(color)
+        icon?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        icon?.alpha = Color.alpha(color)
         textPaint.color = color
         ViewCompat.postInvalidateOnAnimation(this)
     }

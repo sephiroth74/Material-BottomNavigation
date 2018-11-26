@@ -9,5 +9,4 @@
             <solid android:color="@android:color/black" />
         </shape>
     </item>
-
 </ripple>

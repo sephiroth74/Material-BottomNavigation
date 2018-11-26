@@ -24,7 +24,7 @@ import timber.log.Timber
  */
 @Keep
 @KeepClassMembers
-open class BottomBehavior @JvmOverloads constructor(context: Context, attrs: AttributeSet) :
+open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         VerticalScrollingBehavior<BottomNavigation>(context, attrs) {
 
     var isScrollable: Boolean = false
@@ -269,6 +269,7 @@ open class BottomBehavior @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun ensureOrCancelAnimator(coordinatorLayout: CoordinatorLayout, child: BottomNavigation) {
         if (animator == null) {
             animator = ViewCompat.animate(child)

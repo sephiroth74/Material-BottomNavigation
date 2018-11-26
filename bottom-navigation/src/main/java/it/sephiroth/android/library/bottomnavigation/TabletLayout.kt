@@ -2,57 +2,48 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
-import android.util.Log.INFO
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
-import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
+import timber.log.Timber
 
 /**
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
- *
- * The MIT License
  */
-class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
-    private val maxActiveItemWidth: Int
-    private val minActiveItemWidth: Int
-    private var totalChildrenSize: Int = 0
+class TabletLayout(context: Context) : ItemsLayoutContainer(context) {
+    private val itemHeight: Int
+    private val itemPaddingTop: Int
     private var hasFrame: Boolean = false
     private var selectedIndex: Int = 0
-    private var itemFinalWidth: Int = 0
     private var menu: MenuParser.Menu? = null
 
     init {
         val res = resources
-        maxActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_maxActiveItemWidth)
-        minActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_minActiveItemWidth)
+        selectedIndex = 0
+        itemHeight = res.getDimensionPixelSize(R.dimen.bbn_tablet_item_height)
+        itemPaddingTop = res.getDimensionPixelSize(R.dimen.bbn_tablet_layout_padding_top)
     }
 
     override fun removeAll() {
         removeAllViews()
+        selectedIndex = 0
+        menu = null
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         if (!hasFrame || childCount == 0) {
             return
         }
-
-        if (totalChildrenSize == 0) {
-            totalChildrenSize = itemFinalWidth * (childCount - 1) + itemFinalWidth
-        }
-
-        val width = r - l
-        var left = (width - totalChildrenSize) / 2
+        var top = itemPaddingTop
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             val params = child.layoutParams
-            setChildFrame(child, left, 0, params.width, params.height)
-            left += child.width
+            setChildFrame(child, 0, top, params.width, params.height)
+            top += child.height
         }
     }
 
@@ -67,11 +58,12 @@ class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
     }
 
     private fun setChildFrame(child: View, left: Int, top: Int, width: Int, height: Int) {
+        Timber.v("setChildFrame: $left, $top, $width, $height")
         child.layout(left, top, left + width, top + height)
     }
 
     override fun setSelectedIndex(index: Int, animate: Boolean) {
-        MiscUtils.log(Log.INFO, "setSelectedIndex: $index")
+        Timber.v("setSelectedIndex: $index")
 
         if (selectedIndex == index) {
             return
@@ -84,19 +76,21 @@ class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
             return
         }
 
-        val current = getChildAt(oldSelectedIndex) as BottomNavigationFixedItemView
-        val child = getChildAt(index) as BottomNavigationFixedItemView
+        val current = getChildAt(oldSelectedIndex) as BottomNavigationTabletItemView?
+        val child = getChildAt(index) as BottomNavigationTabletItemView?
 
-        current.setExpanded(false, 0, animate)
-        child.setExpanded(true, 0, animate)
+        current?.setExpanded(false, 0, animate)
+        child?.setExpanded(true, 0, animate)
     }
 
     override fun setItemEnabled(index: Int, enabled: Boolean) {
-        log(INFO, "setItemEnabled(%d, %b)", index, enabled)
-        val child = getChildAt(index) as BottomNavigationItemViewAbstract
-        child.isEnabled = enabled
-        child.postInvalidate()
-        requestLayout()
+        Timber.v("setItemEnabled($index, $enabled)")
+        val child = getChildAt(index) as BottomNavigationItemViewAbstract?
+        child?.let {
+            it.isEnabled = enabled
+            it.postInvalidate()
+            requestLayout()
+        }
     }
 
     override fun getSelectedIndex(): Int {
@@ -104,7 +98,7 @@ class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
     }
 
     override fun populate(menu: MenuParser.Menu) {
-        log(Log.INFO, "populate: $menu")
+        Timber.v("populate: $menu")
 
         if (hasFrame) {
             populateInternal(menu)
@@ -115,39 +109,31 @@ class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun populateInternal(menu: MenuParser.Menu) {
-        log(Log.DEBUG, "populateInternal")
+        Timber.v("populateInternal")
 
         val parent = parent as BottomNavigation
-        val screenWidth = parent.width
-        var proposedWidth = Math.min(Math.max(screenWidth / menu.itemsCount, minActiveItemWidth), maxActiveItemWidth)
-
-        if (proposedWidth * menu.itemsCount > screenWidth) {
-            proposedWidth = screenWidth / menu.itemsCount
-        }
-
-        this.itemFinalWidth = proposedWidth
 
         for (i in 0 until menu.itemsCount) {
             val item = menu.getItemAt(i)
-
-            val params = LinearLayout.LayoutParams(proposedWidth, height)
-
-            val view = BottomNavigationFixedItemView(parent, i == selectedIndex, menu)
+            Timber.v("item: $item")
+            val params = LinearLayout.LayoutParams(width, itemHeight)
+            val view = BottomNavigationTabletItemView(parent, i == selectedIndex, menu)
             view.item = item
             view.layoutParams = params
             view.isClickable = true
             view.setTypeface(parent.typeface)
+            val finalI = i
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemPressed(this@FixedLayout, v, true)
+                    itemClickListener?.onItemPressed(this@TabletLayout, v, true)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemPressed(this@FixedLayout, v, false)
+                    itemClickListener?.onItemPressed(this@TabletLayout, v, false)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                itemClickListener?.onItemClick(this@FixedLayout, v, i, true)
+                itemClickListener?.onItemClick(this@TabletLayout, v, finalI, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

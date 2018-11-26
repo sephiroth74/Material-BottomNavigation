@@ -39,7 +39,6 @@ class FloatingActionButtonBehavior(context: Context,
 
         var t = 0f
         var t2 = 0f
-        val t3 = 0f
         var result = false
 
         for (dep in list) {

@@ -1,8 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation
 
-import android.view.View
+import android.content.Context
 import android.view.ViewGroup
-import androidx.annotation.IdRes
 import proguard.annotation.Keep
 import proguard.annotation.KeepClassMembers
 
@@ -12,23 +11,17 @@ import proguard.annotation.KeepClassMembers
  */
 @Keep
 @KeepClassMembers
-interface ItemsLayoutContainer {
+abstract class ItemsLayoutContainer(context: Context) : ViewGroup(context) {
 
-    fun getSelectedIndex(): Int
+    abstract fun getSelectedIndex(): Int
 
-    fun setSelectedIndex(index: Int, animate: Boolean)
+    abstract fun setSelectedIndex(index: Int, animate: Boolean)
 
-    fun populate(menu: MenuParser.Menu)
+    abstract fun populate(menu: MenuParser.Menu)
 
-    fun setLayoutParams(params: ViewGroup.LayoutParams)
+    var itemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener: OnItemClickListener)
+    abstract fun removeAll()
 
-    fun <T : View> findViewById(@IdRes id: Int): T
-
-    fun removeAll()
-
-    fun requestLayout()
-
-    fun setItemEnabled(index: Int, enabled: Boolean)
+    abstract fun setItemEnabled(index: Int, enabled: Boolean)
 }

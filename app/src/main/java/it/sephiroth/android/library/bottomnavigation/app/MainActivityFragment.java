@@ -77,8 +77,8 @@ public class MainActivityFragment extends Fragment {
             actionbarHeight = 0;
         }
 
-        MiscUtils.log(TAG, Log.VERBOSE, "navigationHeight: " + navigationHeight);
-        MiscUtils.log(TAG, Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
+        MiscUtils.INSTANCE.log(Log.VERBOSE, "navigationHeight: " + navigationHeight);
+        MiscUtils.INSTANCE.log(Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
 
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
@@ -101,7 +101,7 @@ public class MainActivityFragment extends Fragment {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
                         int systemBottomNavigation = activity.hasTranslucentNavigation() ? activity.getNavigationBarHeight() : 0;
 
-                        MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
+                        MiscUtils.INSTANCE.log(Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
@@ -132,7 +132,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
-        MiscUtils.log(getClass().getSimpleName(), Log.INFO, "createAdapter(" + height + ")");
+        MiscUtils.INSTANCE.log(Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout, createData()));

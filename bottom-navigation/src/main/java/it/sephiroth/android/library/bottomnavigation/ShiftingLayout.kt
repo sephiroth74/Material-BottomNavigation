@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import it.sephiroth.android.library.bottonnavigation.R
@@ -15,7 +14,7 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class ShiftingLayout(context: Context) : ViewGroup(context), ItemsLayoutContainer {
+class ShiftingLayout(context: Context) : ItemsLayoutContainer(context) {
     private val maxActiveItemWidth: Int
     private val minActiveItemWidth: Int
     private val maxInactiveItemWidth: Int
@@ -25,7 +24,6 @@ class ShiftingLayout(context: Context) : ViewGroup(context), ItemsLayoutContaine
     private var maxSize: Int = 0
     private var selectedIndex: Int = 0
     private var hasFrame: Boolean = false
-    internal var listener: OnItemClickListener? = null
     private var menu: MenuParser.Menu? = null
 
     init {
@@ -75,10 +73,6 @@ class ShiftingLayout(context: Context) : ViewGroup(context), ItemsLayoutContaine
             populateInternal(menu!!)
             menu = null
         }
-    }
-
-    override fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
     }
 
     private fun setChildFrame(child: View, left: Int, top: Int, width: Int, height: Int) {
@@ -215,14 +209,14 @@ class ShiftingLayout(context: Context) : ViewGroup(context), ItemsLayoutContaine
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    listener?.onItemPressed(this@ShiftingLayout, v, true)
+                    itemClickListener?.onItemPressed(this@ShiftingLayout, v, true)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    listener?.onItemPressed(this@ShiftingLayout, v, false)
+                    itemClickListener?.onItemPressed(this@ShiftingLayout, v, false)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                listener?.onItemClick(this@ShiftingLayout, v, i, true)
+                itemClickListener?.onItemClick(this@ShiftingLayout, v, i, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

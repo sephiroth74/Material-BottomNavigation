@@ -31,8 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mViewPager = (ViewPager) findViewById(R.id.ViewPager01);
-        mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+        mViewPager = findViewById(R.id.ViewPager01);
+        mBottomNavigation = findViewById(R.id.BottomNavigation);
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
             mBottomNavigation.setOnMenuItemClickListener(this);
@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
     public BottomNavigation getBottomNavigation() {
         if (null == mBottomNavigation) {
-            mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+            mBottomNavigation = findViewById(R.id.BottomNavigation);
         }
         return mBottomNavigation;
     }
