@@ -66,7 +66,6 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         }
 
     init {
-
         val res = resources
         this.paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active)
         this.paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive)

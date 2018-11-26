@@ -3,18 +3,19 @@ package it.sephiroth.android.library.bottomnavigation;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewPropertyAnimatorCompat;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.Interpolator;
 
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorCompat;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import it.sephiroth.android.library.bottonnavigation.R;
 import proguard.annotation.Keep;
 import proguard.annotation.KeepClassMembers;
@@ -204,7 +205,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         final CoordinatorLayout coordinatorLayout,
         final BottomNavigation child,
         final View directTargetChild, final View target,
-        final int nestedScrollAxes) {
+        final int nestedScrollAxes, @ViewCompat.NestedScrollType int type) {
 
         offset = 0;
         if (!scrollable || !scrollEnabled) {
@@ -221,12 +222,14 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             }
         }
 
-        return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
+        return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes, type);
     }
 
     @Override
-    public void onStopNestedScroll(final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final View target) {
-        super.onStopNestedScroll(coordinatorLayout, child, target);
+    public void onStopNestedScroll(
+        final CoordinatorLayout coordinatorLayout, final BottomNavigation child, final View target,
+        @ViewCompat.NestedScrollType int type) {
+        super.onStopNestedScroll(coordinatorLayout, child, target, type);
         offset = 0;
     }
 
@@ -254,10 +257,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         if (offset > scaledTouchSlop) {
-            handleDirection(coordinatorLayout, child, ScrollDirection.SCROLL_DIRECTION_UP);
+            handleDirection(coordinatorLayout, child, ScrollDirection.Companion.SCROLL_DIRECTION_UP);
             offset = 0;
         } else if (offset < -scaledTouchSlop) {
-            handleDirection(coordinatorLayout, child, ScrollDirection.SCROLL_DIRECTION_DOWN);
+            handleDirection(coordinatorLayout, child, ScrollDirection.Companion.SCROLL_DIRECTION_DOWN);
             offset = 0;
         }
     }
@@ -300,9 +303,9 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         if (!enabled || !scrollable || !scrollEnabled) {
             return;
         }
-        if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
+        if (scrollDirection == ScrollDirection.Companion.SCROLL_DIRECTION_DOWN && hidden) {
             setExpanded(coordinatorLayout, child, true, true);
-        } else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
+        } else if (scrollDirection == ScrollDirection.Companion.SCROLL_DIRECTION_UP && !hidden) {
             setExpanded(coordinatorLayout, child, false, true);
         }
     }
