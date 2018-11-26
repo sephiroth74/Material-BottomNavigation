@@ -37,6 +37,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.util.Log.INFO
 import android.util.Log.VERBOSE
 import android.view.Gravity
@@ -338,14 +339,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         MiscUtils.setDrawableColor(drawable, Color.WHITE)
 
         rippleOverlay = View(getContext())
-        rippleOverlay.let {
-            it.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-            it.background = drawable
-            it.isClickable = false
-            it.isFocusable = false
-            it.isFocusableInTouchMode = false
-            it.alpha = 0f
-            addView(it)
+        with(rippleOverlay) {
+            layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            background = drawable
+            isClickable = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+            alpha = 0f
+            addView(this)
         }
     }
 
@@ -471,6 +472,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         rippleOverlay.layoutParams.width = min(w, h)
         rippleOverlay.layoutParams.height = min(w, h)
+
     }
 
     override fun isAttachedToWindow(): Boolean {
@@ -600,8 +602,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         if (null == itemsContainer) {
             val params = LinearLayout.LayoutParams(
                     if (menu.isTablet) navigationWidth else MATCH_PARENT,
-                    if (menu.isTablet) MATCH_PARENT else navigationHeight
-                                                  )
+                    if (menu.isTablet) MATCH_PARENT else navigationHeight)
 
             itemsContainer = when {
                 menu.isTablet -> TabletLayout(context)
@@ -622,9 +623,11 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     private fun initializeItems(menu: MenuParser.Menu) {
         log(VERBOSE, "initializeItems($defaultSelectedIndex)")
 
-        itemsContainer!!.setSelectedIndex(defaultSelectedIndex, false)
-        itemsContainer!!.populate(menu)
-        itemsContainer!!.itemClickListener = this
+        itemsContainer?.let {
+            it.setSelectedIndex(defaultSelectedIndex, false)
+            it.populate(menu)
+            it.itemClickListener = this
+        }
 
         if (defaultSelectedIndex > -1 && menu.getItemAt(defaultSelectedIndex).hasColor()) {
             backgroundDrawable!!.color = menu.getItemAt(defaultSelectedIndex).color

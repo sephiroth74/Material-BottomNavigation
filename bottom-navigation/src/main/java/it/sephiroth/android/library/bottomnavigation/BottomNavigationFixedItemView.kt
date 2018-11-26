@@ -103,29 +103,6 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
 
     override fun onStatusChanged(expanded: Boolean, size: Int, animate: Boolean) {
         updateLayoutOnAnimation(1f, expanded)
-//        if (!animate) {
-//            updateLayoutOnAnimation(1f, expanded)
-//            iconTranslation = ((if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat())
-//            return
-//        }
-//
-//        val set = AnimatorSet()
-//        set.duration = animationDuration
-//        set.interpolator = interpolator
-//
-//        val animator1 = ObjectAnimator.ofFloat(this, "textScale", if (expanded) TEXT_SCALE_ACTIVE else 1f)
-//
-//        animator1.addUpdateListener { animation ->
-//            val fraction = animation.animatedFraction
-//            updateLayoutOnAnimation(fraction, expanded)
-//        }
-//
-//        val animator2 =
-//                ObjectAnimator.ofFloat(this, "iconTranslation", if (expanded) 0f else (paddingTopInactive - paddingTopActive).toFloat())
-//
-//        set.playTogether(animator1, animator2)
-//        set.start()
-//        updateLayoutOnAnimation(1f, expanded)
     }
 
     private fun updateLayoutOnAnimation(fraction: Float, expanded: Boolean) {
