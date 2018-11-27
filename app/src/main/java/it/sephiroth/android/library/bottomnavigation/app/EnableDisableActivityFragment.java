@@ -73,7 +73,7 @@ public class EnableDisableActivityFragment extends Fragment implements BottomNav
 
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
-            navigation.setOnMenuChangedListener(this);
+            navigation.setMenuChangedListener(this);
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {

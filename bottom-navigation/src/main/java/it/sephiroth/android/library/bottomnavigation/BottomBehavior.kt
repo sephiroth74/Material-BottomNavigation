@@ -3,6 +3,7 @@ package it.sephiroth.android.library.bottomnavigation
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log.VERBOSE
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup.MarginLayoutParams
@@ -294,16 +295,9 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         internal abstract fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean
     }
 
-    class GenericDependentView internal constructor(child: View, height: Int,
-                                                    bottomInset: Int) : DependentView<View>(child, height, bottomInset) {
-
-        override fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean {
-            return true
-        }
-    }
-
     class SnackBarDependentView internal constructor(child: SnackbarLayout, height: Int,
                                                      bottomInset: Int) : DependentView<SnackbarLayout>(child, height, bottomInset) {
+        @Suppress("SpellCheckingInspection")
         private var snackbarHeight = -1
 
         override fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean {
@@ -313,7 +307,7 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
                 val index1 = parent.indexOfChild(child)
                 val index2 = parent.indexOfChild(navigation)
                 if (index1 > index2) {
-                    Timber.w("swapping children")
+                    MiscUtils.log(VERBOSE, "swapping children")
                     navigation.bringToFront()
                 }
             } else {
@@ -337,7 +331,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
         public override fun onDestroy() {
             super.onDestroy()
-            //scrollEnabled = true;
         }
     }
 

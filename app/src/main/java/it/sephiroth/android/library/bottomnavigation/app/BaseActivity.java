@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         mBottomNavigation = findViewById(R.id.BottomNavigation);
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-            mBottomNavigation.setOnMenuItemClickListener(this);
+            mBottomNavigation.setMenuItemSelectionListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
         }
     }

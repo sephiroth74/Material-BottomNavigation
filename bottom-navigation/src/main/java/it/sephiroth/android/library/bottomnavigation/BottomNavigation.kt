@@ -77,8 +77,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * This is the amount of space we have to cover in case there's a translucent navigation
      * enabled.
      */
-    var bottomInset: Int = 0
-        private set
+    private var bottomInset: Int = 0
 
     /**
      * This is the amount of space we have to cover in case there's a translucent status
@@ -118,8 +117,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     private var backgroundOverlay: View? = null
 
     /**
-     * View used to show the press ripple overlay. I don't use the drawable in item view itself
-     * because the ripple background will be clipped inside its bounds
+     * View used to show the press ripple overlay.
      */
     private lateinit var rippleOverlay: View
 
@@ -163,14 +161,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     private var mBehavior: CoordinatorLayout.Behavior<*>? = null
 
     /**
-     * Menu selection listener
+     * Menu selection menuItemSelectionListener
      */
-    private var listener: OnMenuItemSelectionListener? = null
+    var menuItemSelectionListener: OnMenuItemSelectionListener? = null
 
     /**
-     * Menu changed listener
+     * Menu changed
      */
-    private var menuChangedListener: OnMenuChangedListener? = null
+    var menuChangedListener: OnMenuChangedListener? = null
 
     /**
      * The user defined layout_gravity
@@ -195,12 +193,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     var badgeProvider: BadgeProvider? = null
         private set
 
-    val selectedIndex: Int
+    var selectedIndex: Int = -1
         get() = if (null != itemsContainer) {
             itemsContainer!!.getSelectedIndex()
         } else -1
 
-    val isExpanded: Boolean
+    var isExpanded: Boolean = false
         get() = if (null != mBehavior && mBehavior is BottomBehavior) {
             (mBehavior as BottomBehavior).isExpanded
         } else false
@@ -210,12 +208,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      *
      * @return number of items in the current menu
      */
-    val menuItemCount: Int
+    var menuItemCount: Int = 0
         get() = if (null != menu) {
             menu!!.itemsCount
         } else 0
 
-    val behavior: CoordinatorLayout.Behavior<*>?
+    var behavior: CoordinatorLayout.Behavior<*>? = null
         get() {
             if (null == mBehavior) {
                 if (layoutParams is CoordinatorLayout.LayoutParams) {
@@ -353,11 +351,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         pendingAction = PENDING_ACTION_NONE
     }
 
-    override fun setLayoutParams(params: ViewGroup.LayoutParams) {
-        log(VERBOSE, "setLayoutParams: $params")
-        super.setLayoutParams(params)
-    }
-
     private fun isTablet(gravity: Int): Boolean {
         return MiscUtils.isGravitiyLeft(gravity) || MiscUtils.isGravityRight(gravity)
     }
@@ -375,14 +368,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         pendingAction = (if (expanded) PENDING_ACTION_EXPANDED else PENDING_ACTION_COLLAPSED) or
                 if (animate) PENDING_ACTION_ANIMATE_ENABLED else 0
         requestLayout()
-    }
-
-    fun setOnMenuItemClickListener(listener: OnMenuItemSelectionListener) {
-        this.listener = listener
-    }
-
-    fun setOnMenuChangedListener(listener: OnMenuChangedListener) {
-        this.menuChangedListener = listener
     }
 
     /**
@@ -540,8 +525,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun setItems(menu: MenuParser.Menu?) {
-        log(INFO, "setItems: $menu")
-
         this.menu = menu
 
         if (null != menu) {
@@ -557,16 +540,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             initializeContainer(menu)
             initializeItems(menu)
 
-            if (null != menuChangedListener) {
-                menuChangedListener!!.onMenuChanged(this)
-            }
+            menuChangedListener?.onMenuChanged(this)
         }
 
         requestLayout()
     }
 
     private fun initializeUI(gravity: Int) {
-        log(VERBOSE, "initializeUI($gravity)")
         val layerDrawable: LayerDrawable
 
         val tablet = isTablet(gravity)
@@ -595,14 +575,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
     private fun initializeBackgroundColor(menu: MenuParser.Menu) {
         val color = menu.getBackground()
-        log(VERBOSE, "background: $color")
         backgroundDrawable!!.color = color
     }
 
     private fun initializeContainer(menu: MenuParser.Menu) {
         if (null != itemsContainer) {
 
-            // remove the layout listener
+            // remove the layout menuItemSelectionListener
             (itemsContainer as ViewGroup).removeOnLayoutChangeListener(mLayoutChangedListener)
 
             if (menu.isTablet && itemsContainer !is TabletLayout) {
@@ -633,13 +612,11 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             addView(itemsContainer as View?)
         }
 
-        // add the layout listener
+        // add the layout menuItemSelectionListener
         (itemsContainer as ViewGroup).addOnLayoutChangeListener(mLayoutChangedListener)
     }
 
     private fun initializeItems(menu: MenuParser.Menu) {
-        log(VERBOSE, "initializeItems($defaultSelectedIndex)")
-
         itemsContainer?.let {
             it.setSelectedIndex(defaultSelectedIndex, false)
             it.populate(menu)
@@ -792,10 +769,10 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 }
             }
 
-            listener?.onMenuItemSelect(item?.id ?: -1, index, fromUser)
+            menuItemSelectionListener?.onMenuItemSelect(item?.id ?: -1, index, fromUser)
 
         } else {
-            listener?.onMenuItemReselect(item?.id ?: -1, index, fromUser)
+            menuItemSelectionListener?.onMenuItemReselect(item?.id ?: -1, index, fromUser)
         }
     }
 

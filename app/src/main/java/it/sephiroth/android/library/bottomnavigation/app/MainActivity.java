@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final ViewPager viewPager = getViewPager();
         if (null != viewPager) {
 
-            getBottomNavigation().setOnMenuChangedListener(parent -> {
+            getBottomNavigation().setMenuChangedListener(parent -> {
 
                 viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
