@@ -316,6 +316,8 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
                     Timber.w("swapping children")
                     navigation.bringToFront()
                 }
+            } else {
+
             }
 
             if (snackbarHeight == -1) {
@@ -323,7 +325,7 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
             }
 
             val maxScroll = Math.max(0f, navigation.translationY - bottomInset)
-            val newBottomMargin = (height - maxScroll).toInt()
+            val newBottomMargin = (height + bottomInset - maxScroll).toInt()
 
             if (layoutParams.bottomMargin != newBottomMargin) {
                 layoutParams.bottomMargin = newBottomMargin
