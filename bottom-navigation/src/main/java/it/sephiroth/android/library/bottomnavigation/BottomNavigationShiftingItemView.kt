@@ -169,12 +169,10 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
         drawBadge(canvas)
     }
 
-    @proguard.annotation.Keep
     fun getCenterY(): Int {
         return centerY
     }
 
-    @proguard.annotation.Keep
     fun setCenterY(value: Int) {
         centerY = value
         requestLayout()

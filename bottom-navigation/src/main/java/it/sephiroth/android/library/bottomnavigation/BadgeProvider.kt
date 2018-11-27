@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.annotation.IdRes
 import it.sephiroth.android.library.bottonnavigation.R
-import proguard.annotation.Keep
-import proguard.annotation.KeepClassMembers
 import java.util.*
 
 /**
@@ -16,8 +14,6 @@ import java.util.*
  */
 
 @Suppress("unused")
-@Keep
-@KeepClassMembers
 open class BadgeProvider(private val navigation: BottomNavigation) {
     private val map = HashSet<Int>()
     private val badgeSize: Int = navigation.context.resources.getDimensionPixelSize(R.dimen.bbn_badge_size)

@@ -2,15 +2,11 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.content.Context
 import android.view.ViewGroup
-import proguard.annotation.Keep
-import proguard.annotation.KeepClassMembers
 
 /**
  * Created by alessandro on 4/4/16 at 11:13 PM.
  * Project: Material-BottomNavigation
  */
-@Keep
-@KeepClassMembers
 abstract class ItemsLayoutContainer(context: Context) : ViewGroup(context) {
 
     abstract fun getSelectedIndex(): Int

@@ -37,7 +37,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Log.INFO
 import android.util.Log.VERBOSE
 import android.view.Gravity
@@ -219,7 +218,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     val behavior: CoordinatorLayout.Behavior<*>?
         get() {
             if (null == mBehavior) {
-                if (CoordinatorLayout.LayoutParams::class.java.isInstance(layoutParams)) {
+                if (layoutParams is CoordinatorLayout.LayoutParams) {
                     return (layoutParams as CoordinatorLayout.LayoutParams).behavior
                 }
             }
@@ -465,13 +464,31 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        log(INFO, "onSizeChanged(%d, %d)", w, h)
+        log(INFO, "onSizeChanged($w, $h)")
         super.onSizeChanged(w, h, oldw, oldh)
         val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
         marginLayoutParams.bottomMargin = -bottomInset
+    }
 
-        rippleOverlay.layoutParams.width = min(w, h)
-        rippleOverlay.layoutParams.height = min(w, h)
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+
+        if (changed) {
+            val params = rippleOverlay.layoutParams
+            var size = min(width, height)
+
+            if (!isTablet(gravity)) {
+                if (bottomInset == 0) {
+                    size *= 2
+                }
+            } else {
+                size = (size * 1.5f).toInt()
+            }
+
+            params.width = size
+            params.height = size
+            rippleOverlay.layoutParams = params
+        }
 
     }
 

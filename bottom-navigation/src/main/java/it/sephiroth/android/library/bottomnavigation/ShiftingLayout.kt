@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import it.sephiroth.android.library.bottonnavigation.R
-import proguard.annotation.Keep
 import timber.log.Timber
 
 /**
@@ -123,7 +122,6 @@ class ShiftingLayout(context: Context) : ItemsLayoutContainer(context) {
         }
     }
 
-    @Keep
     override fun getSelectedIndex(): Int {
         return selectedIndex
     }

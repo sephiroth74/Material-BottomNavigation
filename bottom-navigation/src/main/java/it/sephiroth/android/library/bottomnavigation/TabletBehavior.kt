@@ -8,16 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
-import proguard.annotation.Keep
-import proguard.annotation.KeepClassMembers
 import timber.log.Timber
 
 /**
  * Created by alessandro on 4/10/16 at 2:12 PM.
  * Project: Material-BottomNavigation
  */
-@Keep
-@KeepClassMembers
 class TabletBehavior(context: Context, attrs: AttributeSet) : VerticalScrollingBehavior<BottomNavigation>(context, attrs) {
     private var topInset: Int = 0
     private var enabled: Boolean = false

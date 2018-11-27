@@ -8,7 +8,6 @@ import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat
 import it.sephiroth.android.library.bottonnavigation.R
-import proguard.annotation.Keep
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -55,9 +54,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
     private var textY: Float = 0.toFloat()
 
     var textScale: Float
-        @Keep
         get() = canvasTextScale
-        @Keep
         set(value) {
             canvasTextScale = value
             ViewCompat.postInvalidateOnAnimation(this)

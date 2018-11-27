@@ -14,16 +14,12 @@ import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_ANIMATE_ENABLED
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_NONE
 import it.sephiroth.android.library.bottonnavigation.R
-import proguard.annotation.Keep
-import proguard.annotation.KeepClassMembers
 import timber.log.Timber
 
 /**
  * Created by alessandro crugnola on 4/2/16.
  * alessandro.crugnola@gmail.com
  */
-@Keep
-@KeepClassMembers
 open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         VerticalScrollingBehavior<BottomNavigation>(context, attrs) {
 
@@ -119,7 +115,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
     private fun isSnackbar(view: View): Boolean {
         return view is SnackbarLayout
-//        return SnackbarLayout::class.java.isInstance(view)
     }
 
     override fun onLayoutChild(parent: CoordinatorLayout, abl: BottomNavigation, layoutDirection: Int): Boolean {
