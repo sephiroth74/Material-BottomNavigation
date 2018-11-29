@@ -253,7 +253,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
             savedState.selectedIndex = selectedIndex
             savedState.disabledIndices = arrayListOf()
-            val items = menu!!.items
+            val items = menu?.items
             if (items != null) {
                 for (i in items.indices) {
                     if (!menu!!.items!![i].isEnabled) {
@@ -268,7 +268,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
 
         if (null != pendingMenu) {
-            val items = pendingMenu!!.items
+            val items = pendingMenu?.items
             if (items != null) {
                 for (i in items.indices) {
                     if (savedState.disabledIndices.contains(i)) {
