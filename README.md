@@ -31,7 +31,7 @@ Installation
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:3.0.0'
 
 
 Usage
