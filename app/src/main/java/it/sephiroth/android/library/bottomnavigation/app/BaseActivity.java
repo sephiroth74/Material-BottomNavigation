@@ -3,11 +3,11 @@ package it.sephiroth.android.library.bottomnavigation.app;
 import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -31,11 +31,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mViewPager = (ViewPager) findViewById(R.id.ViewPager01);
-        mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+        mViewPager = findViewById(R.id.ViewPager01);
+        mBottomNavigation = findViewById(R.id.BottomNavigation);
         if (null != mBottomNavigation) {
             Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-            mBottomNavigation.setOnMenuItemClickListener(this);
+            mBottomNavigation.setMenuItemSelectionListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
         }
     }
@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
     public BottomNavigation getBottomNavigation() {
         if (null == mBottomNavigation) {
-            mBottomNavigation = (BottomNavigation) findViewById(R.id.BottomNavigation);
+            mBottomNavigation = findViewById(R.id.BottomNavigation);
         }
         return mBottomNavigation;
     }

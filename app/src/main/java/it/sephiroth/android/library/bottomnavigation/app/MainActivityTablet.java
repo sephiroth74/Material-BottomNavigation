@@ -3,17 +3,18 @@ package it.sephiroth.android.library.bottomnavigation.app;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.FragmentManager;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
@@ -58,7 +59,7 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
         final CoordinatorLayout mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
         if (translucentStatus) {
-            MiscUtils.log(TAG, Log.DEBUG, "hasTranslucentStatusBar");
+            MiscUtils.INSTANCE.log(Log.DEBUG, "hasTranslucentStatusBar");
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
             params.topMargin = -statusbarHeight;
 
@@ -74,13 +75,13 @@ public class MainActivityTablet extends BaseActivity implements BottomNavigation
 
     @Override
     public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
-        MiscUtils.log(TAG, Log.INFO, "onMenuItemSelect(" + itemId + ", " + position + ")");
+        MiscUtils.INSTANCE.log(Log.INFO, "onMenuItemSelect(" + itemId + ", " + position + ")");
         getBottomNavigation().getBadgeProvider().remove(itemId);
     }
 
     @Override
     public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
-        MiscUtils.log(TAG, Log.INFO, "onMenuItemReselect(" + itemId + ", " + position + ")");
+        MiscUtils.INSTANCE.log(Log.INFO, "onMenuItemReselect(" + itemId + ", " + position + ")");
 
         final FragmentManager manager = getSupportFragmentManager();
         MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);

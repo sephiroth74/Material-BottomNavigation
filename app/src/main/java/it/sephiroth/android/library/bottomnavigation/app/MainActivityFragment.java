@@ -2,12 +2,6 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +12,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.squareup.picasso.Picasso;
 
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
@@ -77,8 +77,8 @@ public class MainActivityFragment extends Fragment {
             actionbarHeight = 0;
         }
 
-        MiscUtils.log(TAG, Log.VERBOSE, "navigationHeight: " + navigationHeight);
-        MiscUtils.log(TAG, Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
+        MiscUtils.INSTANCE.log(Log.VERBOSE, "navigationHeight: " + navigationHeight);
+        MiscUtils.INSTANCE.log(Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
 
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
@@ -101,7 +101,7 @@ public class MainActivityFragment extends Fragment {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
                         int systemBottomNavigation = activity.hasTranslucentNavigation() ? activity.getNavigationBarHeight() : 0;
 
-                        MiscUtils.log(TAG, Log.VERBOSE, "scrollable: " + scrollable);
+                        MiscUtils.INSTANCE.log(Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
@@ -132,9 +132,9 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
-        MiscUtils.log(getClass().getSimpleName(), Log.INFO, "createAdapter(" + height + ")");
+        MiscUtils.INSTANCE.log(Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout, createData()));
     }
 
@@ -172,7 +172,7 @@ public class MainActivityFragment extends Fragment {
             this.navigationHeight = navigationHeight;
             this.data = data;
             this.hasAppBarLayout = hasAppBarLayout;
-            this.picasso = Picasso.with(context);
+            this.picasso = Picasso.get();
         }
 
         @Override
@@ -244,18 +244,18 @@ public class MainActivityFragment extends Fragment {
 
     private Book[] createData() {
         return new Book[]{
-            new Book("The Flight", "Scott Masterson", "http://i.imgur.com/dyyP2iO.jpg"),
-            new Book("Room of Plates", "Ali Conners", "http://i.imgur.com/da6QIlR.jpg"),
-            new Book("The Sleek Boot", "Sandra Adams", "http://i.imgur.com/YHoOJh4.jpg"),
-            new Book("Night Hunting", "Janet Perkins", "http://i.imgur.com/3jxqrKP.jpg"),
-            new Book("Rain and Coffee", "Peter Carlsson", "http://i.imgur.com/AZRynvM.jpg"),
-            new Book("Ocean View", "Trevor Hansen", "http://i.imgur.com/IvhOJcw.jpg"),
-            new Book("Lovers Of The Roof", "Britta Holt", "http://i.imgur.com/pxgI1b4.png"),
-            new Book("Lessons from Delhi", "Mary Johnson", "http://i.imgur.com/oT1WYX9.jpg"),
-            new Book("Mountaineers", "Abbey Christensen", "http://i.imgur.com/CLLDz.jpg"),
-            new Book("Plains In The Night", "David Park", "http://i.imgur.com/7MrSvXE.jpg?1"),
-            new Book("Dear Olivia", "Sylvia Sorensen", "http://i.imgur.com/3mkUuux.jpg"),
-            new Book("Driving Lessons", "Halime Carver", "http://i.imgur.com/LzYAfFL.jpg"),
+            new Book("The Flight", "Scott Masterson", "https://i.imgur.com/dyyP2iO.jpg"),
+            new Book("Room of Plates", "Ali Conners", "https://i.imgur.com/da6QIlR.jpg"),
+            new Book("The Sleek Boot", "Sandra Adams", "https://i.imgur.com/YHoOJh4.jpg"),
+            new Book("Night Hunting", "Janet Perkins", "https://i.imgur.com/3jxqrKP.jpg"),
+            new Book("Rain and Coffee", "Peter Carlsson", "https://i.imgur.com/AZRynvM.jpg"),
+            new Book("Ocean View", "Trevor Hansen", "https://i.imgur.com/IvhOJcw.jpg"),
+            new Book("Lovers Of The Roof", "Britta Holt", "https://i.imgur.com/pxgI1b4.png"),
+            new Book("Lessons from Delhi", "Mary Johnson", "https://i.imgur.com/oT1WYX9.jpg"),
+            new Book("Mountaineers", "Abbey Christensen", "https://i.imgur.com/CLLDz.jpg"),
+            new Book("Plains In The Night", "David Park", "https://i.imgur.com/7MrSvXE.jpg?1"),
+            new Book("Dear Olivia", "Sylvia Sorensen", "https://i.imgur.com/3mkUuux.jpg"),
+            new Book("Driving Lessons", "Halime Carver", "https://i.imgur.com/LzYAfFL.jpg"),
         };
     }
 

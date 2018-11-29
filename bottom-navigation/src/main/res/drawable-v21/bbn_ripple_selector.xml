@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/bbn_shifting_item_ripple_color"
-    android:radius="@dimen/bbn_ripple_radius">
-
-    <item android:id="@android:id/mask">
-        <shape android:shape="oval">
-            <solid android:color="@android:color/black" />
-        </shape>
-    </item>
-
-</ripple>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/bbn_shifting_item_ripple_color" />
+</shape>

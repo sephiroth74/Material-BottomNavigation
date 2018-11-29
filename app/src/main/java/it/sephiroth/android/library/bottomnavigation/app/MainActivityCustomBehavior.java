@@ -2,24 +2,22 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 import static android.util.Log.INFO;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 public class MainActivityCustomBehavior extends MainActivity {
 
@@ -63,7 +61,6 @@ public class MainActivityCustomBehavior extends MainActivity {
         }
     }
 
-
     public static class FabBehavior extends CoordinatorLayout.Behavior<FloatingActionMenu> {
         public FabBehavior() {
             super();
@@ -72,7 +69,6 @@ public class MainActivityCustomBehavior extends MainActivity {
         public FabBehavior(Context context, AttributeSet attrs) {
             super(context, attrs);
         }
-
 
         @Override
         public boolean layoutDependsOn(final CoordinatorLayout parent, final FloatingActionMenu child, final View dependency) {
@@ -87,7 +83,7 @@ public class MainActivityCustomBehavior extends MainActivity {
         @Override
         public boolean onDependentViewChanged(
             final CoordinatorLayout parent, final FloatingActionMenu child, final View dependency) {
-            log(TAG, INFO, "onDependentViewChanged: " + dependency);
+            MiscUtils.INSTANCE.log(INFO, "onDependentViewChanged: " + dependency);
 
             final List<View> list = parent.getDependencies(child);
             int bottomMargin = ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).bottomMargin;

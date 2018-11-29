@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark"
-    app:bbn_alwaysShowLabels="false"
-    app:bbn_itemColorActive="@android:color/white"
+    android:background="@android:color/white"
+    app:bbn_alwaysShowLabels="true"
+    app:bbn_itemColorActive="@color/colorAccent"
     app:bbn_itemColorDisabled="#33ffffff"
-    app:bbn_itemColorInactive="#99ffffff"
-    app:bbn_rippleColor="#ccffffff">
+    app:bbn_itemColorInactive="#99000000"
+    app:bbn_rippleColor="@color/colorAccent">
 
     <item
         android:id="@+id/bbn_item1"

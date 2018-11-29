@@ -4,28 +4,29 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior;
+import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
@@ -45,10 +46,10 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BottomNavigation.DEBUG = BuildConfig.DEBUG;
+        BottomNavigation.Companion.setDEBUG(BuildConfig.DEBUG);
 
         setContentView(getActivityLayoutResId());
-        final ViewGroup root = (ViewGroup) findViewById(R.id.CoordinatorLayout01);
+        final ViewGroup root = findViewById(R.id.CoordinatorLayout01);
         final CoordinatorLayout coordinatorLayout;
         if (root instanceof CoordinatorLayout) {
             coordinatorLayout = (CoordinatorLayout) root;
@@ -56,7 +57,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             coordinatorLayout = null;
         }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
 
@@ -64,7 +65,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final boolean translucentStatus = hasTranslucentStatusBar();
         final boolean translucentNavigation = hasTranslucentNavigation();
 
-        log(TAG, VERBOSE, "translucentStatus: %b", translucentStatus);
+        MiscUtils.INSTANCE.log(VERBOSE, "translucentStatus: %b", translucentStatus);
 
         if (translucentStatus) {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
@@ -98,19 +99,16 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     }
 
     protected void initializeUI(final Bundle savedInstanceState) {
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton floatingActionButton = findViewById(R.id.fab);
         if (null != floatingActionButton) {
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final View root = findViewById(R.id.CoordinatorLayout01);
-                    Snackbar snackbar = Snackbar.make(root, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction(
-                            "Action",
-                            null
-                        );
-                    snackbar.show();
-                }
+            floatingActionButton.setOnClickListener(view -> {
+                final View root = findViewById(R.id.CoordinatorLayout01);
+                Snackbar snackbar = Snackbar.make(root, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction(
+                        "Action",
+                        null
+                    );
+                snackbar.show();
             });
 
             if (hasTranslucentNavigation()) {
@@ -127,27 +125,24 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final ViewPager viewPager = getViewPager();
         if (null != viewPager) {
 
-            getBottomNavigation().setOnMenuChangedListener(new BottomNavigation.OnMenuChangedListener() {
-                @Override
-                public void onMenuChanged(final BottomNavigation parent) {
+            getBottomNavigation().setMenuChangedListener(parent -> {
 
-                    viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
-                    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(
-                            final int position, final float positionOffset, final int positionOffsetPixels) { }
+                viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(
+                        final int position, final float positionOffset, final int positionOffsetPixels) { }
 
-                        @Override
-                        public void onPageSelected(final int position) {
-                            if (getBottomNavigation().getSelectedIndex() != position) {
-                                getBottomNavigation().setSelectedIndex(position, false);
-                            }
+                    @Override
+                    public void onPageSelected(final int position) {
+                        if (getBottomNavigation().getSelectedIndex() != position) {
+                            getBottomNavigation().setSelectedIndex(position, false);
                         }
+                    }
 
-                        @Override
-                        public void onPageScrollStateChanged(final int state) { }
-                    });
-                }
+                    @Override
+                    public void onPageScrollStateChanged(final int state) { }
+                });
             });
 
         }
@@ -240,18 +235,18 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
     @Override
     public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
-        log(TAG, INFO, "onMenuItemSelect(" + itemId + ", " + position + ", " + fromUser + ")");
+        MiscUtils.INSTANCE.log(INFO, "onMenuItemSelect(" + itemId + ", " + position + ", " + fromUser + ")");
         if (fromUser) {
             getBottomNavigation().getBadgeProvider().remove(itemId);
             if (null != getViewPager()) {
-                getViewPager().setCurrentItem(position);
+//                getViewPager().setCurrentItem(position);
             }
         }
     }
 
     @Override
     public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
-        log(TAG, INFO, "onMenuItemReselect(" + itemId + ", " + position + ", " + fromUser + ")");
+        MiscUtils.INSTANCE.log(INFO, "onMenuItemReselect(" + itemId + ", " + position + ", " + fromUser + ")");
 
         if (fromUser) {
             final FragmentManager manager = getSupportFragmentManager();
