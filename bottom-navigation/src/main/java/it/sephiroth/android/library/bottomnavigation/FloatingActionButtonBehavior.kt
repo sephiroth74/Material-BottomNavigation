@@ -42,11 +42,15 @@ class FloatingActionButtonBehavior(context: Context,
         var result = false
 
         for (dep in list) {
-            if (Snackbar.SnackbarLayout::class.java.isInstance(dep)) {
-                t += dep.translationY - dep.height
+            if (dep is Snackbar.SnackbarLayout) {
+                t += if(dep.layoutParams is ViewGroup.MarginLayoutParams) {
+                    dep.translationY - (dep.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+                } else {
+                    dep.translationY - dep.height
+                }
                 result = true
-            } else if (BottomNavigation::class.java.isInstance(dep)) {
-                val navigation = dep as BottomNavigation
+            } else if (dep is BottomNavigation) {
+                val navigation = dep
                 t2 = navigation.translationY - navigation.height + bottomMargin
                 t += t2
                 result = true
