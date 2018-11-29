@@ -40,10 +40,9 @@ Usage of the BottomNavigation widget is very easy. Just place it in your layout.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
 	xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
 	android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -59,7 +58,7 @@ Usage of the BottomNavigation widget is very easy. Just place it in your layout.
         app:bbn_scrollEnabled="true"
         app:bbn_badgeProvider="@string/bbn_badgeProvider"
 	    app:layout_behavior="@string/bbn_phone_view_behavior" />
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 ```
 
 All the menu main configurations are defined within the xml menu resource itself. Here's an example of a menu with 4 items:
