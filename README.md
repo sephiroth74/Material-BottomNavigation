@@ -9,6 +9,9 @@ Lightweight Bottom Navigation library component inspired by the Google Material 
 
 This project is also inspired by https://github.com/roughike/BottomBar
 
+<br />
+<img src="./art/animated_video.gif" />
+
 
 Table of contents
 =================
