@@ -295,7 +295,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun initialize(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        typeface = SoftReference(Typeface.DEFAULT)
+        typeface = SoftReference(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
 
         val array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes)
         val menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0)
