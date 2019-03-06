@@ -2,9 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:background="@android:color/white"
-      app:bbn_itemColorActive="@color/design_default_color_secondary_variant"
+      app:bbn_alwaysShowLabels="true"
+      app:bbn_itemColorActive="@color/colorAccent"
       app:bbn_itemColorDisabled="#33ffffff"
-      app:bbn_itemColorInactive="#CC000000"
+      app:bbn_itemColorInactive="#99000000"
       app:bbn_rippleColor="@color/colorAccent">
 
     <item

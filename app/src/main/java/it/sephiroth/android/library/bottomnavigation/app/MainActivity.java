@@ -239,7 +239,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         if (fromUser) {
             getBottomNavigation().getBadgeProvider().remove(itemId);
             if (null != getViewPager()) {
-//                getViewPager().setCurrentItem(position);
+                //                getViewPager().setCurrentItem(position);
             }
         }
     }

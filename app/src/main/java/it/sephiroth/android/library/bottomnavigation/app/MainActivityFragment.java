@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.squareup.picasso.Picasso;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.MiscUtils;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -153,12 +155,12 @@ public class MainActivityFragment extends Fragment {
 
         public TwoLinesViewHolder(final View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(android.R.id.title);
-            description = (TextView) itemView.findViewById(android.R.id.text1);
-            imageView = (ImageView) itemView.findViewById(android.R.id.icon);
+            title = itemView.findViewById(android.R.id.title);
+            description = itemView.findViewById(android.R.id.text1);
+            imageView = itemView.findViewById(android.R.id.icon);
             marginBottom = ((MarginLayoutParams) itemView.getLayoutParams()).bottomMargin;
-            button1 = (Button) itemView.findViewById(android.R.id.button1);
-            button2 = (Button) itemView.findViewById(android.R.id.button2);
+            button1 = itemView.findViewById(R.id.appCompatButton);
+            button2 = itemView.findViewById(R.id.appCompatButton2);
         }
     }
 
@@ -176,21 +178,18 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        public TwoLinesViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        public TwoLinesViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
             final View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_card_item, parent, false);
             final TwoLinesViewHolder holder = new TwoLinesViewHolder(view);
 
-            holder.button1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Snackbar snackbar =
-                        Snackbar.make(mRoot, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
-                            .setAction(
-                                "Action",
-                                null
-                            );
-                    snackbar.show();
-                }
+            holder.button1.setOnClickListener(view1 -> {
+                Snackbar snackbar =
+                    Snackbar.make(mRoot, "Button 1 of item " + holder.getAdapterPosition(), Snackbar.LENGTH_LONG)
+                        .setAction(
+                            "Action",
+                            null
+                        );
+                snackbar.show();
             });
 
             holder.button2.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +211,8 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
+            Timber.i("onBindViewHolder: " + position);
+
             ((MarginLayoutParams) holder.itemView.getLayoutParams()).topMargin = 0;
             if (position == getItemCount() - 1) {
                 ((MarginLayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.marginBottom + navigationHeight;
@@ -222,6 +223,8 @@ public class MainActivityFragment extends Fragment {
             }
 
             final Book item = data[position];
+            Timber.i("item: " + item);
+
             holder.title.setText(item.title);
             holder.description.setText("By " + item.author);
             holder.imageView.setImageBitmap(null);
@@ -268,6 +271,15 @@ public class MainActivityFragment extends Fragment {
             this.title = title;
             this.author = author;
             this.imageUrl = imageUrl;
+        }
+
+        @Override
+        public String toString() {
+            return "Book{" +
+                "title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
         }
     }
 }

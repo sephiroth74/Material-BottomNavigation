@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import com.google.android.material.appbar.AppBarLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,7 +35,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         mViewPager = findViewById(R.id.ViewPager01);
         mBottomNavigation = findViewById(R.id.BottomNavigation);
         if (null != mBottomNavigation) {
-            Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.nunito_sans_bold);
+//            Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
             mBottomNavigation.setMenuItemSelectionListener(this);
             mBottomNavigation.setDefaultTypeface(typeface);
         }

@@ -36,12 +36,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.balysv:material-ripple:1.0.2'

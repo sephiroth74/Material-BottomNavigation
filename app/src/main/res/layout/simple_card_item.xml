@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="3dp"
@@ -17,80 +17,98 @@
     app:cardUseCompatPadding="false"
     app:contentPadding="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@android:id/icon"
             android:layout_width="@dimen/simple_card_image_width"
             android:layout_height="@dimen/simple_card_image_height"
             android:background="@android:color/darker_gray"
+            android:contentDescription="Image"
             android:scaleType="fitXY"
-            android:contentDescription="Image" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@android:id/title"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            tools:ignore="RtlHardcoded">
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:lines="1"
+            android:text="Title"
+            android:textAppearance="?android:attr/textAppearanceInverse"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@android:id/icon"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@android:id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:lines="1"
-                android:text="Title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textStyle="normal" />
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/title"
+            android:layout_marginTop="8dp"
+            android:lines="1"
+            android:text="Description"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            app:layout_constraintEnd_toEndOf="@android:id/title"
+            app:layout_constraintStart_toStartOf="@android:id/title"
+            app:layout_constraintTop_toBottomOf="@android:id/title" />
 
-            <TextView
-                android:id="@android:id/text1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@android:id/title"
-                android:lines="1"
-                android:text="Description"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        <View
+            android:id="@+id/spacer"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_below="@android:id/text1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@android:id/icon"
+            app:layout_constraintTop_toBottomOf="@android:id/text1" />
 
-            <View
-                android:id="@+id/spacer"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_below="@android:id/text1"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/darker_gray" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/appCompatButton2"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spacer"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/nunito_sans_bold"
+            android:text="FREE SAMPLE"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorButton"
+            app:layout_constraintStart_toEndOf="@android:id/icon"
+            app:layout_constraintTop_toBottomOf="@+id/spacer" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@android:id/button1"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/spacer"
-                android:text="FREE SAMPLE"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorButton" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/appCompatButton"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/nunito_sans_bold"
+            android:text="REVIEW"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorButton"
+            app:layout_constraintStart_toEndOf="@+id/appCompatButton2"
+            app:layout_constraintTop_toTopOf="@+id/appCompatButton2" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@android:id/button2"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@android:id/button1"
-                android:layout_toRightOf="@android:id/button1"
-                android:text="REVIEW"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorButton" />
 
-        </RelativeLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.cardview.widget.CardView>
