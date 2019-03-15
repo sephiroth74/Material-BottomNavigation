@@ -32,7 +32,7 @@ class FloatingActionButtonBehavior(context: Context,
 
     override fun onDependentViewChanged(
             parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
-        Timber.v("onDependentViewChanged: $dependency")
+//        Timber.v("onDependentViewChanged: $dependency")
 
         val list = parent.getDependencies(child)
         val bottomMargin = (child.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
@@ -76,11 +76,11 @@ class FloatingActionButtonBehavior(context: Context,
     override fun onDependentViewRemoved(
             parent: CoordinatorLayout, child: FloatingActionButton, dependency: View) {
         super.onDependentViewRemoved(parent, child, dependency)
-        Timber.v("onDependentViewRemoved: $dependency")
+//        Timber.v("onDependentViewRemoved: $dependency")
     }
 
     fun setNavigationBarHeight(height: Int) {
-        Timber.v("setNavigationBarHeight: $height")
+//        Timber.v("setNavigationBarHeight: $height")
         this.navigationBarHeight = height
     }
 }

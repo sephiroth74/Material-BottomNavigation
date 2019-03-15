@@ -43,8 +43,7 @@
             android:layout_marginTop="8dp"
             android:lines="1"
             android:text="Title"
-            android:textAppearance="?android:attr/textAppearanceInverse"
-            android:textStyle="normal"
+            android:textAppearance="?android:attr/textAppearanceListItem"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@android:id/icon"
             app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +56,7 @@
             android:layout_marginTop="8dp"
             android:lines="1"
             android:text="Description"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             app:layout_constraintEnd_toEndOf="@android:id/title"
             app:layout_constraintStart_toStartOf="@android:id/title"
             app:layout_constraintTop_toBottomOf="@android:id/title" />

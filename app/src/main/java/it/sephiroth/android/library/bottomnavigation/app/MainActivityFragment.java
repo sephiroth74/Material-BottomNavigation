@@ -211,7 +211,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
-            Timber.i("onBindViewHolder: " + position);
+//            Timber.i("onBindViewHolder: " + position);
 
             ((MarginLayoutParams) holder.itemView.getLayoutParams()).topMargin = 0;
             if (position == getItemCount() - 1) {
@@ -223,8 +223,6 @@ public class MainActivityFragment extends Fragment {
             }
 
             final Book item = data[position];
-            Timber.i("item: " + item);
-
             holder.title.setText(item.title);
             holder.description.setText("By " + item.author);
             holder.imageView.setImageBitmap(null);
