@@ -25,10 +25,11 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
     private val paddingBottomActive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active)
     private val paddingBottomInactive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive)
     private val iconSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size)
-    private val textSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_text_size)
+    private val textSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_text_size)
     private val animationDuration: Long = menu.itemAnimationDuration.toLong()
 
     private var centerY: Int = 0
+    private var centerX: Int = 0
     private val alphaActive: Float
     private val alphaInactive: Float
     private val alphaDisabled: Float
@@ -41,25 +42,21 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
     private var textY: Int = 0
 
     init {
-
         this.alphaInactive = Color.alpha(this.colorInactive) / BottomNavigationItemViewAbstract.ALPHA_MAX
         this.alphaDisabled = Color.alpha(this.colorDisabled) / BottomNavigationItemViewAbstract.ALPHA_MAX
         this.alphaActive = Math.max(Color.alpha(colorActive).toFloat() / BottomNavigationItemViewAbstract.ALPHA_MAX, alphaInactive)
-
         this.centerY = if (expanded) paddingTopItem else paddingBottomInactive
-        this.textPaint.hinting = Paint.HINTING_ON
-        this.textPaint.isLinearText = true
-        this.textPaint.isSubpixelText = true
-        this.textPaint.textSize = textSize.toFloat()
-        this.textPaint.color = colorActive
 
-        if (!expanded) {
-            this.textPaint.alpha = 0
-        }
+        this.textPaint.let { paint ->
+            paint.hinting = Paint.HINTING_ON
+            paint.isLinearText = true
+            paint.isSubpixelText = true
+            paint.textSize = textSize.toFloat()
+            paint.color = colorActive
 
-        if (BottomNavigation.DEBUG) {
-            Timber.v("colors: %x, %x, %x", colorDisabled, colorInactive, colorActive)
-            Timber.v("alphas: %g, %g, %g", alphaDisabled, alphaInactive, alphaActive)
+            if (!expanded) {
+                paint.alpha = 0
+            }
         }
     }
 
@@ -70,16 +67,16 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
                 ((if (isExpanded) if (enabled) alphaActive else alphaDisabled else 0f) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
 
         if (null != icon) {
-            updateLayoutOnAnimation(layoutParams.width, 1f, isExpanded)
+            updateLayoutOnAnimation(1f, isExpanded)
         }
-
         requestLayout()
     }
 
     override fun onStatusChanged(expanded: Boolean, size: Int, animate: Boolean) {
         Timber.i("onStatusChanged($expanded, $size, $animate)")
+
         if (!animate) {
-            updateLayoutOnAnimation(size, 1f, expanded)
+            updateLayoutOnAnimation(1f, expanded)
             setCenterY(if (expanded) paddingTopItem else paddingBottomInactive)
             return
         }
@@ -94,45 +91,34 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
         animator1.addUpdateListener { animation ->
             val size = animation.animatedValue as Int
             val fraction = animation.animatedFraction
-            updateLayoutOnAnimation(size, fraction, expanded)
+            updateLayoutOnAnimation(fraction, expanded)
         }
 
         set.playTogether(animator1, animator2)
         set.start()
-
-//        this.animate().translationY(if(expanded) -paddingTopItem.toFloat() else 0f).start()
     }
 
-    private fun updateLayoutOnAnimation(size: Int, fraction: Float, expanded: Boolean) {
-        val color: Int
+    private fun updateLayoutOnAnimation(fraction: Float, expanded: Boolean) {
         val enabled = isEnabled
-
         val srcColor = if (enabled) if (expanded) colorInactive else colorActive else colorDisabled
         val dstColor = if (enabled) if (expanded) colorActive else colorInactive else colorDisabled
         val srcAlpha = if (enabled) alphaInactive else alphaDisabled
         val dstAlpha = if (enabled) alphaActive else alphaDisabled
+        val computedFraction = if (expanded) fraction else (1.0f - fraction)
+        val color = evaluator.evaluate(fraction, srcColor, dstColor) as Int
 
+        textPaint.textSize = textSize * computedFraction
+        textPaint.alpha = (computedFraction * dstAlpha * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
 
-        if (expanded) {
-            textPaint.textSize = textSize * fraction
-            color = evaluator.evaluate(fraction, srcColor, dstColor) as Int
-            icon!!.alpha = ((srcAlpha + fraction * (dstAlpha - srcAlpha)) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
-            textPaint.alpha = (fraction * dstAlpha * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
-        } else {
-            textPaint.textSize = textSize * (1 - fraction)
-            color = evaluator.evaluate(fraction, srcColor, dstColor) as Int
-            val alpha = 1.0f - fraction
-            icon!!.alpha = ((srcAlpha + alpha * (dstAlpha - srcAlpha)) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
-            textPaint.alpha = (alpha * dstAlpha * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
-        }
+        val w = right - left
+        val h = bottom - top
+        this.textY = h - paddingBottomActive
+        this.textX = (w - (textWidth * computedFraction)) / 2
 
         icon?.let { icon ->
+            icon.alpha =
+                    ((srcAlpha + computedFraction * (dstAlpha - srcAlpha)) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-            val w = right - left
-            val h = bottom - top
-            val centerX = (w - iconSize) / 2
-            this.textY = h - paddingBottomActive
-            this.textX = (w - (textWidth * (if (expanded) fraction else 1 - fraction))) / 2
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize)
         }
     }
@@ -168,7 +154,7 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
         if (changed) {
             val w = right - left
             val h = bottom - top
-            val centerX = (w - iconSize) / 2
+            this.centerX = (w - iconSize) / 2
             this.textY = h - paddingBottomActive
             this.textX = (w - textWidth) / 2
             icon?.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize)

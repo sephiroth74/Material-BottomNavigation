@@ -27,10 +27,9 @@
     <dimen name="bbn_shifting_minInactiveItemWidth">64dp</dimen>
 
     <!-- expanding item dimensions -->
-    <dimen name="bbn_expanding_maxActiveItemWidth">168dp</dimen>
-    <dimen name="bbn_expanding_minActiveItemWidth">80dp</dimen>
-    <dimen name="bbn_expanding_maxInactiveItemWidth">168dp</dimen>
-    <dimen name="bbn_expanding_minInactiveItemWidth">80dp</dimen>
+    <dimen name="bbn_expanding_maxItemWidth">168dp</dimen>
+    <dimen name="bbn_expanding_minItemWidth">80dp</dimen>
+    <dimen name="bbn_expanding_text_size">14dp</dimen>
 
     <!-- fixed item dimensions -->
     <dimen name="bbn_fixed_maxActiveItemWidth">168dp</dimen>

@@ -15,44 +15,21 @@ import timber.log.Timber
  */
 class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
 
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {}
-
-    private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_maxActiveItemWidth)
-    private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_minActiveItemWidth)
+    private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_maxItemWidth)
+    private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_minItemWidth)
     private var itemsGap: Int = 0
     private var itemWidth: Int = 0
     private var selectedIndex: Int = 0
     private var hasFrame: Boolean = false
     private var menu: MenuParser.Menu? = null
 
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {}
+
     override fun removeAll() {
         removeAllViews()
         selectedIndex = 0
         menu = null
     }
-
-//    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-//        if (!hasFrame || childCount == 0) {
-//            return
-//        }
-//
-//        val w = r - l
-//        val itemSize = w / childCount
-//        totalChildrenSize = itemSize
-//
-//        Timber.v("width = $w")
-//        Timber.v("itemSize = $itemSize, max = $maxItemWidth, min = $minItemWidth")
-//
-//        val width = r - l
-//        var left = (width - totalChildrenSize) / 2
-//
-//        for (i in 0 until childCount) {
-//            val child = getChildAt(i)
-//            val params = child.layoutParams
-//            setChildFrame(child, left, 0, params.width, params.height)
-//            left += child.width
-//        }
-//    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -96,22 +73,16 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
     }
 
     override fun setItemEnabled(index: Int, enabled: Boolean) {
-        Timber.i("setItemEnabled($index, $enabled)")
-        val child = getChildAt(index) as BottomNavigationItemViewAbstract?
-        child?.let {
-            it.isEnabled = enabled
-            it.postInvalidate()
+        (getChildAt(index) as BottomNavigationItemViewAbstract?)?.let { child ->
+            child.isEnabled = enabled
+            child.postInvalidate()
             requestLayout()
         }
     }
 
-    override fun getSelectedIndex(): Int {
-        return selectedIndex
-    }
+    override fun getSelectedIndex(): Int = selectedIndex
 
     override fun populate(menu: MenuParser.Menu) {
-        Timber.i("populate: $menu")
-
         if (hasFrame) {
             populateInternal(menu)
         } else {
@@ -121,8 +92,6 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun populateInternal(menu: MenuParser.Menu) {
-        Timber.d("populateInternal")
-
         val parent = parent as BottomNavigation
         val density = resources.displayMetrics.density
         val screenWidth = parent.width
@@ -155,8 +124,6 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
 
         for (i in 0 until menu.itemsCount) {
             val item = menu.getItemAt(i)
-            Timber.v("item: $item")
-
             val params = LinearLayout.LayoutParams(itemWidth, height)
             val view = BottomNavigationExpandingItemView(parent, i == selectedIndex, menu)
             view.item = item
@@ -188,6 +155,5 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
         }
     }
 
-    companion object {
-    }
+    companion object {}
 }
