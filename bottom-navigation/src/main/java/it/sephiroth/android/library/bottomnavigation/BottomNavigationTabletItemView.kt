@@ -19,18 +19,10 @@ internal class BottomNavigationTabletItemView(parent: BottomNavigation, expanded
     private val iconSize: Int
 
     private val interpolator = DecelerateInterpolator()
-    private val animationDuration: Long
-    private val colorActive: Int
-    private val colorInactive: Int
-    private val colorDisabled: Int
 
     init {
         val res = resources
         this.iconSize = res.getDimensionPixelSize(R.dimen.bbn_tablet_item_icon_size)
-        this.animationDuration = menu.itemAnimationDuration.toLong()
-        this.colorActive = menu.getColorActive()
-        this.colorInactive = menu.getColorInactive()
-        this.colorDisabled = menu.getColorDisabled()
     }
 
     override fun onStatusChanged(expanded: Boolean, size: Int, animate: Boolean) {

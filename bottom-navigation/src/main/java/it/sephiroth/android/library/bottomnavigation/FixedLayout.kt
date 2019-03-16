@@ -17,7 +17,7 @@ import it.sephiroth.android.library.bottonnavigation.R
  *
  * The MIT License
  */
-class FixedLayout(context: Context) : ItemsLayoutContainer(context) {
+class FixedLayout(context: Context) : LayoutManager(context) {
     private val maxActiveItemWidth: Int
     private val minActiveItemWidth: Int
     private var totalChildrenSize: Int = 0

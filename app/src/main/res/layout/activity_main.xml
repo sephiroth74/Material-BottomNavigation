@@ -21,12 +21,15 @@
     <include layout="@layout/floating_action_button_main" />
 
     <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:id="@id/BottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="@integer/app_gravity"
         app:bbn_badgeProvider="@string/bbn_badgeProvider"
-        app:bbn_entries="@menu/bottombar_menu_4items_no_background"
+        app:bbn_entries="@menu/bottombar_menu_3items"
+        app:bbn_layoutManager="ExpandLayoutManager"
         app:layout_behavior="@string/bbn_default_view_behavior" />
 
     <com.google.android.material.appbar.AppBarLayout

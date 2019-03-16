@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Xml
-import androidx.core.content.ContextCompat
 import it.sephiroth.android.library.bottonnavigation.R
 import org.xmlpull.v1.XmlPullParser
 import java.util.*
@@ -24,91 +23,24 @@ class MenuParser {
     class Menu(private val context: Context) {
 
         var items: Array<BottomNavigationItem>? = null
-            set(items) {
-                field = items
-                this.isShifting = null != items && items.size > 3 && !forceFixed
-            }
-        internal var colorActive: Int = 0
-        internal var background: Int = 0
-        internal var rippleColor: Int = 0
-        internal var colorInactive: Int = 0
-        internal var colorDisabled: Int = 0
+
+        var colorActive: Int = 0
+        var background: Int = 0
+        var rippleColor: Int = 0
+        var colorInactive: Int = 0
+        var colorDisabled: Int = 0
 
         var itemAnimationDuration: Int = 0
-            internal set
-
-        var isShifting: Boolean = false
-            internal set
-
-        var isTablet: Boolean = false
             internal set
 
         var badgeColor: Int = 0
             internal set
 
-        var forceFixed: Boolean = false
-            internal set
-
         val itemsCount: Int
-            get() = if (null != this.items) {
-                this.items!!.size
-            } else 0
+            get() = this.items?.size ?: 0
 
         override fun toString(): String {
-            return "Menu{background:$background, colorActive:$colorActive, colorInactive:$colorInactive, colorDisabled: $colorDisabled, shifting:$isShifting, tablet:$isTablet}"
-        }
-
-        fun getBackground(): Int {
-            return if (0 == background) {
-                if (isShifting && !isTablet) {
-                    MiscUtils.getColor(context, R.attr.colorPrimary)
-                } else {
-                    MiscUtils.getColor(context, android.R.attr.windowBackground)
-                }
-            } else background
-        }
-
-        fun getColorActive(): Int {
-            if (0 == colorActive) {
-                colorActive = if (isShifting && !isTablet) {
-                    MiscUtils.getColor(context, android.R.attr.colorForegroundInverse)
-                } else {
-                    MiscUtils.getColor(context, android.R.attr.colorForeground)
-                }
-            }
-            return colorActive
-        }
-
-        fun getColorInactive(): Int {
-            if (0 == colorInactive) {
-                colorInactive = if (isShifting && !isTablet) {
-                    val color = getColorActive()
-                    Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color))
-                } else {
-                    val color = getColorActive()
-                    Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color))
-                }
-            }
-            return colorInactive
-        }
-
-        fun getColorDisabled(): Int {
-            if (0 == colorDisabled) {
-                val color = getColorInactive()
-                colorDisabled = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color))
-            }
-            return colorDisabled
-        }
-
-        fun getRippleColor(): Int {
-            if (0 == rippleColor) {
-                rippleColor = if (isShifting && !isTablet) {
-                    ContextCompat.getColor(context, R.color.bbn_shifting_item_ripple_color)
-                } else {
-                    ContextCompat.getColor(context, R.color.bbn_fixed_item_ripple_color)
-                }
-            }
-            return rippleColor
+            return "Menu{background:$background, colorActive:$colorActive, colorInactive:$colorInactive, colorDisabled: $colorDisabled}"
         }
 
         fun getItemAt(index: Int): BottomNavigationItem {
@@ -121,10 +53,6 @@ class MenuParser {
          */
         fun hasChangingColor(): Boolean {
             return this.items!![0].hasColor()
-        }
-
-        fun setTabletMode(tablet: Boolean) {
-            this.isTablet = tablet
         }
     }
 
@@ -149,7 +77,6 @@ class MenuParser {
             it.colorDisabled = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled, 0)
             it.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0)
             it.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED)
-            it.forceFixed = a.getBoolean(R.styleable.BottomNavigationMenu_bbn_alwaysShowLabels, false)
         }
         a.recycle()
     }

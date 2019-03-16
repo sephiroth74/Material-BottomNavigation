@@ -39,10 +39,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log.INFO
 import android.util.Log.VERBOSE
-import android.view.Gravity
-import android.view.View
-import android.view.ViewAnimationUtils
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -55,8 +52,10 @@ import androidx.core.view.ViewCompat
 import com.readystatesoftware.systembartint.SystemBarTintManager
 import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
+import timber.log.Timber
 import java.lang.ref.SoftReference
 import java.lang.reflect.Constructor
+import java.lang.reflect.InvocationTargetException
 import java.util.*
 import kotlin.math.min
 
@@ -89,32 +88,29 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * This is the current view height. It does take into account the extra space
      * used in case we have to cover the navigation translucent area, and neither the shadow height.
      */
-    var navigationHeight: Int = 0
-        private set
+    val navigationHeight: Int by lazy { resources.getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height) }
 
     /**
      * Same as defaultHeight, but for tablet mode.
      */
-    var navigationWidth: Int = 0
-        private set
+    private val navigationWidth: Int by lazy { resources.getDimensionPixelSize(R.dimen.bbn_bottom_navigation_width) }
 
     /**
      * Shadow is created above the widget background. It simulates the
      * elevation.
      */
-    var shadowHeight: Int = 0
-        private set
+    private val shadowHeight: Int by lazy { resources.getDimensionPixelOffset(R.dimen.bbn_top_shadow_height) }
 
     /**
      * Layout container used to create and manage the UI items.
      * It can be either Fixed or Shifting, based on the widget `mode`
      */
-    private var itemsContainer: ItemsLayoutContainer? = null
+    private var layoutManager: LayoutManager? = null
 
     /**
      * This is where the color animation is happening
      */
-    private var backgroundOverlay: View? = null
+    private lateinit var backgroundOverlay: View
 
     /**
      * View used to show the press ripple overlay.
@@ -143,12 +139,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     /**
      * View visible background color
      */
-    private var backgroundDrawable: ColorDrawable? = null
+    private lateinit var backgroundDrawable: ColorDrawable
 
     /**
      * Animation duration for the background color change
      */
-    private var backgroundColorAnimation: Long = 0
+    private val backgroundColorAnimation: Long = resources.getInteger(R.integer.bbn_background_animation_duration).toLong()
 
     /**
      * Optional typeface used for the items' text labels
@@ -194,14 +190,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         private set
 
     var selectedIndex: Int = -1
-        get() = if (null != itemsContainer) {
-            itemsContainer!!.getSelectedIndex()
-        } else -1
+        get() = layoutManager?.getSelectedIndex() ?: -1
+        private set
 
     var isExpanded: Boolean = false
         get() = if (null != mBehavior && mBehavior is BottomBehavior) {
             (mBehavior as BottomBehavior).isExpanded
         } else false
+        private set
 
     /**
      * Returns the current menu items count
@@ -212,6 +208,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         get() = if (null != menu) {
             menu!!.itemsCount
         } else 0
+        private set
 
     var behavior: CoordinatorLayout.Behavior<*>? = null
         get() {
@@ -222,6 +219,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             }
             return mBehavior
         }
+        private set
 
     private val mLayoutChangedListener = MyLayoutChangedListener()
 
@@ -240,45 +238,46 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         initialize(context, attrs, defStyleAttr, defStyleRes)
     }
 
+    @Suppress("NAME_SHADOWING")
     override fun onSaveInstanceState(): Parcelable? {
-        MiscUtils.log(INFO, "onSaveInstanceState")
         val parcelable = super.onSaveInstanceState()
+        parcelable?.let { parcelable ->
+            val savedState = SavedState(parcelable)
 
-        val savedState = SavedState(parcelable)
-
-        if (null == menu) {
-            savedState.selectedIndex = 0
-            savedState.disabledIndices = arrayListOf()
-        } else {
-            // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
-            savedState.selectedIndex = selectedIndex
-            savedState.disabledIndices = arrayListOf()
-            val items = menu?.items
-            if (items != null) {
-                for (i in items.indices) {
-                    if (!menu!!.items!![i].isEnabled) {
-                        savedState.disabledIndices.add(i)
+            if (null == menu) {
+                savedState.selectedIndex = 0
+                savedState.disabledIndices = arrayListOf()
+            } else {
+                // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
+                savedState.selectedIndex = selectedIndex
+                savedState.disabledIndices = arrayListOf()
+                val items = menu?.items
+                if (items != null) {
+                    for (i in items.indices) {
+                        if (!menu!!.items!![i].isEnabled) {
+                            savedState.disabledIndices.add(i)
+                        }
                     }
                 }
             }
-        }
 
-        if (null != badgeProvider) {
-            savedState.badgeBundle = badgeProvider!!.save()
-        }
+            if (null != badgeProvider) {
+                savedState.badgeBundle = badgeProvider!!.save()
+            }
 
-        if (null != pendingMenu) {
-            val items = pendingMenu?.items
-            if (items != null) {
-                for (i in items.indices) {
-                    if (savedState.disabledIndices.contains(i)) {
-                        pendingMenu!!.items!![i].isEnabled = false
+            if (null != pendingMenu) {
+                val items = pendingMenu?.items
+                if (items != null) {
+                    for (i in items.indices) {
+                        if (savedState.disabledIndices.contains(i)) {
+                            pendingMenu!!.items!![i].isEnabled = false
+                        }
                     }
                 }
             }
+            return savedState
         }
-
-        return savedState
+        return AbsSavedState.EMPTY_STATE
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
@@ -298,17 +297,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         typeface = SoftReference(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
 
         val array = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigation, defStyleAttr, defStyleRes)
+        val layoutManagerName = array.getString(R.styleable.BottomNavigation_bbn_layoutManager)
+
         val menuResId = array.getResourceId(R.styleable.BottomNavigation_bbn_entries, 0)
         pendingMenu = MenuParser.inflateMenu(context, menuResId)
         badgeProvider = parseBadgeProvider(this, context, array.getString(R.styleable.BottomNavigation_bbn_badgeProvider))
         array.recycle()
 
-        backgroundColorAnimation = resources.getInteger(R.integer.bbn_background_animation_duration).toLong()
         defaultSelectedIndex = 0
-
-        navigationHeight = resources.getDimensionPixelSize(R.dimen.bbn_bottom_navigation_height)
-        navigationWidth = resources.getDimensionPixelSize(R.dimen.bbn_bottom_navigation_width)
-        shadowHeight = resources.getDimensionPixelOffset(R.dimen.bbn_top_shadow_height)
 
         // check if the bottom navigation is translucent
         if (!isInEditMode) {
@@ -328,7 +324,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         val params = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         backgroundOverlay = View(getContext())
-        backgroundOverlay!!.layoutParams = params
+        backgroundOverlay.layoutParams = params
         addView(backgroundOverlay)
 
         val drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector)
@@ -345,6 +341,101 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             alpha = 0f
             addView(this)
         }
+
+        layoutManagerName?.let {
+            createLayoutManager(context, it, attrs, defStyleAttr, defStyleRes)
+        }
+    }
+
+    private fun getFullClassName(context: Context, className: String): String {
+        if (className[0] == '.') {
+            return context.packageName + className
+        }
+        return if (className.contains(".")) {
+            className
+        } else BottomNavigation::class.java.getPackage()!!.name + '.'.toString() + className
+    }
+
+    private fun createLayoutManager(context: Context,
+                                    layoutManagerName: String,
+                                    attrs: AttributeSet?,
+                                    defStyleAttr: Int,
+                                    defStyleRes: Int) {
+
+        var className = layoutManagerName.trim()
+        if (!className.isEmpty()) {
+            className = getFullClassName(context, className)
+            try {
+                val classLoader: ClassLoader? = if (isInEditMode) {
+                    this.javaClass.classLoader
+                } else {
+                    context.classLoader
+                }
+                val layoutManagerClass =
+                        classLoader!!.loadClass(className).asSubclass<LayoutManager>(LayoutManager::class.java)
+                var constructor: Constructor<out LayoutManager>
+                var constructorArgs: Array<Any?> = arrayOf()
+                try {
+                    constructor = layoutManagerClass.getConstructor(*LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE)
+                    constructorArgs = arrayOf(context, attrs, defStyleAttr, defStyleRes)
+                } catch (e: NoSuchMethodException) {
+                    try {
+                        constructor = layoutManagerClass.getConstructor()
+                    } catch (e1: NoSuchMethodException) {
+                        e1.initCause(e)
+                        throw IllegalStateException("${attrs?.positionDescription}: Error creating LayoutManager " + className, e1)
+                    }
+                }
+
+                constructor.isAccessible = true
+                setLayoutManager(constructor.newInstance(*constructorArgs))
+            } catch (e: ClassNotFoundException) {
+                throw IllegalStateException("${attrs?.positionDescription}: Unable to find LayoutManager " + className, e)
+            } catch (e: InvocationTargetException) {
+                throw IllegalStateException("${attrs?.positionDescription}: Could not instantiate the LayoutManager: " + className, e)
+            } catch (e: InstantiationException) {
+                throw IllegalStateException("${attrs?.positionDescription}: Could not instantiate the LayoutManager: " + className, e)
+            } catch (e: IllegalAccessException) {
+                throw IllegalStateException("${attrs?.positionDescription}: Cannot access non-public constructor " + className, e)
+            } catch (e: ClassCastException) {
+                throw IllegalStateException("${attrs?.positionDescription}: Class is not a LayoutManager " + className, e)
+            }
+        }
+    }
+
+    private fun clearLayoutManager() {
+        layoutManager?.let { layoutManager ->
+            layoutManager.removeOnLayoutChangeListener(mLayoutChangedListener)
+            layoutManager.removeAll()
+            layoutManager.addOnLayoutChangeListener(mLayoutChangedListener)
+        }
+    }
+
+    private fun setLayoutManager(layout: LayoutManager?) {
+        Timber.i("setLayoutManager($layout)")
+        Timber.v("navigationWidth = $navigationWidth, navigationHeight = $navigationHeight")
+
+        layoutManager?.let { layoutManager ->
+            // remove the layout menuItemSelectionListener
+            layoutManager.removeOnLayoutChangeListener(mLayoutChangedListener)
+            layoutManager.removeAll()
+            removeView(layoutManager)
+        }
+
+        layoutManager = null
+
+        val width = if (layoutManager is TabletLayout) navigationWidth else MATCH_PARENT
+        val height = if (layoutManager is TabletLayout) MATCH_PARENT else navigationHeight
+        val params = LinearLayout.LayoutParams(width, height)
+
+        layout?.let { layout ->
+            layout.id = R.id.bbn_layoutManager
+            layout.layoutParams = params
+            layout.addOnLayoutChangeListener(mLayoutChangedListener)
+            addView(layout)
+        }
+
+        layoutManager = layout
     }
 
     internal fun resetPendingAction() {
@@ -356,15 +447,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun setSelectedIndex(position: Int, animate: Boolean) {
-        itemsContainer?.let {
-            setSelectedItemInternal(it, (itemsContainer as ViewGroup).getChildAt(position), position, animate, false)
+        layoutManager?.let {
+            setSelectedItemInternal(it, (layoutManager as ViewGroup).getChildAt(position), position, animate, false)
         } ?: run {
             defaultSelectedIndex = position
         }
     }
 
     fun setExpanded(expanded: Boolean, animate: Boolean) {
-        log(VERBOSE, "setExpanded(%b, %b)", expanded, animate)
         pendingAction = (if (expanded) PENDING_ACTION_EXPANDED else PENDING_ACTION_COLLAPSED) or
                 if (animate) PENDING_ACTION_ANIMATE_ENABLED else 0
         requestLayout()
@@ -403,8 +493,8 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         log(INFO, "setMenuItemEnabled($index, $enabled)", index, enabled)
         if (null != menu) {
             menu!!.getItemAt(index).isEnabled = enabled
-            if (null != itemsContainer) {
-                itemsContainer!!.setItemEnabled(index, enabled)
+            if (null != layoutManager) {
+                layoutManager!!.setItemEnabled(index, enabled)
             }
         }
     }
@@ -532,12 +622,10 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 throw IllegalArgumentException("BottomNavigation expects 3 to 5 items. " + menu.itemsCount + " found")
             }
 
-            enabledRippleBackground = !menu.getItemAt(0).hasColor() || menu.isTablet
-
-            menu.setTabletMode(isTablet(gravity))
+            enabledRippleBackground = !menu.getItemAt(0).hasColor()
 
             initializeBackgroundColor(menu)
-            initializeContainer(menu)
+            clearLayoutManager()
             initializeItems(menu)
 
             menuChangedListener?.onMenuChanged(this)
@@ -574,60 +662,22 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun initializeBackgroundColor(menu: MenuParser.Menu) {
-        val color = menu.getBackground()
-        backgroundDrawable!!.color = color
-    }
-
-    private fun initializeContainer(menu: MenuParser.Menu) {
-        if (null != itemsContainer) {
-
-            // remove the layout menuItemSelectionListener
-            (itemsContainer as ViewGroup).removeOnLayoutChangeListener(mLayoutChangedListener)
-
-            if (menu.isTablet && itemsContainer !is TabletLayout) {
-                removeView(itemsContainer as View?)
-                itemsContainer = null
-            } else if (menu.isShifting && itemsContainer !is ShiftingLayout || !menu.isShifting && itemsContainer !is FixedLayout) {
-                removeView(itemsContainer as View?)
-                itemsContainer = null
-            } else {
-                itemsContainer!!.removeAll()
-            }
-        }
-
-        if (null == itemsContainer) {
-            val params = LinearLayout.LayoutParams(
-                    if (menu.isTablet) navigationWidth else MATCH_PARENT,
-                    if (menu.isTablet) MATCH_PARENT else navigationHeight)
-
-            itemsContainer = when {
-                menu.isTablet -> TabletLayout(context)
-                menu.isShifting -> ShiftingLayout(context)
-                else -> FixedLayout(context)
-            }
-
-            // force the layout manager ID
-            (itemsContainer as View).id = R.id.bbn_layoutManager
-            itemsContainer!!.layoutParams = params
-            addView(itemsContainer as View?)
-        }
-
-        // add the layout menuItemSelectionListener
-        (itemsContainer as ViewGroup).addOnLayoutChangeListener(mLayoutChangedListener)
+        backgroundDrawable.color = menu.background
     }
 
     private fun initializeItems(menu: MenuParser.Menu) {
-        itemsContainer?.let {
+        Timber.i("initializeItems($menu)")
+        layoutManager?.let {
             it.setSelectedIndex(defaultSelectedIndex, false)
             it.populate(menu)
             it.itemClickListener = this
         }
 
         if (defaultSelectedIndex > -1 && menu.getItemAt(defaultSelectedIndex).hasColor()) {
-            backgroundDrawable!!.color = menu.getItemAt(defaultSelectedIndex).color
+            backgroundDrawable.color = menu.getItemAt(defaultSelectedIndex).color
         }
 
-        MiscUtils.setDrawableColor(rippleOverlay.background, menu.getRippleColor())
+        MiscUtils.setDrawableColor(rippleOverlay.background, menu.rippleColor)
     }
 
     /**
@@ -662,6 +712,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 oldTop: Int,
                 oldRight: Int,
                 oldBottom: Int) {
+
             if (null == view) {
                 return
             }
@@ -676,12 +727,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
 
         fun forceLayout(v: View) {
-            view = v as BottomNavigationItemViewAbstract
-            onLayoutChange(view, view!!.left, view!!.top, view!!.right, view!!.bottom, 0, 0, 0, 0)
+            view = (v as BottomNavigationItemViewAbstract)
+            view?.let { view ->
+                onLayoutChange(view, view.left, view.top, view.right, view.bottom, 0, 0, 0, 0)
+            }
         }
     }
 
-    override fun onItemDown(parent: ItemsLayoutContainer, view: View,
+    override fun onItemDown(parent: LayoutManager, view: View,
                             pressed: Boolean, x: Float, y: Float) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return
@@ -730,14 +783,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
     }
 
-    override fun onItemClick(parent: ItemsLayoutContainer, view: View, index: Int, animate: Boolean) {
-        log(VERBOSE, "onItemClick: $index")
+    override fun onItemClick(parent: LayoutManager, view: View, index: Int, animate: Boolean) {
         setSelectedItemInternal(parent, view, index, animate, true)
         mLayoutChangedListener.forceLayout(view)
     }
 
     private fun setSelectedItemInternal(
-            layoutContainer: ItemsLayoutContainer,
+            layoutManager: LayoutManager,
             view: View, index: Int,
             animate: Boolean,
             fromUser: Boolean) {
@@ -747,24 +799,24 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             else -> null
         }
 
-        if (layoutContainer.getSelectedIndex() != index) {
-            layoutContainer.setSelectedIndex(index, animate)
+        if (layoutManager.getSelectedIndex() != index) {
+            layoutManager.setSelectedIndex(index, animate)
 
-            if (null != item && item.hasColor() && !menu!!.isTablet) {
+            if (null != item && item.hasColor()) {
                 if (animate) {
                     MiscUtils.animate(
                             this,
                             view,
-                            backgroundOverlay!!,
-                            backgroundDrawable!!,
+                            backgroundOverlay,
+                            backgroundDrawable,
                             item.color,
                             backgroundColorAnimation)
                 } else {
                     MiscUtils.switchColor(
                             this,
                             view,
-                            backgroundOverlay!!,
-                            backgroundDrawable!!,
+                            backgroundOverlay,
+                            backgroundDrawable,
                             item.color)
                 }
             }
@@ -786,8 +838,8 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
     fun invalidateBadge(itemId: Int) {
         log(VERBOSE, "invalidateBadge: $itemId")
-        if (null != itemsContainer) {
-            val viewAbstract = itemsContainer!!.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
+        if (null != layoutManager) {
+            val viewAbstract = layoutManager!!.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
             viewAbstract?.invalidateBadge()
         }
     }
@@ -854,8 +906,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         private val CONSTRUCTOR_PARAMS = arrayOf<Class<*>>(BottomNavigation::class.java)
 
+        private val LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE =
+                arrayOf<Class<*>>(Context::class.java, AttributeSet::class.java, Int::class.javaPrimitiveType!!, Int::class.javaPrimitiveType!!)
+
         private val S_CONSTRUCTORS = ThreadLocal<MutableMap<String, Constructor<BadgeProvider>>>()
 
+        @Suppress("UNCHECKED_CAST")
         internal fun parseBadgeProvider(navigation: BottomNavigation, context: Context, name: String?): BadgeProvider {
             log(VERBOSE, "parseBadgeProvider: $name")
 
@@ -868,7 +924,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 name.indexOf('.') >= 0 -> name
                 else -> // Assume stock behavior in this package (if we have one)
                     if (!TextUtils.isEmpty(WIDGET_PACKAGE_NAME))
-                        WIDGET_PACKAGE_NAME + '.'.toString() + name
+                        "$WIDGET_PACKAGE_NAME.$name"
                     else
                         name
             }

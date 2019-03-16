@@ -13,7 +13,7 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class ShiftingLayout(context: Context) : ItemsLayoutContainer(context) {
+class ShiftingLayout(context: Context) : LayoutManager(context) {
     private val maxActiveItemWidth: Int
     private val minActiveItemWidth: Int
     private val maxInactiveItemWidth: Int

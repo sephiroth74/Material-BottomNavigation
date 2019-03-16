@@ -2,6 +2,7 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
@@ -13,7 +14,8 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
+class ExpandLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+        LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
 
     private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_maxItemWidth)
     private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_minItemWidth)
@@ -115,9 +117,10 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
         }
 
         if (BottomNavigation.DEBUG) {
-            Timber.v("active size (dp): ${maxItemWidth / density} , ${minItemWidth / density}")
+            Timber.v("active size (dp): ${maxItemWidth / density}, ${minItemWidth / density}")
             Timber.v("itemWidth(dp): ${itemWidth / density}, ${itemWidth / density}")
             Timber.v("itemsGap: $itemsGap")
+            Timber.v("itemsCount: ${menu.itemsCount}")
         }
 
         var childLeft = 0
@@ -134,14 +137,14 @@ class ExpandLayout(context: Context) : ItemsLayoutContainer(context) {
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemDown(this@ExpandLayout, v, true, event.x, event.y)
+                    itemClickListener?.onItemDown(this@ExpandLayoutManager, v, true, event.x, event.y)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemDown(this@ExpandLayout, v, false, event.x, event.y)
+                    itemClickListener?.onItemDown(this@ExpandLayoutManager, v, false, event.x, event.y)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                itemClickListener?.onItemClick(this@ExpandLayout, v, i, true)
+                itemClickListener?.onItemClick(this@ExpandLayoutManager, v, i, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

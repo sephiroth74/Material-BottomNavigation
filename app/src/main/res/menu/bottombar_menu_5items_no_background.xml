@@ -6,7 +6,7 @@
         android:id="@+id/bbn_item1"
         android:enabled="true"
         android:icon="@drawable/ic_cloud_off_white_24dp"
-        android:title="Cloud Sync" />
+        android:title="Cloud" />
     <item
         android:id="@+id/bbn_item2"
         android:enabled="true"

@@ -1,13 +1,16 @@
 package it.sephiroth.android.library.bottomnavigation
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.ViewGroup
 
 /**
  * Created by alessandro on 4/4/16 at 11:13 PM.
  * Project: Material-BottomNavigation
  */
-abstract class ItemsLayoutContainer(context: Context) : ViewGroup(context) {
+abstract class LayoutManager @JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+        ViewGroup(context, attrs, defStyleAttr) {
 
     abstract fun getSelectedIndex(): Int
 

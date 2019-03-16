@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:bbn_itemAnimationDuration="200"
-    app:bbn_alwaysShowLabels="false"
     app:bbn_itemColorActive="@android:color/black"
     app:bbn_itemColorInactive="#AA000000"
     app:bbn_rippleColor="#ccffffff">

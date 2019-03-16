@@ -27,16 +27,9 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
 
     private val interpolator = DecelerateInterpolator()
     private var textWidth: Float = 0.toFloat()
-    private val animationDuration: Long
-    private val colorActive: Int
-    private val colorInactive: Int
-    private val colorDisabled: Int
-
     private val paddingTopActive: Int
     private val paddingTopInactive: Int
-
     private var paddingBottomItem: Int
-
     private val paddingHorizontal: Int
     private val textSizeInactive: Int
     private var canvasTextScale: Float = 0.toFloat()
@@ -69,16 +62,9 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         this.textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive)
         this.iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size)
 
-        this.animationDuration = menu.itemAnimationDuration.toLong()
-        this.colorActive = menu.getColorActive()
-        this.colorInactive = menu.getColorInactive()
-        this.colorDisabled = menu.getColorDisabled()
         this.centerY = paddingTopActive
         this.canvasTextScale = 1f
         this.iconTranslation = 0f
-//        this.canvasTextScale = if (expanded) TEXT_SCALE_ACTIVE else 1f
-//        this.iconTranslation = (if (expanded) 0 else paddingTopInactive - paddingTopActive).toFloat()
-
         this.textPaint.color = Color.WHITE
         this.textPaint.hinting = Paint.HINTING_ON
         this.textPaint.isLinearText = true

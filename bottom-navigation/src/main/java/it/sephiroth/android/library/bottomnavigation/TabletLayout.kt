@@ -13,7 +13,7 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class TabletLayout(context: Context) : ItemsLayoutContainer(context) {
+class TabletLayout(context: Context) : LayoutManager(context) {
     private val itemHeight: Int
     private val itemPaddingTop: Int
     private var hasFrame: Boolean = false

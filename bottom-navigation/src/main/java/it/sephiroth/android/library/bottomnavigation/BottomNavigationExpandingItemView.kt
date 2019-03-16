@@ -26,24 +26,18 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
     private val paddingBottomInactive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive)
     private val iconSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size)
     private val textSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_text_size)
-    private val animationDuration: Long = menu.itemAnimationDuration.toLong()
-
     private var centerY: Int = 0
     private var centerX: Int = 0
     private val alphaActive: Float
-    private val alphaInactive: Float
-    private val alphaDisabled: Float
+    private val alphaInactive: Float = Color.alpha(this.colorInactive) / BottomNavigationItemViewAbstract.ALPHA_MAX
+    private val alphaDisabled: Float = Color.alpha(this.colorDisabled) / BottomNavigationItemViewAbstract.ALPHA_MAX
     private val interpolator = DecelerateInterpolator()
     private var textWidth: Float = 0.toFloat()
-    private val colorActive: Int = menu.getColorActive()
-    private val colorInactive: Int = menu.getColorInactive()
-    private val colorDisabled: Int = menu.getColorDisabled()
+
     private var textX: Float = 0.toFloat()
     private var textY: Int = 0
 
     init {
-        this.alphaInactive = Color.alpha(this.colorInactive) / BottomNavigationItemViewAbstract.ALPHA_MAX
-        this.alphaDisabled = Color.alpha(this.colorDisabled) / BottomNavigationItemViewAbstract.ALPHA_MAX
         this.alphaActive = Math.max(Color.alpha(colorActive).toFloat() / BottomNavigationItemViewAbstract.ALPHA_MAX, alphaInactive)
         this.centerY = if (expanded) paddingTopItem else paddingBottomInactive
 
@@ -82,7 +76,7 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
         }
 
         val set = AnimatorSet()
-        set.duration = animationDuration * 2
+        set.duration = animationDuration
         set.interpolator = interpolator
         val animator1 = ValueAnimator.ofInt(layoutParams.width, size)
         val animator2 =

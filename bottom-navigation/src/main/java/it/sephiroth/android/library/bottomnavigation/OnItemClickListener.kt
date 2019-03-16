@@ -7,8 +7,8 @@ import android.view.View
  * Project: Material-BottomNavigation
  */
 interface OnItemClickListener {
-    fun onItemClick(parent: ItemsLayoutContainer, view: View, index: Int, animate: Boolean)
+    fun onItemClick(parent: LayoutManager, view: View, index: Int, animate: Boolean)
 
-    fun onItemDown(parent: ItemsLayoutContainer, view: View,
+    fun onItemDown(parent: LayoutManager, view: View,
                    pressed: Boolean, x: Float, y: Float)
 }
