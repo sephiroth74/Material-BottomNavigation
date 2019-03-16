@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     app:bbn_itemAnimationDuration="200"
-    app:bbn_itemColorActive="@color/design_default_color_secondary_variant"
+    app:bbn_itemColorActive="?attr/colorPrimaryDark"
     app:bbn_itemColorDisabled="#33ffffff"
     app:bbn_itemColorInactive="#CC000000"
     app:bbn_rippleColor="#77000000">

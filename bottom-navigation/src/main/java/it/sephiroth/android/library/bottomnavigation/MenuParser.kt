@@ -71,11 +71,40 @@ class MenuParser {
         menu?.let {
             it.itemAnimationDuration =
                     a.getInt(R.styleable.BottomNavigationMenu_bbn_itemAnimationDuration, context.resources.getInteger(R.integer.bbn_item_animation_duration))
-            it.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0)
-            it.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0)
-            it.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0)
-            it.colorDisabled = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled, 0)
-            it.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0)
+
+            if (a.hasValue(R.styleable.BottomNavigationMenu_android_background)) {
+                it.background = a.getColor(R.styleable.BottomNavigationMenu_android_background, 0)
+            } else {
+                it.background = MiscUtils.getColor(context, android.R.attr.windowBackground)
+            }
+
+            if (a.hasValue(R.styleable.BottomNavigationMenu_bbn_rippleColor)) {
+                it.rippleColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_rippleColor, 0)
+            } else {
+                it.rippleColor = MiscUtils.getColor(context, R.attr.colorControlHighlight)
+            }
+
+            if (a.hasValue(R.styleable.BottomNavigationMenu_bbn_itemColorActive)) {
+                it.colorActive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorActive, 0)
+            } else {
+                it.colorActive = MiscUtils.getColor(context, android.R.attr.colorForeground)
+            }
+
+            if (a.hasValue(R.styleable.BottomNavigationMenu_bbn_itemColorInactive)) {
+                it.colorInactive = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorInactive, 0)
+            } else {
+                val color = it.colorActive
+                it.colorInactive = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color))
+            }
+
+            if (a.hasValue(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled)) {
+                it.colorDisabled = a.getColor(R.styleable.BottomNavigationMenu_bbn_itemColorDisabled, 0)
+            } else {
+                val color = it.colorInactive
+                it.colorDisabled = Color.argb(Color.alpha(color) / 2, Color.red(color), Color.green(color), Color.blue(color))
+
+            }
+
             it.badgeColor = a.getColor(R.styleable.BottomNavigationMenu_bbn_badgeColor, Color.RED)
         }
         a.recycle()

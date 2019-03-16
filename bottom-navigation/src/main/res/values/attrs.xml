@@ -5,6 +5,7 @@
         <attr name="bbn_entries" format="reference" />
         <attr name="bbn_badgeProvider" format="string" />
         <attr name="bbn_layoutManager" format="string" />
+        <attr name="bbn_distributeEqually" format="boolean" />
     </declare-styleable>
 
     <!-- styles for the menu resource -->

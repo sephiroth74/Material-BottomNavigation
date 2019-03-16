@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/colorPrimaryDark">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    app:bbn_badgeColor="?attr/colorPrimaryDark"
+    app:bbn_itemAnimationDuration="150"
+    app:bbn_itemColorActive="?attr/colorPrimaryDark"
+    app:bbn_rippleColor="?attr/colorControlHighlight">
 
     <item
         android:id="@+id/bbn_item1"

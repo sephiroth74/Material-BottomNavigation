@@ -9,16 +9,21 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
+@SuppressLint("ViewConstructor")
+@Suppress("unused")
 class ExpandLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
         LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
 
     private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_maxItemWidth)
     private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_minItemWidth)
+    private val defaultItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_defaultItemWidth)
     private var itemsGap: Int = 0
     private var itemWidth: Int = 0
     private var selectedIndex: Int = 0
@@ -107,23 +112,32 @@ class ExpandLayoutManager(context: Context, attrs: AttributeSet? = null, defStyl
         Timber.v("totalWidth: $totalWidth")
 
         var itemWidth = screenWidth / menu.itemsCount
+        Timber.v("itemWidth(dp): ${itemWidth / density}")
+
+        itemWidth = min(max(itemWidth, minItemWidth), maxItemWidth)
+
         Timber.v("itemWidth: $itemWidth")
 
-        if (itemWidth < minItemWidth) itemWidth = minItemWidth
-        if (itemWidth > maxItemWidth) itemWidth = maxItemWidth
+        var childLeft = 0
+
+        if (!distributeEqually && itemWidth > defaultItemWidth) itemWidth = defaultItemWidth
 
         if (itemWidth * menu.itemsCount < screenWidth) {
-            itemsGap = (screenWidth - itemWidth) / (menu.itemsCount - 1)
+            if (distributeEqually) {
+                itemsGap = (screenWidth - itemWidth * (menu.itemsCount)) / (menu.itemsCount + 1)
+                childLeft = itemsGap
+            } else {
+                childLeft = (screenWidth - itemWidth * (menu.itemsCount)) / 2
+                itemsGap = 0
+            }
         }
 
         if (BottomNavigation.DEBUG) {
             Timber.v("active size (dp): ${maxItemWidth / density}, ${minItemWidth / density}")
-            Timber.v("itemWidth(dp): ${itemWidth / density}, ${itemWidth / density}")
+            Timber.v("itemWidth(dp): ${itemWidth / density}")
             Timber.v("itemsGap: $itemsGap")
             Timber.v("itemsCount: ${menu.itemsCount}")
         }
-
-        var childLeft = 0
 
         for (i in 0 until menu.itemsCount) {
             val item = menu.getItemAt(i)

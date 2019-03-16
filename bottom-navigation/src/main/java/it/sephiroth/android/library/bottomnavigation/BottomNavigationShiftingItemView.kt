@@ -78,7 +78,7 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
         }
 
         val set = AnimatorSet()
-        set.duration = animationDuration * 2
+        set.duration = animationDuration
         set.interpolator = interpolator
         val animator1 = ValueAnimator.ofInt(layoutParams.width, size)
         val animator2 = ObjectAnimator.ofInt(this, "centerY", if (expanded) paddingBottomInactive else paddingTopItem,

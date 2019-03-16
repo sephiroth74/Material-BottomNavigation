@@ -2,6 +2,7 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.AttributeSet
 import android.util.Log
 import android.util.Log.INFO
 import android.view.MotionEvent
@@ -17,7 +18,10 @@ import it.sephiroth.android.library.bottonnavigation.R
  *
  * The MIT License
  */
-class FixedLayout(context: Context) : LayoutManager(context) {
+@Suppress("unused")
+@SuppressLint("ViewConstructor")
+class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+        LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
     private val maxActiveItemWidth: Int
     private val minActiveItemWidth: Int
     private var totalChildrenSize: Int = 0
@@ -140,14 +144,14 @@ class FixedLayout(context: Context) : LayoutManager(context) {
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemDown(this@FixedLayout, v, true, event.x, event.y)
+                    itemClickListener?.onItemDown(this@FixLayoutManager, v, true, event.x, event.y)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemDown(this@FixedLayout, v, false, event.x, event.y)
+                    itemClickListener?.onItemDown(this@FixLayoutManager, v, false, event.x, event.y)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                itemClickListener?.onItemClick(this@FixedLayout, v, i, true)
+                itemClickListener?.onItemClick(this@FixLayoutManager, v, i, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

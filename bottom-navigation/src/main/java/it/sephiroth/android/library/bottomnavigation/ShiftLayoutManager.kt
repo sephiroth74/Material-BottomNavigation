@@ -2,6 +2,7 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
@@ -13,7 +14,10 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class ShiftingLayout(context: Context) : LayoutManager(context) {
+@Suppress("unused")
+@SuppressLint("ViewConstructor")
+class ShiftLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+        LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
     private val maxActiveItemWidth: Int
     private val minActiveItemWidth: Int
     private val maxInactiveItemWidth: Int
@@ -207,14 +211,14 @@ class ShiftingLayout(context: Context) : LayoutManager(context) {
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemDown(this@ShiftingLayout, v, true, event.x, event.y)
+                    itemClickListener?.onItemDown(this@ShiftLayoutManager, v, true, event.x, event.y)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemDown(this@ShiftingLayout, v, false, event.x, event.y)
+                    itemClickListener?.onItemDown(this@ShiftLayoutManager, v, false, event.x, event.y)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                itemClickListener?.onItemClick(this@ShiftingLayout, v, i, true)
+                itemClickListener?.onItemClick(this@ShiftLayoutManager, v, i, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

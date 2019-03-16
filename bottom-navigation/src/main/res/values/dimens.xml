@@ -29,6 +29,7 @@
     <!-- expanding item dimensions -->
     <dimen name="bbn_expanding_maxItemWidth">168dp</dimen>
     <dimen name="bbn_expanding_minItemWidth">80dp</dimen>
+    <dimen name="bbn_expanding_defaultItemWidth">120dp</dimen>
     <dimen name="bbn_expanding_text_size">14dp</dimen>
 
     <!-- fixed item dimensions -->
