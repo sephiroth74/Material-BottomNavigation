@@ -11,6 +11,9 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
+import timber.log.Timber
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by crugnola on 4/4/16.
@@ -22,18 +25,25 @@ import it.sephiroth.android.library.bottonnavigation.R
 @SuppressLint("ViewConstructor")
 class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
         LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
-    private val maxActiveItemWidth: Int
-    private val minActiveItemWidth: Int
+    private val maxItemWidth: Int
+    private val minItemWidth: Int
+    private var defaultItemWidth: Int
+
+    private var itemsGap: Int = 0
+    private var itemWidth: Int = 0
+
     private var totalChildrenSize: Int = 0
     private var hasFrame: Boolean = false
+    private var needLayout: Boolean = false
     private var selectedIndex: Int = 0
-    private var itemFinalWidth: Int = 0
     private var menu: MenuParser.Menu? = null
+
 
     init {
         val res = resources
-        maxActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_maxActiveItemWidth)
-        minActiveItemWidth = res.getDimensionPixelSize(R.dimen.bbn_fixed_minActiveItemWidth)
+        maxItemWidth = res.getDimensionPixelSize(R.dimen.bbn_maxItemWidth)
+        minItemWidth = res.getDimensionPixelSize(R.dimen.bbn_minItemWidth)
+        defaultItemWidth = res.getDimensionPixelSize(R.dimen.bbn_defaultItemWidth)
     }
 
     override fun removeAll() {
@@ -45,18 +55,30 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
             return
         }
 
-        if (totalChildrenSize == 0) {
-            totalChildrenSize = itemFinalWidth * (childCount - 1) + itemFinalWidth
-        }
+        if (changed || needLayout) {
+            val width = r - l
+            var childLeft = 0
 
-        val width = r - l
-        var left = (width - totalChildrenSize) / 2
+            if (!distributeEqually && itemWidth > defaultItemWidth) itemWidth = defaultItemWidth
 
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            val params = child.layoutParams
-            setChildFrame(child, left, 0, params.width, params.height)
-            left += child.width
+            if (itemWidth * childCount < width) {
+                if (distributeEqually) {
+                    itemsGap = (width - itemWidth * (childCount)) / (childCount + 1)
+                    childLeft = itemsGap
+                } else {
+                    childLeft = (width - itemWidth * (childCount)) / 2
+                    itemsGap = 0
+                }
+            }
+
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                val params = child.layoutParams
+                setChildFrame(child, childLeft, 0, params.width, params.height)
+                childLeft += params.width + itemsGap
+            }
+
+            if (needLayout) needLayout = false
         }
     }
 
@@ -75,8 +97,6 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
     }
 
     override fun setSelectedIndex(index: Int, animate: Boolean) {
-        MiscUtils.log(Log.INFO, "setSelectedIndex: $index")
-
         if (selectedIndex == index) {
             return
         }
@@ -119,23 +139,45 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
 
     @SuppressLint("ClickableViewAccessibility")
     private fun populateInternal(menu: MenuParser.Menu) {
-        log(Log.DEBUG, "populateInternal")
-
         val parent = parent as BottomNavigation
+        val density = resources.displayMetrics.density
         val screenWidth = parent.width
-        var proposedWidth = Math.min(Math.max(screenWidth / menu.itemsCount, minActiveItemWidth), maxActiveItemWidth)
 
-        if (proposedWidth * menu.itemsCount > screenWidth) {
-            proposedWidth = screenWidth / menu.itemsCount
+        Timber.v("density: $density")
+        Timber.v("maxItemWidth: $maxItemWidth")
+        Timber.v("minItemWidth: $minItemWidth")
+        Timber.v("screenWidth: $screenWidth")
+
+        val totalWidth = maxItemWidth * (menu.itemsCount)
+        Timber.v("totalWidth: $totalWidth")
+
+        itemWidth = screenWidth / menu.itemsCount
+        Timber.v("itemWidth(dp): ${itemWidth / density}")
+
+        itemWidth = min(max(itemWidth, minItemWidth), maxItemWidth)
+
+        Timber.v("itemWidth: $itemWidth")
+
+        if (!distributeEqually && itemWidth > defaultItemWidth) itemWidth = defaultItemWidth
+
+        if (itemWidth * menu.itemsCount < screenWidth) {
+            itemsGap = if (distributeEqually) {
+                (screenWidth - itemWidth * (menu.itemsCount)) / (menu.itemsCount + 1)
+            } else {
+                0
+            }
         }
 
-        this.itemFinalWidth = proposedWidth
+        if (BottomNavigation.DEBUG) {
+            Timber.v("active size (dp): ${maxItemWidth / density}, ${minItemWidth / density}")
+            Timber.v("itemWidth(dp): ${itemWidth / density}")
+            Timber.v("itemsGap: $itemsGap")
+            Timber.v("itemsCount: ${menu.itemsCount}")
+        }
 
         for (i in 0 until menu.itemsCount) {
             val item = menu.getItemAt(i)
-
-            val params = LinearLayout.LayoutParams(proposedWidth, height)
-
+            val params = LinearLayout.LayoutParams(itemWidth, height)
             val view = BottomNavigationFixedItemView(parent, i == selectedIndex, menu)
             view.item = item
             view.layoutParams = params
@@ -159,5 +201,7 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
             }
             addView(view)
         }
+
+        needLayout = true
     }
 }

@@ -111,7 +111,7 @@ class ExpandLayoutManager(context: Context, attrs: AttributeSet? = null, defStyl
         val totalWidth = maxItemWidth * (menu.itemsCount)
         Timber.v("totalWidth: $totalWidth")
 
-        var itemWidth = screenWidth / menu.itemsCount
+        itemWidth = screenWidth / menu.itemsCount
         Timber.v("itemWidth(dp): ${itemWidth / density}")
 
         itemWidth = min(max(itemWidth, minItemWidth), maxItemWidth)
