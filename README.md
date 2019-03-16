@@ -34,7 +34,7 @@ Installation
 
 In your project's `build.gradle` file add the following line to the `dependencies` group:
 
-	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:3.0.0'
+	compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:4.0.0'
 
 
 Usage
@@ -60,6 +60,7 @@ Usage of the BottomNavigation widget is very easy. Just place it in your layout.
 	    app:bbn_entries="@menu/bottombar_menu_4items"
         app:bbn_scrollEnabled="true"
         app:bbn_badgeProvider="@string/bbn_badgeProvider"
+        app:bbn_layoutManager="ExpandLayoutManager"
 	    app:layout_behavior="@string/bbn_phone_view_behavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 ```
@@ -71,8 +72,11 @@ All the menu main configurations are defined within the xml menu resource itself
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/black"
-    app:bbn_badgeColor="#FFFF0000"
-	app:bbn_rippleColor="#33ffffff">
+    app:bbn_itemAnimationDuration="200"
+    app:bbn_itemColorActive="@android:color/black"
+    app:bbn_itemColorInactive="#AA000000"    
+    app:bbn_badgeColor="@android:color/black"
+	app:bbn_rippleColor="?attr/controlColorHighlight">
     <item
 	    android:id="@+id/bbn_item1"
     	android:color="@color/colorPrimary"
@@ -127,6 +131,7 @@ The View supports tablet mode too (Left or Right). In order to enable tablet mod
     android:layout_gravity="start"
     app:bbn_entries="@menu/bottombar_menu_3items"
     app:bbn_badgeProvider="@string/bbn_badgeProvider"
+    app:bbn_layoutManager="TabletLayoutManager"
     app:layout_behavior="@string/bbn_tablet_view_behavior" />
 ```
 
@@ -160,12 +165,26 @@ The xml menu supports the following attributes in the &lt;menu&gt; tag:
 
     <!-- menu item disabled color -->
     <attr name="bbn_itemColorDisabled" format="color" />
-
-    <!-- force fixed behavior and always display item labels -->
-    <!-- default implementation is false and the labels are -->
-    <!-- shown only if there are less than 4 items in the menu -->
-    <attr name="bbn_alwaysShowLabels" format="boolean" />
 </declare-styleable>
+```
+
+Attributes for the *BottomNavigation* View:
+```xml
+    <declare-styleable name="BottomNavigation">
+        <!-- reference to the xml menu -->
+        <attr name="bbn_entries" format="reference" />
+
+        <!-- className of the badge provider -->
+        <attr name="bbn_badgeProvider" format="string" />
+
+        <!-- className of the LayoutManager -->
+        <attr name="bbn_layoutManager" format="string" />
+
+        <!-- some layoutmanagers can distribute the items equally 
+        if the available real estate is bigger than the total items size 
+    -->
+        <attr name="bbn_distributeEqually" format="boolean" />
+    </declare-styleable>
 ```
 
 > **Note:** By default when there are 4 or 5 elements, only the selected item will display the label.
@@ -223,6 +242,7 @@ For instance:
     android:layout_gravity="bottom"
     app:bbn_badgeProvider="my.custom.BadgeProviderCustom"
     app:bbn_entries="@menu/bottombar_menu_4items"
+    app:bbn_layoutManager="ShiftLayoutManager"
     app:layout_behavior="@string/bbn_phone_view_behavior" />
 ```
 
