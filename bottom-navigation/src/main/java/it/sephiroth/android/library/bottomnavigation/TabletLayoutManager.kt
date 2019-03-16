@@ -2,6 +2,7 @@ package it.sephiroth.android.library.bottomnavigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
@@ -13,7 +14,10 @@ import timber.log.Timber
  * Created by crugnola on 4/4/16.
  * MaterialBottomNavigation
  */
-class TabletLayout(context: Context) : LayoutManager(context) {
+@SuppressLint("ViewConstructor")
+class TabletLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
+        LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
+
     private val itemHeight: Int
     private val itemPaddingTop: Int
     private var hasFrame: Boolean = false
@@ -126,14 +130,14 @@ class TabletLayout(context: Context) : LayoutManager(context) {
             view.setOnTouchListener { v, event ->
                 val action = event.actionMasked
                 if (action == MotionEvent.ACTION_DOWN) {
-                    itemClickListener?.onItemDown(this@TabletLayout, v, true, event.x, event.y)
+                    itemClickListener?.onItemDown(this@TabletLayoutManager, v, true, event.x, event.y)
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    itemClickListener?.onItemDown(this@TabletLayout, v, false, event.x, event.y)
+                    itemClickListener?.onItemDown(this@TabletLayoutManager, v, false, event.x, event.y)
                 }
                 false
             }
             view.setOnClickListener { v ->
-                itemClickListener?.onItemClick(this@TabletLayout, v, finalI, true)
+                itemClickListener?.onItemClick(this@TabletLayoutManager, v, finalI, true)
             }
             view.setOnLongClickListener {
                 Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()

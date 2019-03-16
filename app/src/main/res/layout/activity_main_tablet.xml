@@ -42,6 +42,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:bbn_entries="@menu/bottombar_menu_3items_tablet"
+        app:bbn_layoutManager="TabletLayoutManager"
         app:layout_behavior="@string/bbn_tablet_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

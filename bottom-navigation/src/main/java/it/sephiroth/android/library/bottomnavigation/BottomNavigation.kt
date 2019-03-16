@@ -424,8 +424,8 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         layoutManager = null
 
-        val width = if (layoutManager is TabletLayout) navigationWidth else MATCH_PARENT
-        val height = if (layoutManager is TabletLayout) MATCH_PARENT else navigationHeight
+        val width = if (layout is TabletLayoutManager) navigationWidth else MATCH_PARENT
+        val height = if (layout is TabletLayoutManager) MATCH_PARENT else navigationHeight
         val params = LinearLayout.LayoutParams(width, height)
 
         layout?.let { layout ->

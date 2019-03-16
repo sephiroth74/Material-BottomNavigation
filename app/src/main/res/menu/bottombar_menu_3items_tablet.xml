@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:bbn_rippleColor="#66000000"
-    app:bbn_itemColorActive="@color/colorAccent"
-    app:bbn_itemColorInactive="#66000000"
-    app:bbn_itemColorDisabled="#44000000">
+    app:bbn_itemColorActive="@android:color/black"
+    app:bbn_itemColorDisabled="#33000000"
+    app:bbn_itemColorInactive="#AA000000"
+    app:bbn_rippleColor="#66000000">
 
     <item
         android:id="@+id/bbn_item1"
@@ -16,7 +16,6 @@
         android:title="Chromecast" />
     <item
         android:id="@+id/bbn_item3"
-        android:enabled="false"
         android:icon="@drawable/ic_mail_white_24dp"
         android:title="Mail" />
 

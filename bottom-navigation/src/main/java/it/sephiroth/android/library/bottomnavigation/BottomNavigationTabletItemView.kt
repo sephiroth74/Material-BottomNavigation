@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat
 import it.sephiroth.android.library.bottonnavigation.R
+import timber.log.Timber
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -53,6 +54,8 @@ internal class BottomNavigationTabletItemView(parent: BottomNavigation, expanded
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
+        Timber.i("onLayout(${right-left}, ${bottom-top})")
+
         if (null == this.icon) {
             this.icon = item?.getIcon(context)?.mutate()
             this.icon?.setColorFilter(
@@ -67,10 +70,15 @@ internal class BottomNavigationTabletItemView(parent: BottomNavigation, expanded
         if (changed) {
             val w = right - left
             val h = bottom - top
+            Timber.v("w = $w, h = $h")
             val centerX = (w - iconSize) / 2
             val centerY = (h - iconSize) / 2
+            Timber.v("centerX = $centerX, centerY = $centerY")
             icon?.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize)
         }
+
+        Timber.v("icon = $icon")
+        Timber.v("icon bounds = ${icon?.bounds}")
     }
 
     override fun onDraw(canvas: Canvas) {
