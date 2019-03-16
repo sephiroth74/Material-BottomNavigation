@@ -27,8 +27,6 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
 
     private val interpolator = DecelerateInterpolator()
     private var textWidth: Float = 0.toFloat()
-    private val paddingTopActive: Int
-    private val paddingTopInactive: Int
     private var paddingBottomItem: Int
     private val paddingHorizontal: Int
     private val textSizeInactive: Int
@@ -55,14 +53,12 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
 
     init {
         val res = resources
-        this.paddingTopActive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_active)
-        this.paddingTopInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top_inactive)
         this.paddingBottomItem = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_bottom)
         this.paddingHorizontal = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_horizontal)
-        this.textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_fixed_text_size_inactive)
-        this.iconSize = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_icon_size)
+        this.textSizeInactive = res.getDimensionPixelSize(R.dimen.bbn_default_text_size)
+        this.iconSize = res.getDimensionPixelSize(R.dimen.bbn_default_item_icon_size)
 
-        this.centerY = paddingTopActive
+        this.centerY = res.getDimensionPixelSize(R.dimen.bbn_fixed_item_padding_top)
         this.canvasTextScale = 1f
         this.iconTranslation = 0f
         this.textPaint.color = Color.WHITE

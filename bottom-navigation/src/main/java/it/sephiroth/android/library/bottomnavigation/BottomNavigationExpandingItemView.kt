@@ -21,11 +21,11 @@ import timber.log.Timber
 internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expanded: Boolean, menu: MenuParser.Menu) :
         BottomNavigationItemViewAbstract(parent, expanded, menu) {
 
-    private val paddingTopItem: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top)
-    private val paddingBottomActive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active)
-    private val paddingBottomInactive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_inactive)
-    private val iconSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_icon_size)
-    private val textSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_text_size)
+    private val paddingTopItem: Int = resources.getDimensionPixelSize(R.dimen.bbn_expand_item_padding_top)
+    private val paddingBottomActive: Int = resources.getDimensionPixelSize(R.dimen.bbn_expand_item_padding_bottom_active)
+    private val paddingBottomInactive: Int = resources.getDimensionPixelSize(R.dimen.bbn_expand_item_padding_bottom_inactive)
+    private val iconSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_default_item_icon_size)
+    private val textSize: Int = resources.getDimensionPixelSize(R.dimen.bbn_default_text_size)
     private var centerY: Int = 0
     private var centerX: Int = 0
     private val alphaActive: Float

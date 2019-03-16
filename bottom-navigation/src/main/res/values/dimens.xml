@@ -27,19 +27,18 @@
     <dimen name="bbn_shifting_minInactiveItemWidth">64dp</dimen>
 
     <!-- expanding item dimensions -->
-    <dimen name="bbn_expanding_maxItemWidth">168dp</dimen>
-    <dimen name="bbn_expanding_minItemWidth">80dp</dimen>
-    <dimen name="bbn_expanding_defaultItemWidth">120dp</dimen>
-    <dimen name="bbn_expanding_text_size">14dp</dimen>
+    <dimen name="bbn_expand_item_padding_top">6dp</dimen>
+    <dimen name="bbn_expand_item_padding_bottom_active">12dp</dimen>
+    <dimen name="bbn_expand_item_padding_bottom_inactive">16dp</dimen>
 
     <!-- fixed item dimensions -->
-    <dimen name="bbn_fixed_item_padding_top_active">6dp</dimen>
-    <dimen name="bbn_fixed_item_padding_top_inactive">8dp</dimen>
-    <dimen name="bbn_fixed_item_padding_bottom">10dp</dimen>
+    <dimen name="bbn_fixed_item_padding_top">8dp</dimen>
+    <dimen name="bbn_fixed_item_padding_bottom">12dp</dimen>
     <dimen name="bbn_fixed_item_padding_horizontal">12dp</dimen>
-    <dimen name="bbn_fixed_text_size_inactive">12dp</dimen>
-    <dimen name="bbn_fixed_item_icon_size">24dp</dimen>
 
+    <!-- default values -->
+    <dimen name="bbn_default_item_icon_size">24dp</dimen>
+    <dimen name="bbn_default_text_size">14dp</dimen>
     <dimen name="bbn_maxItemWidth">168dp</dimen>
     <dimen name="bbn_minItemWidth">80dp</dimen>
     <dimen name="bbn_defaultItemWidth">120dp</dimen>

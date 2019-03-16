@@ -21,9 +21,9 @@ import kotlin.math.min
 class ExpandLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
         LayoutManager(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_maxItemWidth)
-    private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_minItemWidth)
-    private val defaultItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_expanding_defaultItemWidth)
+    private val maxItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_maxItemWidth)
+    private val minItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_minItemWidth)
+    private val defaultItemWidth: Int = resources.getDimensionPixelSize(R.dimen.bbn_defaultItemWidth)
     private var itemsGap: Int = 0
     private var itemWidth: Int = 0
     private var selectedIndex: Int = 0
