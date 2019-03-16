@@ -1,14 +1,14 @@
 package it.sephiroth.android.library.bottomnavigation;
 
 import android.os.SystemClock;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import it.sephiroth.android.library.bottomnavigation.app.MainActivity;
 import it.sephiroth.android.library.bottomnavigation.app.R;
 

@@ -17,12 +17,13 @@ package it.sephiroth.android.library.bottomnavigation;
  */
 
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.MotionEvent;
+
+import androidx.core.util.Preconditions;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.action.MotionEvents;
 import androidx.test.espresso.action.Swiper;
-import androidx.test.espresso.core.deps.guava.base.Preconditions;
-import android.util.Log;
-import android.view.MotionEvent;
 
 /**
  * Executes different swipe types to given positions.
@@ -50,9 +51,6 @@ public enum CustomSwipe implements Swiper {
     private static final int SWIPE_MEDIUM_DURATION_MS = 400;
 
     private static float[][] interpolate(float[] start, float[] end, int steps) {
-        Preconditions.checkElementIndex(1, start.length);
-        Preconditions.checkElementIndex(1, end.length);
-
         float[][] res = new float[steps][2];
 
         for (int i = 1; i < steps + 1; i++) {
@@ -101,4 +99,4 @@ public enum CustomSwipe implements Swiper {
         return Swiper.Status.SUCCESS;
     }
 
-    }
+}
