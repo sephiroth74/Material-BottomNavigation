@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat
 import it.sephiroth.android.library.bottonnavigation.R
+import timber.log.Timber
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -34,6 +35,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
 
     private var iconTranslation: Float = 0.toFloat()
         set(value) {
+            Timber.v("iconTranslation = $value")
             field = value
             ViewCompat.postInvalidateOnAnimation(this)
         }
@@ -47,6 +49,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
     var textScale: Float
         get() = canvasTextScale
         set(value) {
+            Timber.v("textScale = $value")
             canvasTextScale = value
             ViewCompat.postInvalidateOnAnimation(this)
         }

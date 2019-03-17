@@ -171,12 +171,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 return setMenuType(MENU_TYPE_5_ITEMS);
             case R.id.item6:
                 return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
-            case R.id.item7:
-                startActivity(new Intent(this, MainActivityTablet.class));
-                return true;
-            case R.id.item8:
-                startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
-                return true;
             case R.id.item9:
                 startActivity(new Intent(this, MainActivityCustomBehavior.class));
                 return true;

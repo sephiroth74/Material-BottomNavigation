@@ -39,18 +39,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/item7"
-        android:orderInCategory="100"
-        android:title="Tablet Demo 1"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/item8"
-        android:orderInCategory="100"
-        android:title="Tablet Demo 2"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/item9"
         android:orderInCategory="100"
         android:title="Custom Behavior"

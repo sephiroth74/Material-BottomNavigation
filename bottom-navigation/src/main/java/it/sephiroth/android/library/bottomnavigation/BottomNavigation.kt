@@ -424,9 +424,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         layoutManager = null
 
-        val width = if (layout is TabletLayoutManager) navigationWidth else MATCH_PARENT
-        val height = if (layout is TabletLayoutManager) MATCH_PARENT else navigationHeight
-        val params = LinearLayout.LayoutParams(width, height)
+        val params = LinearLayout.LayoutParams(MATCH_PARENT, navigationHeight)
 
         layout?.let { layout ->
             layout.id = R.id.bbn_layoutManager
@@ -605,10 +603,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
                 if (BottomBehavior::class.java.isInstance(mBehavior)) {
                     (mBehavior as BottomBehavior).setLayoutValues(navigationHeight, bottomInset)
-                } else if (TabletBehavior::class.java.isInstance(mBehavior)) {
-                    val activity = MiscUtils.getActivity(context)
-                    val translucentStatus = MiscUtils.hasTranslucentStatusBar(activity)
-                    (mBehavior as TabletBehavior).setLayoutValues(navigationWidth, topInset, translucentStatus)
                 }
             }
         }
