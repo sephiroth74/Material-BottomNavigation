@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 /**
  * Created by crugnola on 6/23/16.
@@ -47,7 +46,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<Toolbar> {
         if (!enabled) {
             return false;
         }
-        MiscUtils.INSTANCE.log(Log.INFO, "onStartNestedScroll. nestedScrollAxes=" + nestedScrollAxes);
         return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL;
     }
 
@@ -55,7 +53,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<Toolbar> {
     public void onNestedScrollAccepted(
         final CoordinatorLayout coordinatorLayout, final Toolbar child, final View directTargetChild, final View target,
         final int nestedScrollAxes) {
-        MiscUtils.INSTANCE.log(Log.VERBOSE, "onNestedScrollAccepted. nestedScrollAxes=" + nestedScrollAxes);
         super.onNestedScrollAccepted(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
     }
 
@@ -72,7 +69,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<Toolbar> {
         final CoordinatorLayout coordinatorLayout, final Toolbar child, final View target, final int dxConsumed,
         final int dyConsumed, final int dxUnconsumed,
         final int dyUnconsumed) {
-        MiscUtils.INSTANCE.log(Log.INFO, "onNestedScroll. dyConsumed=" + dyConsumed + ", dyUnconsumed=" + dyUnconsumed);
         scrolling = true;
     }
 
@@ -80,7 +76,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<Toolbar> {
     public void onNestedPreScroll(
         final CoordinatorLayout coordinatorLayout, final Toolbar child, final View target, final int dx, final int dy,
         final int[] consumed) {
-        //        MiscUtils.log(TAG, Log.INFO, "onNestedPreScroll. dy=" + dy + ", consumed=" + consumed[0]);
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
     }
 
@@ -88,15 +83,12 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<Toolbar> {
     public boolean onNestedFling(
         final CoordinatorLayout coordinatorLayout, final Toolbar child, final View target, final float velocityX,
         final float velocityY, final boolean consumed) {
-        MiscUtils.INSTANCE.log(Log.INFO, "onNestedFling. velocityY=" + velocityY + ", consumed=" + consumed);
-
         return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
     @Override
     public WindowInsetsCompat onApplyWindowInsets(
         final CoordinatorLayout coordinatorLayout, final Toolbar child, final WindowInsetsCompat insets) {
-        MiscUtils.INSTANCE.log(Log.INFO, "onApplyWindowInsets: " + insets);
         return super.onApplyWindowInsets(coordinatorLayout, child, insets);
     }
 

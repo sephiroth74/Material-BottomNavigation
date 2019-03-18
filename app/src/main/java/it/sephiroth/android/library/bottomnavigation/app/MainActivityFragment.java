@@ -2,7 +2,6 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
-import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -79,9 +76,6 @@ public class MainActivityFragment extends Fragment {
             actionbarHeight = 0;
         }
 
-        MiscUtils.INSTANCE.log(Log.VERBOSE, "navigationHeight: " + navigationHeight);
-        MiscUtils.INSTANCE.log(Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
-
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
             navigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -102,8 +96,6 @@ public class MainActivityFragment extends Fragment {
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
                         int systemBottomNavigation = activity.hasTranslucentNavigation() ? activity.getNavigationBarHeight() : 0;
-
-                        MiscUtils.INSTANCE.log(Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
@@ -134,7 +126,6 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
-        MiscUtils.INSTANCE.log(Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout, createData()));
@@ -211,7 +202,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final TwoLinesViewHolder holder, final int position) {
-//            Timber.i("onBindViewHolder: " + position);
+            //            Timber.i("onBindViewHolder: " + position);
 
             ((MarginLayoutParams) holder.itemView.getLayoutParams()).topMargin = 0;
             if (position == getItemCount() - 1) {

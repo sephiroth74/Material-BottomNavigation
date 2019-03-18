@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "it.sephiroth.android.library.bottomnavigation.app"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
         versionCode 1
         versionName "1.0"
@@ -68,10 +68,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
-
-configurations.all {
-    resolutionStrategy {
-        forcedModules = ['com.android.support:support-annotations:' + SUPPORT_LIBRARY_VERSION]
-    }
-}
+//
+//configurations.all {
+//    resolutionStrategy {
+//        forcedModules = ['com.android.support:support-annotations:' + SUPPORT_LIBRARY_VERSION]
+//    }
+//}
 

@@ -2,7 +2,6 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -68,9 +66,6 @@ public class EnableDisableActivityFragment extends Fragment implements BottomNav
             actionbarHeight = 0;
         }
 
-        MiscUtils.INSTANCE.log(Log.VERBOSE, "navigationHeight: " + navigationHeight);
-        MiscUtils.INSTANCE.log(Log.VERBOSE, "actionbarHeight: " + actionbarHeight);
-
         final BottomNavigation navigation = activity.getBottomNavigation();
         if (null != navigation) {
             navigation.setMenuChangedListener(this);
@@ -85,14 +80,8 @@ public class EnableDisableActivityFragment extends Fragment implements BottomNav
                     final CoordinatorLayout.Behavior behavior = coordinatorLayoutParams.getBehavior();
                     final MarginLayoutParams params = (MarginLayoutParams) mRecyclerView.getLayoutParams();
 
-                    MiscUtils.INSTANCE.log(Log.VERBOSE, "behavior: %s", behavior);
-                    MiscUtils.INSTANCE.log(Log.VERBOSE, "finalNavigationHeight: " + navigationHeight);
-                    MiscUtils.INSTANCE.log(Log.VERBOSE, "bottomNagivation: " + navigation.getNavigationHeight());
-
                     if (behavior instanceof BottomBehavior) {
                         final boolean scrollable = ((BottomBehavior) behavior).isScrollable();
-
-                        MiscUtils.INSTANCE.log(Log.VERBOSE, "scrollable: " + scrollable);
 
                         int totalHeight;
 
@@ -102,9 +91,6 @@ public class EnableDisableActivityFragment extends Fragment implements BottomNav
                         } else {
                             totalHeight = navigation.getNavigationHeight();
                         }
-
-                        MiscUtils.INSTANCE.log(Log.VERBOSE, "totalHeight: " + totalHeight);
-                        MiscUtils.INSTANCE.log(Log.VERBOSE, "bottomMargin: " + params.bottomMargin);
 
                         createAdater(totalHeight, activity.hasAppBarLayout());
                     } else {
@@ -146,7 +132,6 @@ public class EnableDisableActivityFragment extends Fragment implements BottomNav
 
     private void createAdater(int height, final boolean hasAppBarLayout) {
         final BottomNavigation navigation = getBottomNavigation();
-        MiscUtils.INSTANCE.log(Log.INFO, "createAdapter(" + height + ")");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(new Adapter(getContext(), height, hasAppBarLayout));

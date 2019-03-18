@@ -1,0 +1,3 @@
+[submodule "kotlin_extensions"]
+	path = kotlin_extensions
+	url = git@github.com:sephiroth74/kotlin_extensions.git

@@ -37,8 +37,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.Log.INFO
-import android.util.Log.VERBOSE
 import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
@@ -50,8 +48,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import com.readystatesoftware.systembartint.SystemBarTintManager
-import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
+import it.sephiroth.android.library.kotlin_extensions.content.getActivity
 import timber.log.Timber
 import java.lang.ref.SoftReference
 import java.lang.reflect.Constructor
@@ -281,12 +279,10 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
-        log(INFO, "onRestoreInstanceState")
         val savedState = state as SavedState
         super.onRestoreInstanceState(savedState.superState)
 
         defaultSelectedIndex = savedState.selectedIndex
-        log(VERBOSE, "defaultSelectedIndex: $defaultSelectedIndex")
 
         if (null != badgeProvider && null != savedState.badgeBundle) {
             badgeProvider!!.restore(savedState.badgeBundle!!)
@@ -308,8 +304,8 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         // check if the bottom navigation is translucent
         if (!isInEditMode) {
-            val activity = MiscUtils.getActivity(context)
-            if (null != activity) {
+
+            context.getActivity()?.let { activity ->
                 val systembarTint = SystemBarTintManager(activity)
                 bottomInset = if (MiscUtils.hasTranslucentNavigation(activity)
                                   && systembarTint.config.isNavigationAtBottom
@@ -488,7 +484,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun setMenuItemEnabled(index: Int, enabled: Boolean) {
-        log(INFO, "setMenuItemEnabled($index, $enabled)", index, enabled)
         if (null != menu) {
             menu!!.getItemAt(index).isEnabled = enabled
             if (null != layoutManager) {
@@ -537,7 +532,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        log(INFO, "onSizeChanged($w, $h)")
         super.onSizeChanged(w, h, oldw, oldh)
         val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
         marginLayoutParams.bottomMargin = -bottomInset
@@ -831,7 +825,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun invalidateBadge(itemId: Int) {
-        log(VERBOSE, "invalidateBadge: $itemId")
         if (null != layoutManager) {
             val viewAbstract = layoutManager!!.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
             viewAbstract?.invalidateBadge()
@@ -907,7 +900,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         @Suppress("UNCHECKED_CAST")
         internal fun parseBadgeProvider(navigation: BottomNavigation, context: Context, name: String?): BadgeProvider {
-            log(VERBOSE, "parseBadgeProvider: $name")
 
             if (name.isNullOrEmpty()) {
                 return BadgeProvider(navigation)

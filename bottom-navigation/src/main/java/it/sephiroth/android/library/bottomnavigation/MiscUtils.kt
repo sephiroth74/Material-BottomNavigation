@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -23,7 +22,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.ViewPropertyAnimatorListener
 import it.sephiroth.android.library.bottonnavigation.R
-import timber.log.Timber
 
 /**
  * Created by alessandro on 4/2/16.
@@ -207,20 +205,4 @@ object MiscUtils {
             animator1.start()
         }
     }
-
-    fun log(level: Int, message: String, vararg arguments: Any) {
-        if (BottomNavigation.DEBUG) {
-            Timber.log(level, message, arguments)
-        }
-    }
-
-    fun getActivity(context: Context?): Activity? {
-        return when (context) {
-            null -> null
-            is Activity -> context
-            is ContextWrapper -> getActivity(context.baseContext)
-            else -> null
-        }
-    }
-
 }

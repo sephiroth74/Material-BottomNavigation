@@ -2,7 +2,6 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,7 +10,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
 
 /**
  * Created by crugnola on 6/22/16.
@@ -246,8 +244,6 @@ public class ToolbarScrollHelper
 
     @Override
     public void onViewDetachedFromWindow(final View v) {
-        MiscUtils.INSTANCE.log(Log.INFO, "onViewDetachedFromWindow: " + v);
-
         ((RecyclerView) v).removeOnScrollListener(this);
 
         if (null != toolbar) {
@@ -263,7 +259,6 @@ public class ToolbarScrollHelper
         final int oldRight, final int oldBottom) {
         final int height = bottom - top;
         if (height > 0 && height != toolbarHeight) {
-            MiscUtils.INSTANCE.log(Log.VERBOSE, "height: " + height);
             toolbarHeight = height;
             enabled = true;
             scrollHelper.setRange(-toolbarHeight, 0);

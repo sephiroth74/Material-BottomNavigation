@@ -23,10 +23,6 @@ import androidx.viewpager.widget.ViewPager;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
-
-import static android.util.Log.INFO;
-import static android.util.Log.VERBOSE;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
 public class MainActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
@@ -64,8 +60,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
         final int statusbarHeight = getStatusBarHeight();
         final boolean translucentStatus = hasTranslucentStatusBar();
         final boolean translucentNavigation = hasTranslucentNavigation();
-
-        MiscUtils.INSTANCE.log(VERBOSE, "translucentStatus: %b", translucentStatus);
 
         if (translucentStatus) {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
@@ -229,7 +223,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
     @Override
     public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
-        MiscUtils.INSTANCE.log(INFO, "onMenuItemSelect(" + itemId + ", " + position + ", " + fromUser + ")");
         if (fromUser) {
             getBottomNavigation().getBadgeProvider().remove(itemId);
             if (null != getViewPager()) {
@@ -240,8 +233,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
     @Override
     public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
-        MiscUtils.INSTANCE.log(INFO, "onMenuItemReselect(" + itemId + ", " + position + ", " + fromUser + ")");
-
         if (fromUser) {
             final FragmentManager manager = getSupportFragmentManager();
             MainActivityFragment fragment = (MainActivityFragment) manager.findFragmentById(R.id.fragment);

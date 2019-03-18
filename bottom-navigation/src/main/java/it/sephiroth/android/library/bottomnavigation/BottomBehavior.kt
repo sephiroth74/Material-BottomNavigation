@@ -1,9 +1,7 @@
 package it.sephiroth.android.library.bottomnavigation
 
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
-import android.util.Log.VERBOSE
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup.MarginLayoutParams
@@ -15,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_ANIMATE_ENABLED
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_NONE
 import it.sephiroth.android.library.bottonnavigation.R
-import timber.log.Timber
+import it.sephiroth.android.library.kotlin_extensions.os.isAtLeastAPI
 
 /**
  * Created by alessandro crugnola on 4/2/16.
@@ -303,11 +301,10 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         override fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean {
 //            Timber.v("onDependentViewChanged")
 
-            if (Build.VERSION.SDK_INT < 21) {
+            if (!isAtLeastAPI(21)) {
                 val index1 = parent.indexOfChild(child)
                 val index2 = parent.indexOfChild(navigation)
                 if (index1 > index2) {
-                    MiscUtils.log(VERBOSE, "swapping children")
                     navigation.bringToFront()
                 }
             } else {

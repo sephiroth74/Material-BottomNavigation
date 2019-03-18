@@ -6,7 +6,7 @@ android {
     compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
         versionCode 1
         versionName VERSION_NAME
@@ -45,6 +45,8 @@ dependencies {
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.balysv:material-ripple:1.0.2'
+
+    implementation project(':kotlin_extensions')
 }
 
 

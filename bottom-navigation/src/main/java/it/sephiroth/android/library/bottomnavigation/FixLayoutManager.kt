@@ -3,13 +3,10 @@ package it.sephiroth.android.library.bottomnavigation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
-import android.util.Log.INFO
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
-import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
 import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
 import kotlin.math.max
@@ -116,7 +113,6 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
     }
 
     override fun setItemEnabled(index: Int, enabled: Boolean) {
-        log(INFO, "setItemEnabled(%d, %b)", index, enabled)
         val child = getChildAt(index) as BottomNavigationItemViewAbstract
         child.isEnabled = enabled
         child.postInvalidate()
@@ -128,8 +124,6 @@ class FixLayoutManager(context: Context, attrs: AttributeSet? = null, defStyleAt
     }
 
     override fun populate(menu: MenuParser.Menu) {
-        log(Log.INFO, "populate: $menu")
-
         if (hasFrame) {
             populateInternal(menu)
         } else {

@@ -1,1 +1,1 @@
-include ':app', ':bottom-navigation'
+include ':app', ':bottom-navigation', ':kotlin_extensions'

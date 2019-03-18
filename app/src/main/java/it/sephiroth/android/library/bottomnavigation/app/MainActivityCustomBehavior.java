@@ -15,9 +15,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
-import it.sephiroth.android.library.bottomnavigation.MiscUtils;
-
-import static android.util.Log.INFO;
 
 public class MainActivityCustomBehavior extends MainActivity {
 
@@ -83,7 +80,6 @@ public class MainActivityCustomBehavior extends MainActivity {
         @Override
         public boolean onDependentViewChanged(
             final CoordinatorLayout parent, final FloatingActionMenu child, final View dependency) {
-            MiscUtils.INSTANCE.log(INFO, "onDependentViewChanged: " + dependency);
 
             final List<View> list = parent.getDependencies(child);
             int bottomMargin = ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).bottomMargin;
