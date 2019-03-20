@@ -14,6 +14,7 @@ import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_NONE
 import it.sephiroth.android.library.bottonnavigation.R
 import it.sephiroth.android.library.kotlin_extensions.os.isAtLeastAPI
+import timber.log.Timber
 
 /**
  * Created by alessandro crugnola on 4/2/16.
@@ -87,7 +88,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         this.scaledTouchSlop = ViewConfiguration.get(context).scaledTouchSlop * 2
         this.offset = 0
         array.recycle()
-//        Timber.v("scrollable: $isScrollable, duration: $animationDuration, touchSlop: $scaledTouchSlop")
     }
 
     fun setOnExpandStatusChangeListener(listener: OnExpandStatusChangeListener) {
@@ -95,18 +95,15 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     fun setLayoutValues(bottomNavHeight: Int, bottomInset: Int) {
-//        Timber.v("setLayoutValues($bottomNavHeight, $bottomInset)")
+        Timber.i("setLayoutValues($bottomNavHeight, $bottomInset)")
         this.height = bottomNavHeight
         this.bottomInset = bottomInset
         this.translucentNavigation = bottomInset > 0
         this.maxOffset = height + if (translucentNavigation) bottomInset else 0
         this.enabled = true
-//        Timber.v("height: $height, translucent: $translucentNavigation, maxOffset: $maxOffset, bottomInset: $bottomInset")
     }
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: BottomNavigation, dependency: View): Boolean {
-//        Timber.v("layoutDependsOn: $dependency")
-
         return if (!enabled) {
             false
         } else isSnackbar(dependency)
@@ -138,9 +135,7 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
     override fun onDependentViewRemoved(parent: CoordinatorLayout, child: BottomNavigation, dependency: View) {
         if (isSnackbar(dependency)) {
-            if (null != snackbarDependentView) {
-                snackbarDependentView!!.onDestroy()
-            }
+            snackbarDependentView?.onDestroy()
             snackbarDependentView = null
         }
     }
@@ -150,7 +145,7 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
             if (null == snackbarDependentView) {
                 snackbarDependentView = SnackBarDependentView(dependency as SnackbarLayout, height, bottomInset)
             }
-            return snackbarDependentView!!.onDependentViewChanged(parent, child)
+            return snackbarDependentView?.onDependentViewChanged(parent, child) ?: false
         }
         return super.onDependentViewChanged(parent, child, dependency)
     }
@@ -167,7 +162,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         }
 
         if (nestedScrollAxes and ViewCompat.SCROLL_AXIS_VERTICAL != 0) {
-//            Timber.v("isScrollContainer: ${target.isScrollContainer}, canScrollUp: ${target.canScrollVertically(-1)}, canScrollDown: ${target.canScrollVertically(1)}")
             if (target.isScrollContainer && !target.canScrollVertically(-1) && !target.canScrollVertically(1)) {
                 return false
             }
@@ -192,15 +186,10 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         // stop nested scroll if target is not scrollable
         // FIXME: not yet verified
         if (target.isScrollContainer && !target.canScrollVertically(scrollDirection)) {
-//            Timber.w("stopNestedScroll")
             ViewCompat.stopNestedScroll(target)
         }
 
         offset += dy
-
-        if (BottomNavigation.DEBUG) {
-//            Timber.v("onDirectionNestedPreScroll($scrollDirection, $target, ${target.canScrollVertically(scrollDirection)})")
-        }
 
         if (offset > scaledTouchSlop) {
             handleDirection(coordinatorLayout, child, VerticalScrollingBehavior.ScrollDirection.SCROLL_DIRECTION_UP)
@@ -214,7 +203,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     override fun onNestedDirectionFling(
             coordinatorLayout: CoordinatorLayout, child: BottomNavigation, target: View, velocityX: Float, velocityY: Float,
             @ScrollDirection scrollDirection: Int): Boolean {
-//        Timber.v("onNestedDirectionFling($velocityY, $scrollDirection)")
 
         if (Math.abs(velocityY) > 1000) {
             handleDirection(coordinatorLayout, child, scrollDirection)
@@ -241,7 +229,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
     protected fun setExpanded(
             coordinatorLayout: CoordinatorLayout, child: BottomNavigation, expanded: Boolean, animate: Boolean) {
-//        Timber.v("setExpanded($expanded)")
         animateOffset(coordinatorLayout, child, if (expanded) 0 else maxOffset, animate)
         listener?.onExpandStatusChanged(expanded, animate)
     }
@@ -252,7 +239,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
             offset: Int,
             animate: Boolean) {
 
-//        Timber.v("animateOffset($offset)")
         hidden = offset != 0
         ensureOrCancelAnimator(coordinatorLayout, child)
 
@@ -299,7 +285,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         private var snackbarHeight = -1
 
         override fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean {
-//            Timber.v("onDependentViewChanged")
 
             if (!isAtLeastAPI(21)) {
                 val index1 = parent.indexOfChild(child)
@@ -307,8 +292,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
                 if (index1 > index2) {
                     navigation.bringToFront()
                 }
-            } else {
-
             }
 
             if (snackbarHeight == -1) {
@@ -317,6 +300,13 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
             val maxScroll = Math.max(0f, navigation.translationY - bottomInset)
             val newBottomMargin = (height + bottomInset - maxScroll).toInt()
+
+//            Timber.v("snackbarHeight = $snackbarHeight, maxScroll = $maxScroll")
+//            Timber.v("bottomMargin = $bottomMargin, newBottomMargin = $newBottomMargin")
+//            Timber.v("translationY = ${child.translationY}")
+
+            if (child.translationY > newBottomMargin) child.translationY = newBottomMargin.toFloat()
+
 
             if (layoutParams.bottomMargin != newBottomMargin) {
                 layoutParams.bottomMargin = newBottomMargin

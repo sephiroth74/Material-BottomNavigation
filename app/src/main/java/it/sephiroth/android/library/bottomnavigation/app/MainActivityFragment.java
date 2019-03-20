@@ -47,7 +47,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView01);
+        mRecyclerView = view.findViewById(R.id.RecyclerView01);
     }
 
     @Override

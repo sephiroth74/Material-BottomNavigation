@@ -203,9 +203,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * @return number of items in the current menu
      */
     var menuItemCount: Int = 0
-        get() = if (null != menu) {
-            menu!!.itemsCount
-        } else 0
+        get() = menu?.itemsCount ?: 0
         private set
 
     var behavior: CoordinatorLayout.Behavior<*>? = null
@@ -242,35 +240,34 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         parcelable?.let { parcelable ->
             val savedState = SavedState(parcelable)
 
-            if (null == menu) {
-                savedState.selectedIndex = 0
-                savedState.disabledIndices = arrayListOf()
-            } else {
+            menu?.let { menu ->
                 // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
                 savedState.selectedIndex = selectedIndex
                 savedState.disabledIndices = arrayListOf()
-                val items = menu?.items
-                if (items != null) {
+                menu.items?.let { items ->
                     for (i in items.indices) {
-                        if (!menu!!.items!![i].isEnabled) {
+                        if (!items[i].isEnabled) {
                             savedState.disabledIndices.add(i)
                         }
                     }
                 }
+            } ?: run {
+                savedState.selectedIndex = 0
+                savedState.disabledIndices = arrayListOf()
             }
 
-            if (null != badgeProvider) {
-                savedState.badgeBundle = badgeProvider!!.save()
+            badgeProvider?.let { badgeProvider ->
+                savedState.badgeBundle = badgeProvider.save()
             }
 
-            if (null != pendingMenu) {
-                val items = pendingMenu?.items
-                if (items != null) {
+            pendingMenu?.let { pendingMenu ->
+                pendingMenu.items?.let { items ->
                     for (i in items.indices) {
                         if (savedState.disabledIndices.contains(i)) {
-                            pendingMenu!!.items!![i].isEnabled = false
+                            items[i].isEnabled = false
                         }
                     }
+
                 }
             }
             return savedState
@@ -324,8 +321,10 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         addView(backgroundOverlay)
 
         val drawable = ContextCompat.getDrawable(getContext(), R.drawable.bbn_ripple_selector)
-        drawable!!.mutate()
-        MiscUtils.setDrawableColor(drawable, Color.WHITE)
+        drawable?.let {
+            it.mutate()
+            MiscUtils.setDrawableColor(it, Color.WHITE)
+        }
 
         rippleOverlay = View(getContext())
         with(rippleOverlay) {
@@ -478,31 +477,23 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      */
     @IdRes
     fun getMenuItemId(position: Int): Int {
-        return if (null != menu) {
-            menu!!.getItemAt(position).id
-        } else 0
+        return menu?.getItemAt(position)?.id ?: 0
     }
 
     fun setMenuItemEnabled(index: Int, enabled: Boolean) {
-        if (null != menu) {
-            menu!!.getItemAt(index).isEnabled = enabled
-            if (null != layoutManager) {
-                layoutManager!!.setItemEnabled(index, enabled)
-            }
+        menu?.let { menu ->
+            menu.getItemAt(index).isEnabled = enabled
+            layoutManager?.setItemEnabled(index, enabled)
         }
     }
 
     fun getMenuItemEnabled(index: Int): Boolean {
-        return if (null != menu) {
-            menu!!.getItemAt(index).isEnabled
-        } else false
+        return menu?.getItemAt(index)?.isEnabled ?: false
         // menu has not been parsed yet
     }
 
     fun getMenuItemTitle(index: Int): String? {
-        return if (null != menu) {
-            menu!!.getItemAt(index).title
-        } else null
+        return menu?.getItemAt(index)?.title
         // menu has not been parsed yet
     }
 
@@ -782,9 +773,11 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             animate: Boolean,
             fromUser: Boolean) {
 
-        val item: BottomNavigationItem? = when {
-            index > -1 && index < menu!!.itemsCount -> menu!!.getItemAt(index)
-            else -> null
+        val item: BottomNavigationItem? = menu?.let { menu ->
+            when {
+                index > -1 && index < menu.itemsCount -> menu.getItemAt(index)
+                else -> null
+            } ?: run { null }
         }
 
         if (layoutManager.getSelectedIndex() != index) {
@@ -825,15 +818,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun invalidateBadge(itemId: Int) {
-        if (null != layoutManager) {
-            val viewAbstract = layoutManager!!.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
+        layoutManager?.let { layoutManager ->
+            val viewAbstract = layoutManager.findViewById<View>(itemId) as BottomNavigationItemViewAbstract?
             viewAbstract?.invalidateBadge()
         }
     }
 
     interface OnMenuItemSelectionListener {
         fun onMenuItemSelect(@IdRes itemId: Int, position: Int, fromUser: Boolean)
-
         fun onMenuItemReselect(@IdRes itemId: Int, position: Int, fromUser: Boolean)
     }
 
