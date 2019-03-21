@@ -241,7 +241,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             val savedState = SavedState(parcelable)
 
             menu?.let { menu ->
-                // savedState.selectedIndex = Math.max(0, Math.min(getSelectedIndex(), menu.getItemsCount() - 1));
                 savedState.selectedIndex = selectedIndex
                 savedState.disabledIndices = arrayListOf()
                 menu.items?.let { items ->

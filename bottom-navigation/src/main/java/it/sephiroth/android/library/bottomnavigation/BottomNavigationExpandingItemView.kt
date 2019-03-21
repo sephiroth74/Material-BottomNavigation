@@ -82,12 +82,7 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
         val animator2 =
                 ObjectAnimator.ofInt(this, "centerY", if (expanded) paddingBottomInactive else paddingTopItem, if (expanded) paddingTopItem else paddingBottomInactive)
 
-        animator1.addUpdateListener { animation ->
-            val size = animation.animatedValue as Int
-            val fraction = animation.animatedFraction
-            updateLayoutOnAnimation(fraction, expanded)
-        }
-
+        animator1.addUpdateListener { animation -> updateLayoutOnAnimation(animation.animatedFraction, expanded) }
         set.playTogether(animator1, animator2)
         set.start()
     }
@@ -115,6 +110,8 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             icon.setBounds(centerX, centerY, centerX + iconSize, centerY + iconSize)
         }
+
+        postInvalidateOnAnimation()
     }
 
     private fun measureText() {
@@ -173,6 +170,6 @@ internal class BottomNavigationExpandingItemView(parent: BottomNavigation, expan
     @Suppress("MemberVisibilityCanBePrivate")
     fun setCenterY(value: Int) {
         centerY = value
-        requestLayout()
+        postInvalidateOnAnimation()
     }
 }
