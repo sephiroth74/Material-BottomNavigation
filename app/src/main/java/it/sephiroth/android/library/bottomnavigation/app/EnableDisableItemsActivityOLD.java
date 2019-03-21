@@ -7,7 +7,7 @@ import androidx.annotation.IdRes;
  * BottomNavigation
  */
 
-public class EnableDisableItemsActivity extends MainActivity {
+public class EnableDisableItemsActivityOLD extends MainActivityOLD {
 
     @Override
     protected int getActivityLayoutResId() {

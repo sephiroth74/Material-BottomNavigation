@@ -5,7 +5,7 @@ package it.sephiroth.android.library.bottomnavigation.app;
  * BottomNavigation
  */
 
-public class MainActivityNoCoordinator extends MainActivity {
+public class MainActivityOLDNoCoordinator extends MainActivityOLD {
     @Override
     protected int getActivityLayoutResId() {
         return R.layout.activity_main_no_coordinator;

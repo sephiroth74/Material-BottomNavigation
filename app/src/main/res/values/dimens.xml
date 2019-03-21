@@ -8,4 +8,5 @@
 
     <item name="app_gravity" format="integer" type="integer">80</item>
     <bool name="is_tablet">false</bool>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

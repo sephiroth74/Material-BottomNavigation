@@ -25,9 +25,9 @@ import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior;
 
 @TargetApi (Build.VERSION_CODES.KITKAT_WATCH)
-public class MainActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
+public class MainActivityOLD extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
 
-    static final String TAG = MainActivity.class.getSimpleName();
+    static final String TAG = MainActivityOLD.class.getSimpleName();
 
     public static final int MENU_TYPE_3_ITEMS = 0;
     public static final int MENU_TYPE_3_ITEMS_NO_BACKGROUND = 1;
@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
             getBottomNavigation().setMenuChangedListener(parent -> {
 
-                viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, parent.getMenuItemCount()));
+                viewPager.setAdapter(new ViewPagerAdapter(MainActivityOLD.this, parent.getMenuItemCount()));
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(
@@ -166,19 +166,19 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             case R.id.item6:
                 return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
             case R.id.item9:
-                startActivity(new Intent(this, MainActivityCustomBehavior.class));
+                startActivity(new Intent(this, MainActivityOLDCustomBehavior.class));
                 return true;
             case R.id.item10:
-                startActivity(new Intent(this, MainActivityCustomBadge.class));
+                startActivity(new Intent(this, MainActivityOLDCustomBadge.class));
                 return true;
             case R.id.item11:
-                startActivity(new Intent(this, MainActivityNoHide.class));
+                startActivity(new Intent(this, MainActivityOLDNoHide.class));
                 return true;
             case R.id.item12:
-                startActivity(new Intent(this, EnableDisableItemsActivity.class));
+                startActivity(new Intent(this, EnableDisableItemsActivityOLD.class));
                 return true;
             case R.id.item13:
-                startActivity(new Intent(this, MainActivityNoCoordinator.class));
+                startActivity(new Intent(this, MainActivityOLDNoCoordinator.class));
                 return true;
 
         }

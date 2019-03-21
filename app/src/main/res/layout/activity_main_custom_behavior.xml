@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".MainActivityOLD">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBarLayout01"
@@ -35,7 +35,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
-        app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.MainActivityCustomBehavior$FabBehavior"
+        app:layout_behavior="it.sephiroth.android.library.bottomnavigation.app.MainActivityOLDCustomBehavior$FabBehavior"
         app:layout_anchor="@id/BottomNavigation"
         app:layout_anchorGravity="right|top"
         app:menu_backgroundColor="#ccffffff"

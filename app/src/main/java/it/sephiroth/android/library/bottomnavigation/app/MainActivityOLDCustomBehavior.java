@@ -16,7 +16,7 @@ import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomBehavior;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
-public class MainActivityCustomBehavior extends MainActivity {
+public class MainActivityOLDCustomBehavior extends MainActivityOLD {
 
     @Override
     protected int getActivityLayoutResId() {

@@ -2,7 +2,7 @@ package it.sephiroth.android.library.bottomnavigation.app;
 
 import android.os.Bundle;
 
-public class MainActivityNoHide extends MainActivity {
+public class MainActivityOLDNoHide extends MainActivityOLD {
 
     @Override
     protected int getActivityLayoutResId() {

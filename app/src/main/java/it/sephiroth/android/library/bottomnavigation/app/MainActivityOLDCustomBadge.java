@@ -6,7 +6,7 @@ import android.view.View;
 
 import it.sephiroth.android.library.bottomnavigation.app.providers.CustomBadgeProvider;
 
-public class MainActivityCustomBadge extends MainActivity {
+public class MainActivityOLDCustomBadge extends MainActivityOLD {
 
     @Override
     protected int getActivityLayoutResId() {
