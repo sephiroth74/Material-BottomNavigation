@@ -7,7 +7,7 @@
     app:bbn_itemColorActive="?attr/colorPrimaryDark"
     app:bbn_itemColorDisabled="#33ffffff"
     app:bbn_itemColorInactive="#CC000000"
-    app:bbn_rippleColor="#77000000">
+    app:bbn_rippleColor="?attr/rippleColor">
 
     <item
         android:id="@+id/bbn_item1"
