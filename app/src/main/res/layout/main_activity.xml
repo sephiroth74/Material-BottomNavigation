@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <it.sephiroth.android.library.bottomnavigation.BottomNavigation
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -29,7 +36,7 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
