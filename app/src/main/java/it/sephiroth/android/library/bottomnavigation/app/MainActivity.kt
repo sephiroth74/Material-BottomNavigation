@@ -7,8 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation
-import it.sephiroth.android.library.bottomnavigation.setListener
+import it.sephiroth.android.library.bottomnavigation.*
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
@@ -29,13 +28,23 @@ class MainActivity : AppCompatActivity() {
 
                 title = bottomNavigation.getMenuItemTitle(position)
 
-                if(fromUser) {
+                if (fromUser) {
                     viewPager.setCurrentItem(position, true)
                 }
             }
 
             onMenuItemReselect { itemId, position, fromUser ->
                 Timber.v("onMenuItemReselect($itemId, $position, $fromUser)")
+
+                if (fromUser) {
+                    when (bottomNavigation.layoutManager) {
+                        is ExpandLayoutManager -> bottomNavigation.setLayoutManager(FixLayoutManager(this@MainActivity))
+                        is FixLayoutManager -> bottomNavigation.setLayoutManager(ShiftLayoutManager(this@MainActivity))
+                        is ShiftLayoutManager -> bottomNavigation.setLayoutManager(ExpandLayoutManager(this@MainActivity))
+                    }
+                    bottomNavigation.inflateMenu(R.menu.bottombar_menu_4items)
+                }
+
             }
         }
 

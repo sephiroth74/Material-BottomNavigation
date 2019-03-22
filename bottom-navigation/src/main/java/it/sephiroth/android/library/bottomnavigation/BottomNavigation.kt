@@ -103,7 +103,8 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
      * Layout container used to create and manage the UI items.
      * It can be either Fixed or Shifting, based on the widget `mode`
      */
-    private var layoutManager: LayoutManager? = null
+    var layoutManager: LayoutManager? = null
+        private set
 
     /**
      * This is where the color animation is happening
@@ -405,7 +406,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
     }
 
-    private fun setLayoutManager(layout: LayoutManager?) {
+    fun setLayoutManager(layout: LayoutManager?) {
         Timber.i("setLayoutManager($layout)")
         Timber.v("navigationWidth = $navigationWidth, navigationHeight = $navigationHeight")
 
@@ -428,6 +429,13 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
 
         layoutManager = layout
+
+        this.menu?.let {
+            setItems(it)
+        } ?: run {
+            requestLayout()
+        }
+
     }
 
     internal fun resetPendingAction() {
