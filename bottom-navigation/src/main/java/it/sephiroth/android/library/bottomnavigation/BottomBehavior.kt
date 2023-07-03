@@ -14,7 +14,6 @@ import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_ANIMATE_ENABLED
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation.Companion.PENDING_ACTION_NONE
-import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
 
 /**
@@ -22,7 +21,7 @@ import timber.log.Timber
  * alessandro.crugnola@gmail.com
  */
 open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
-        VerticalScrollingBehavior<BottomNavigation>(context, attrs) {
+    VerticalScrollingBehavior<BottomNavigation>(context, attrs) {
 
     var isScrollable: Boolean = false
     private val scrollEnabled: Boolean
@@ -85,7 +84,7 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         this.isScrollable = array.getBoolean(R.styleable.BottomNavigationBehavior_bbn_scrollEnabled, true)
         this.scrollEnabled = true
         this.animationDuration =
-                array.getInt(R.styleable.BottomNavigationBehavior_bbn_animationDuration, context.resources.getInteger(R.integer.bbn_hide_animation_duration))
+            array.getInt(R.styleable.BottomNavigationBehavior_bbn_animationDuration, context.resources.getInteger(R.integer.bbn_hide_animation_duration))
         this.scaledTouchSlop = ViewConfiguration.get(context).scaledTouchSlop * 2
         this.offset = 0
         array.recycle()
@@ -111,7 +110,9 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
 
         return if (!enabled) {
             false
-        } else isSnackbar(dependency)
+        } else {
+            isSnackbar(dependency)
+        }
     }
 
     private fun isSnackbar(view: View): Boolean {
@@ -158,11 +159,13 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     override fun onStartNestedScroll(
-            coordinatorLayout: CoordinatorLayout,
-            child: BottomNavigation,
-            directTargetChild: View, target: View,
-            nestedScrollAxes: Int, @ViewCompat.NestedScrollType type: Int): Boolean {
-
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        directTargetChild: View,
+        target: View,
+        nestedScrollAxes: Int,
+        @ViewCompat.NestedScrollType type: Int,
+    ): Boolean {
         offset = 0
         if (!isScrollable || !scrollEnabled) {
             return false
@@ -179,18 +182,24 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     override fun onStopNestedScroll(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, target: View,
-            @ViewCompat.NestedScrollType type: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        target: View,
+        @ViewCompat.NestedScrollType type: Int,
+    ) {
         super.onStopNestedScroll(coordinatorLayout, child, target, type)
         offset = 0
     }
 
     override fun onDirectionNestedPreScroll(
-            coordinatorLayout: CoordinatorLayout,
-            child: BottomNavigation,
-            target: View, dx: Int, dy: Int, consumed: IntArray,
-            @ScrollDirection scrollDirection: Int) {
-
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        target: View,
+        dx: Int,
+        dy: Int,
+        consumed: IntArray,
+        @ScrollDirection scrollDirection: Int,
+    ) {
         // stop nested scroll if target is not scrollable
         // FIXME: not yet verified
         if (target.isScrollContainer && !target.canScrollVertically(scrollDirection)) {
@@ -214,8 +223,13 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     override fun onNestedDirectionFling(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, target: View, velocityX: Float, velocityY: Float,
-            @ScrollDirection scrollDirection: Int): Boolean {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        target: View,
+        velocityX: Float,
+        velocityY: Float,
+        @ScrollDirection scrollDirection: Int,
+    ): Boolean {
         Timber.v("onNestedDirectionFling($velocityY, $scrollDirection)")
 
         if (Math.abs(velocityY) > 1000) {
@@ -226,8 +240,12 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     override fun onNestedVerticalOverScroll(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, @ScrollDirection direction: Int, currentOverScroll: Int,
-            totalOverScroll: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        @ScrollDirection direction: Int,
+        currentOverScroll: Int,
+        totalOverScroll: Int,
+    ) {
     }
 
     private fun handleDirection(coordinatorLayout: CoordinatorLayout, child: BottomNavigation, scrollDirection: Int) {
@@ -242,18 +260,22 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
     }
 
     protected fun setExpanded(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, expanded: Boolean, animate: Boolean) {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        expanded: Boolean,
+        animate: Boolean,
+    ) {
         Timber.v("setExpanded($expanded)")
         animateOffset(coordinatorLayout, child, if (expanded) 0 else maxOffset, animate)
         listener?.onExpandStatusChanged(expanded, animate)
     }
 
     private fun animateOffset(
-            coordinatorLayout: CoordinatorLayout,
-            child: BottomNavigation,
-            offset: Int,
-            animate: Boolean) {
-
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        offset: Int,
+        animate: Boolean,
+    ) {
         Timber.v("animateOffset($offset)")
         hidden = offset != 0
         ensureOrCancelAnimator(coordinatorLayout, child)
@@ -276,8 +298,11 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         }
     }
 
-    abstract class DependentView<V : View> internal constructor(protected val child: V, protected var height: Int,
-                                                                protected val bottomInset: Int) {
+    abstract class DependentView<V : View> internal constructor(
+        protected val child: V,
+        protected var height: Int,
+        protected val bottomInset: Int,
+    ) {
         protected val layoutParams: MarginLayoutParams = child.layoutParams as MarginLayoutParams
         protected val bottomMargin: Int
         protected val originalPosition: Float = child.translationY
@@ -295,8 +320,11 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
         internal abstract fun onDependentViewChanged(parent: CoordinatorLayout, navigation: BottomNavigation): Boolean
     }
 
-    class SnackBarDependentView internal constructor(child: SnackbarLayout, height: Int,
-                                                     bottomInset: Int) : DependentView<SnackbarLayout>(child, height, bottomInset) {
+    class SnackBarDependentView internal constructor(
+        child: SnackbarLayout,
+        height: Int,
+        bottomInset: Int,
+    ) : DependentView<SnackbarLayout>(child, height, bottomInset) {
         @Suppress("SpellCheckingInspection")
         private var snackbarHeight = -1
 
@@ -311,7 +339,6 @@ open class BottomBehavior constructor(context: Context, attrs: AttributeSet) :
                     navigation.bringToFront()
                 }
             } else {
-
             }
 
             if (snackbarHeight == -1) {

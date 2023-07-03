@@ -16,6 +16,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent2">
             <intent-filter>
@@ -25,22 +26,26 @@
         </activity>
 
         <activity
+            android:exported="false"
             android:name=".EnableDisableItemsActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
         <activity
+            android:exported="false"
             android:name=".MainActivityCustomBehavior"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:exported="false"
             android:name=".MainActivityNoHide"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent2" />
 
         <activity
+            android:exported="false"
             android:name=".MainActivityTablet"
             android:label="@string/app_name_tablet"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent">
@@ -48,6 +53,7 @@
         </activity>
 
         <activity
+            android:exported="false"
             android:name=".MainActivityTabletCollapsedToolbar"
             android:label="@string/app_name_tablet"
             android:theme="@style/AppTheme.NoActionBar.NoTranslucent2">
@@ -55,6 +61,7 @@
         </activity>
 
         <activity
+            android:exported="false"
             android:name=".MainActivityCustomBadge"
             android:label="@string/app_name_custom_badges"
             android:theme="@style/AppTheme.NoActionBar">
@@ -62,6 +69,7 @@
         </activity>
 
         <activity
+            android:exported="false"
             android:name=".MainActivityNoCoordinator"
             android:label="@string/app_name_no_coordinator"
             android:theme="@style/AppTheme.NoActionBar">

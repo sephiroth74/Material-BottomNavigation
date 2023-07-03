@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy
  * Created by alessandro on 4/2/16.
  */
 abstract class VerticalScrollingBehavior<V : View>(context: Context, attrs: AttributeSet) :
-        CoordinatorLayout.Behavior<V>(context, attrs) {
+    CoordinatorLayout.Behavior<V>(context, attrs) {
 
     private var mTotalDyUnconsumed = 0
     private var mTotalDy = 0
@@ -53,25 +53,47 @@ abstract class VerticalScrollingBehavior<V : View>(context: Context, attrs: Attr
      * @param totalOverScroll   Cumulative value for current direction
      */
     abstract fun onNestedVerticalOverScroll(
-            coordinatorLayout: CoordinatorLayout, child: V, @ScrollDirection direction: Int, currentOverScroll: Int,
-            totalOverScroll: Int)
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        @ScrollDirection direction: Int,
+        currentOverScroll: Int,
+        totalOverScroll: Int,
+    )
 
     /**
      * @param scrollDirection Direction of the over scroll: SCROLL_DIRECTION_UP, SCROLL_DIRECTION_DOWN
      */
     abstract fun onDirectionNestedPreScroll(
-            coordinatorLayout: CoordinatorLayout, child: V, target: View, dx: Int, dy: Int, consumed: IntArray,
-            @ScrollDirection scrollDirection: Int)
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        dx: Int,
+        dy: Int,
+        consumed: IntArray,
+        @ScrollDirection scrollDirection: Int,
+    )
 
     override fun onStartNestedScroll(
-            coordinatorLayout: CoordinatorLayout, child: V, directTargetChild: View, target: View, nestedScrollAxes: Int,
-            @ViewCompat.NestedScrollType type: Int): Boolean {
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        directTargetChild: View,
+        target: View,
+        nestedScrollAxes: Int,
+        @ViewCompat.NestedScrollType type: Int,
+    ): Boolean {
         return nestedScrollAxes and ViewCompat.SCROLL_AXIS_VERTICAL != 0
     }
 
     override fun onNestedScroll(
-            coordinatorLayout: CoordinatorLayout, child: V, target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int,
-            dyUnconsumed: Int, @ViewCompat.NestedScrollType type: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        @ViewCompat.NestedScrollType type: Int,
+    ) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type)
         if (dyUnconsumed > 0 && mTotalDyUnconsumed < 0) {
             mTotalDyUnconsumed = 0
@@ -84,8 +106,15 @@ abstract class VerticalScrollingBehavior<V : View>(context: Context, attrs: Attr
         onNestedVerticalOverScroll(coordinatorLayout, child, overScrollDirection, dyConsumed, mTotalDyUnconsumed)
     }
 
-    override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View, dx: Int, dy: Int,
-                                   consumed: IntArray, @ViewCompat.NestedScrollType type: Int) {
+    override fun onNestedPreScroll(
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        dx: Int,
+        dy: Int,
+        consumed: IntArray,
+        @ViewCompat.NestedScrollType type: Int,
+    ) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
         if (dy > 0 && mTotalDy < 0) {
             mTotalDy = 0
@@ -99,15 +128,24 @@ abstract class VerticalScrollingBehavior<V : View>(context: Context, attrs: Attr
     }
 
     override fun onNestedFling(
-            coordinatorLayout: CoordinatorLayout, child: V, target: View, velocityX: Float, velocityY: Float,
-            consumed: Boolean): Boolean {
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        velocityX: Float,
+        velocityY: Float,
+        consumed: Boolean,
+    ): Boolean {
         super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed)
         scrollDirection = if (velocityY > 0) ScrollDirection.SCROLL_DIRECTION_UP else ScrollDirection.SCROLL_DIRECTION_DOWN
         return onNestedDirectionFling(coordinatorLayout, child, target, velocityX, velocityY, scrollDirection)
     }
 
     protected abstract fun onNestedDirectionFling(
-            coordinatorLayout: CoordinatorLayout, child: V, target: View, velocityX: Float, velocityY: Float,
-            @ScrollDirection scrollDirection: Int): Boolean
-
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        velocityX: Float,
+        velocityY: Float,
+        @ScrollDirection scrollDirection: Int,
+    ): Boolean
 }

@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat
-import it.sephiroth.android.library.bottonnavigation.R
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -16,7 +15,7 @@ import it.sephiroth.android.library.bottonnavigation.R
 @Suppress("unused")
 @SuppressLint("ViewConstructor")
 internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded: Boolean, menu: MenuParser.Menu) :
-        BottomNavigationItemViewAbstract(parent, expanded, menu) {
+    BottomNavigationItemViewAbstract(parent, expanded, menu) {
     private val iconSize: Int
 
     private var centerY: Int = 0
@@ -90,7 +89,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         this.textPaint.color =
-                if (isExpanded) if (enabled) colorActive else colorDisabled else if (enabled) colorInactive else colorDisabled
+            if (isExpanded) if (enabled) colorActive else colorDisabled else if (enabled) colorInactive else colorDisabled
 
         if (null != icon) {
             updateLayoutOnAnimation(1f, isExpanded)
@@ -121,7 +120,7 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
             this.icon = item!!.getIcon(context)!!.mutate()
 
             val color =
-                    if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled
+                if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled
 
             this.icon!!.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             this.icon!!.setBounds(0, 0, iconSize, iconSize)
@@ -164,17 +163,16 @@ internal class BottomNavigationFixedItemView(parent: BottomNavigation, expanded:
         canvas.scale(canvasTextScale, canvasTextScale, textCenterX.toFloat(), textCenterY.toFloat())
 
         canvas.drawText(
-                item!!.title,
-                textX,
-                textY,
-                textPaint)
+            item!!.title,
+            textX,
+            textY,
+            textPaint,
+        )
 
         canvas.restore()
-
     }
 
     companion object {
         private const val TEXT_SCALE_ACTIVE = 1.1666666667f
     }
-
 }

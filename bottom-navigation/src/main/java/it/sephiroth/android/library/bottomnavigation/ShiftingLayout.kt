@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
-import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
 
 /**

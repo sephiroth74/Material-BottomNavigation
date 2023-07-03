@@ -54,7 +54,6 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import com.readystatesoftware.systembartint.SystemBarTintManager
 import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
-import it.sephiroth.android.library.bottonnavigation.R
 import java.lang.ref.SoftReference
 import java.lang.reflect.Constructor
 import java.util.*
@@ -196,12 +195,16 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     var selectedIndex: Int = -1
         get() = if (null != itemsContainer) {
             itemsContainer!!.getSelectedIndex()
-        } else -1
+        } else {
+            -1
+        }
 
     var isExpanded: Boolean = false
         get() = if (null != mBehavior && mBehavior is BottomBehavior) {
             (mBehavior as BottomBehavior).isExpanded
-        } else false
+        } else {
+            false
+        }
 
     /**
      * Returns the current menu items count
@@ -211,7 +214,9 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     var menuItemCount: Int = 0
         get() = if (null != menu) {
             menu!!.itemsCount
-        } else 0
+        } else {
+            0
+        }
 
     var behavior: CoordinatorLayout.Behavior<*>? = null
         get() {
@@ -235,16 +240,21 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int,
-                defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(
+        context: Context,
+        attrs: AttributeSet,
+        defStyleAttr: Int,
+        defStyleRes: Int,
+    ) : super(context, attrs, defStyleAttr, defStyleRes) {
         initialize(context, attrs, defStyleAttr, defStyleRes)
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         MiscUtils.log(INFO, "onSaveInstanceState")
         val parcelable = super.onSaveInstanceState()
-
-        val savedState = SavedState(parcelable)
+        val savedState = parcelable?.let {
+            SavedState(parcelable)
+        } ?: SavedState(BaseSavedState.EMPTY_STATE)
 
         if (null == menu) {
             savedState.selectedIndex = 0
@@ -315,9 +325,10 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             val activity = MiscUtils.getActivity(context)
             if (null != activity) {
                 val systembarTint = SystemBarTintManager(activity)
-                bottomInset = if (MiscUtils.hasTranslucentNavigation(activity)
-                                  && systembarTint.config.isNavigationAtBottom
-                                  && systembarTint.config.hasNavigtionBar()) {
+                bottomInset = if (MiscUtils.hasTranslucentNavigation(activity) &&
+                    systembarTint.config.isNavigationAtBottom &&
+                    systembarTint.config.hasNavigtionBar()
+                ) {
                     systembarTint.config.navigationBarHeight
                 } else {
                     0
@@ -356,9 +367,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     fun setSelectedIndex(position: Int, animate: Boolean) {
-        itemsContainer?.let {
-            setSelectedItemInternal(it, (itemsContainer as ViewGroup).getChildAt(position), position, animate, false)
-        } ?: run {
+        try {
+            val container = itemsContainer as ItemsLayoutContainer
+            val viewGroup = itemsContainer as ViewGroup
+            val view = viewGroup.getChildAt(position)
+            setSelectedItemInternal(container, view, position, animate, false)
+        } catch (e: Exception) {
             defaultSelectedIndex = position
         }
     }
@@ -366,7 +380,7 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     fun setExpanded(expanded: Boolean, animate: Boolean) {
         log(VERBOSE, "setExpanded(%b, %b)", expanded, animate)
         pendingAction = (if (expanded) PENDING_ACTION_EXPANDED else PENDING_ACTION_COLLAPSED) or
-                if (animate) PENDING_ACTION_ANIMATE_ENABLED else 0
+            if (animate) PENDING_ACTION_ANIMATE_ENABLED else 0
         requestLayout()
     }
 
@@ -396,7 +410,9 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     fun getMenuItemId(position: Int): Int {
         return if (null != menu) {
             menu!!.getItemAt(position).id
-        } else 0
+        } else {
+            0
+        }
     }
 
     fun setMenuItemEnabled(index: Int, enabled: Boolean) {
@@ -412,14 +428,18 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     fun getMenuItemEnabled(index: Int): Boolean {
         return if (null != menu) {
             menu!!.getItemAt(index).isEnabled
-        } else false
+        } else {
+            false
+        }
         // menu has not been parsed yet
     }
 
     fun getMenuItemTitle(index: Int): String? {
         return if (null != menu) {
             menu!!.getItemAt(index).title
-        } else null
+        } else {
+            null
+        }
         // menu has not been parsed yet
     }
 
@@ -434,7 +454,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 throw IllegalArgumentException("layout_width must be equal to `match_parent`")
             }
             setMeasuredDimension(widthSize, navigationHeight + bottomInset + shadowHeight)
-
         } else if (MiscUtils.isGravitiyLeft(gravity) || MiscUtils.isGravityRight(gravity)) {
             val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
             val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
@@ -474,13 +493,14 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             params.height = size
             rippleOverlay.layoutParams = params
         }
-
     }
 
     override fun isAttachedToWindow(): Boolean {
         return if (Build.VERSION.SDK_INT >= 19) {
             super.isAttachedToWindow()
-        } else attached
+        } else {
+            attached
+        }
     }
 
     override fun onAttachedToWindow() {
@@ -551,13 +571,15 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         val tablet = isTablet(gravity)
         val elevation = resources.getDimensionPixelSize(if (!tablet) R.dimen.bbn_elevation else R.dimen.bbn_elevation_tablet)
-        val bgResId = if (!tablet)
+        val bgResId = if (!tablet) {
             R.drawable.bbn_background
-        else
-            if (MiscUtils.isGravityRight(gravity))
+        } else {
+            if (MiscUtils.isGravityRight(gravity)) {
                 R.drawable.bbn_background_tablet_right
-            else
+            } else {
                 R.drawable.bbn_background_tablet_left
+            }
+        }
         val paddingBottom = if (!tablet) shadowHeight else 0
 
         // View elevation
@@ -580,7 +602,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
     private fun initializeContainer(menu: MenuParser.Menu) {
         if (null != itemsContainer) {
-
             // remove the layout menuItemSelectionListener
             (itemsContainer as ViewGroup).removeOnLayoutChangeListener(mLayoutChangedListener)
 
@@ -597,8 +618,9 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
 
         if (null == itemsContainer) {
             val params = LinearLayout.LayoutParams(
-                    if (menu.isTablet) navigationWidth else MATCH_PARENT,
-                    if (menu.isTablet) MATCH_PARENT else navigationHeight)
+                if (menu.isTablet) navigationWidth else MATCH_PARENT,
+                if (menu.isTablet) MATCH_PARENT else navigationHeight,
+            )
 
             itemsContainer = when {
                 menu.isTablet -> TabletLayout(context)
@@ -636,7 +658,9 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     private fun isMenuItemEnabled(menu: MenuParser.Menu, index: Int): Boolean {
         return if (menu.itemsCount > index) {
             menu.getItemAt(index).isEnabled
-        } else false
+        } else {
+            false
+        }
     }
 
     private fun findFirstSelectedIndex(menu: MenuParser.Menu): Int {
@@ -653,15 +677,16 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         private val outRect = Rect()
 
         override fun onLayoutChange(
-                unused: View?,
-                left: Int,
-                top: Int,
-                right: Int,
-                bottom: Int,
-                oldLeft: Int,
-                oldTop: Int,
-                oldRight: Int,
-                oldBottom: Int) {
+            unused: View?,
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int,
+        ) {
             if (null == view) {
                 return
             }
@@ -681,25 +706,28 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
         }
     }
 
-    override fun onItemDown(parent: ItemsLayoutContainer, view: View,
-                            pressed: Boolean, x: Float, y: Float) {
+    override fun onItemDown(
+        parent: ItemsLayoutContainer,
+        view: View,
+        pressed: Boolean,
+        x: Float,
+        y: Float,
+    ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return
         }
 
         if (!pressed) {
             if (enabledRippleBackground) {
-
                 circleRevealAnim?.let {
                     if (it.isRunning) {
                         it.addListener(object : Animator.AnimatorListener {
-                            override fun onAnimationRepeat(p0: Animator?) {}
-                            override fun onAnimationStart(p0: Animator?) {}
-                            override fun onAnimationCancel(p0: Animator?) {}
-
-                            override fun onAnimationEnd(p0: Animator?) {
+                            override fun onAnimationStart(animation: Animator) {}
+                            override fun onAnimationEnd(animation: Animator) {
                                 rippleOverlay.animate().alpha(0f).setDuration(rippleRevealAnimationDuration).start()
                             }
+                            override fun onAnimationCancel(animation: Animator) {}
+                            override fun onAnimationRepeat(animation: Animator) {}
                         })
                     } else {
                         rippleOverlay.animate().alpha(0f).setDuration(rippleRevealAnimationDuration).start()
@@ -721,11 +749,9 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 circleRevealAnim?.removeAllListeners()
                 circleRevealAnim?.cancel()
                 circleRevealAnim =
-                        ViewAnimationUtils.createCircularReveal(rippleOverlay, rippleOverlay.width / 2, rippleOverlay.height / 2, 0f, (rippleOverlay.width / 2).toFloat())
+                    ViewAnimationUtils.createCircularReveal(rippleOverlay, rippleOverlay.width / 2, rippleOverlay.height / 2, 0f, (rippleOverlay.width / 2).toFloat())
                 circleRevealAnim?.duration = rippleRevealAnimationDuration
                 circleRevealAnim?.start()
-
-
             }
         }
     }
@@ -737,11 +763,12 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
     }
 
     private fun setSelectedItemInternal(
-            layoutContainer: ItemsLayoutContainer,
-            view: View, index: Int,
-            animate: Boolean,
-            fromUser: Boolean) {
-
+        layoutContainer: ItemsLayoutContainer,
+        view: View,
+        index: Int,
+        animate: Boolean,
+        fromUser: Boolean,
+    ) {
         val item: BottomNavigationItem? = when {
             index > -1 && index < menu!!.itemsCount -> menu!!.getItemAt(index)
             else -> null
@@ -753,24 +780,25 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             if (null != item && item.hasColor() && !menu!!.isTablet) {
                 if (animate) {
                     MiscUtils.animate(
-                            this,
-                            view,
-                            backgroundOverlay!!,
-                            backgroundDrawable!!,
-                            item.color,
-                            backgroundColorAnimation)
+                        this,
+                        view,
+                        backgroundOverlay!!,
+                        backgroundDrawable!!,
+                        item.color,
+                        backgroundColorAnimation,
+                    )
                 } else {
                     MiscUtils.switchColor(
-                            this,
-                            view,
-                            backgroundOverlay!!,
-                            backgroundDrawable!!,
-                            item.color)
+                        this,
+                        view,
+                        backgroundOverlay!!,
+                        backgroundDrawable!!,
+                        item.color,
+                    )
                 }
             }
 
             menuItemSelectionListener?.onMenuItemSelect(item?.id ?: -1, index, fromUser)
-
         } else {
             menuItemSelectionListener?.onMenuItemReselect(item?.id ?: -1, index, fromUser)
         }
@@ -867,10 +895,11 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
                 name.startsWith(".") -> context.packageName + name
                 name.indexOf('.') >= 0 -> name
                 else -> // Assume stock behavior in this package (if we have one)
-                    if (!TextUtils.isEmpty(WIDGET_PACKAGE_NAME))
+                    if (!TextUtils.isEmpty(WIDGET_PACKAGE_NAME)) {
                         WIDGET_PACKAGE_NAME + '.'.toString() + name
-                    else
+                    } else {
                         name
+                    }
             }
 
             try {
@@ -890,7 +919,6 @@ class BottomNavigation : FrameLayout, OnItemClickListener {
             } catch (e: Exception) {
                 throw RuntimeException("Could not inflate Behavior subclass $fullName", e)
             }
-
         }
     }
 }

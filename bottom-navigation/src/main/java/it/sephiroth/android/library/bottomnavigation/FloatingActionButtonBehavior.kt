@@ -13,8 +13,10 @@ import timber.log.Timber
  * Created by crugnola on 11/2/16.
  * BottomNavigation
  */
-class FloatingActionButtonBehavior(context: Context,
-                                   attrs: AttributeSet) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
+class FloatingActionButtonBehavior(
+    context: Context,
+    attrs: AttributeSet,
+) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
     private var navigationBarHeight = 0
 
     override fun onAttachedToLayoutParams(lp: CoordinatorLayout.LayoutParams) {
@@ -31,7 +33,10 @@ class FloatingActionButtonBehavior(context: Context,
     }
 
     override fun onDependentViewChanged(
-            parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
+        parent: CoordinatorLayout,
+        child: FloatingActionButton,
+        dependency: View,
+    ): Boolean {
         Timber.v("onDependentViewChanged: $dependency")
 
         val list = parent.getDependencies(child)
@@ -43,7 +48,7 @@ class FloatingActionButtonBehavior(context: Context,
 
         for (dep in list) {
             if (dep is Snackbar.SnackbarLayout) {
-                t += if(dep.layoutParams is ViewGroup.MarginLayoutParams) {
+                t += if (dep.layoutParams is ViewGroup.MarginLayoutParams) {
                     dep.translationY - (dep.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
                 } else {
                     dep.translationY - dep.height
@@ -74,7 +79,10 @@ class FloatingActionButtonBehavior(context: Context,
     }
 
     override fun onDependentViewRemoved(
-            parent: CoordinatorLayout, child: FloatingActionButton, dependency: View) {
+        parent: CoordinatorLayout,
+        child: FloatingActionButton,
+        dependency: View,
+    ) {
         super.onDependentViewRemoved(parent, child, dependency)
         Timber.v("onDependentViewRemoved: $dependency")
     }

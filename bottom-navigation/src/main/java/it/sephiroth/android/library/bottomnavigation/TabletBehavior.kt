@@ -27,7 +27,6 @@ class TabletBehavior(context: Context, attrs: AttributeSet) : VerticalScrollingB
         this.width = bottomNavWidth
         this.topInset = topInset
         this.enabled = true
-
     }
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: BottomNavigation, dependency: View): Boolean {
@@ -35,7 +34,10 @@ class TabletBehavior(context: Context, attrs: AttributeSet) : VerticalScrollingB
     }
 
     override fun onDependentViewChanged(
-            parent: CoordinatorLayout, child: BottomNavigation, dependency: View): Boolean {
+        parent: CoordinatorLayout,
+        child: BottomNavigation,
+        dependency: View,
+    ): Boolean {
         val params = child.layoutParams as ViewGroup.MarginLayoutParams
         val top = if (Build.VERSION.SDK_INT > 19) topInset else if (translucentStatus) topInset else 0
         params.topMargin = Math.max(dependency.top + dependency.height - top, if (translucentStatus) 0 else -top)
@@ -53,20 +55,33 @@ class TabletBehavior(context: Context, attrs: AttributeSet) : VerticalScrollingB
     }
 
     override fun onNestedVerticalOverScroll(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, @ScrollDirection direction: Int,
-            currentOverScroll: Int, totalOverScroll: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        @ScrollDirection direction: Int,
+        currentOverScroll: Int,
+        totalOverScroll: Int,
+    ) {
     }
 
     override fun onDirectionNestedPreScroll(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, target: View, dx: Int, dy: Int,
-            consumed: IntArray,
-            @ScrollDirection scrollDirection: Int) {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        target: View,
+        dx: Int,
+        dy: Int,
+        consumed: IntArray,
+        @ScrollDirection scrollDirection: Int,
+    ) {
     }
 
     override fun onNestedDirectionFling(
-            coordinatorLayout: CoordinatorLayout, child: BottomNavigation, target: View, velocityX: Float,
-            velocityY: Float,
-            @ScrollDirection scrollDirection: Int): Boolean {
+        coordinatorLayout: CoordinatorLayout,
+        child: BottomNavigation,
+        target: View,
+        velocityX: Float,
+        velocityY: Float,
+        @ScrollDirection scrollDirection: Int,
+    ): Boolean {
         return false
     }
 }

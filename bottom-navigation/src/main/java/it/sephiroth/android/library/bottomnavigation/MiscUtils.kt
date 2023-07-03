@@ -22,7 +22,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.ViewPropertyAnimatorListener
-import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
 
 /**
@@ -110,12 +109,12 @@ object MiscUtils {
     }
 
     fun switchColor(
-            navigation: BottomNavigation,
-            v: View,
-            backgroundOverlay: View,
-            backgroundDrawable: ColorDrawable,
-            newColor: Int) {
-
+        navigation: BottomNavigation,
+        v: View,
+        backgroundOverlay: View,
+        backgroundDrawable: ColorDrawable,
+        newColor: Int,
+    ) {
         backgroundOverlay.clearAnimation()
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -130,9 +129,13 @@ object MiscUtils {
     }
 
     fun animate(
-            navigation: BottomNavigation, v: View, backgroundOverlay: View, backgroundDrawable: ColorDrawable,
-            newColor: Int, duration: Long) {
-
+        navigation: BottomNavigation,
+        v: View,
+        backgroundOverlay: View,
+        backgroundDrawable: ColorDrawable,
+        newColor: Int,
+        duration: Long,
+    ) {
         val centerX = (v.x + v.width / 2).toInt()
         val centerY = navigation.paddingTop + v.height / 2
 
@@ -141,7 +144,6 @@ object MiscUtils {
         val animator: Any
 
         if (Build.VERSION.SDK_INT >= 21) {
-
             val currentAnimator = backgroundOverlay.getTag(R.id.bbn_backgroundOverlay_animator) as Animator?
             currentAnimator?.cancel()
 
@@ -222,5 +224,4 @@ object MiscUtils {
             else -> null
         }
     }
-
 }

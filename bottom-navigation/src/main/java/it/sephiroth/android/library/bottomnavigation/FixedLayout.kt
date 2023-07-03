@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import it.sephiroth.android.library.bottomnavigation.MiscUtils.log
-import it.sephiroth.android.library.bottonnavigation.R
 
 /**
  * Created by crugnola on 4/4/16.

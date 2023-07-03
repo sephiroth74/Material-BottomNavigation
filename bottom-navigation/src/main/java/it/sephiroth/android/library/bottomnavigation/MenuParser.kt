@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Xml
 import androidx.core.content.ContextCompat
-import it.sephiroth.android.library.bottonnavigation.R
 import org.xmlpull.v1.XmlPullParser
 import java.util.*
 
@@ -61,7 +60,7 @@ class MenuParser {
         fun getBackground(): Int {
             return if (0 == background) {
                 if (isShifting && !isTablet) {
-                    MiscUtils.getColor(context, R.attr.colorPrimary)
+                    MiscUtils.getColor(context, androidx.appcompat.R.attr.colorPrimary)
                 } else {
                     MiscUtils.getColor(context, android.R.attr.windowBackground)
                 }

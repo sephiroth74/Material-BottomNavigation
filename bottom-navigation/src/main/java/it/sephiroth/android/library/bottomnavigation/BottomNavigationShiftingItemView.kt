@@ -9,7 +9,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
-import it.sephiroth.android.library.bottonnavigation.R
 import timber.log.Timber
 
 /**
@@ -19,7 +18,7 @@ import timber.log.Timber
 @Suppress("unused")
 @SuppressLint("ViewConstructor")
 internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expanded: Boolean, menu: MenuParser.Menu) :
-        BottomNavigationItemViewAbstract(parent, expanded, menu) {
+    BottomNavigationItemViewAbstract(parent, expanded, menu) {
 
     private val paddingTopItem: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_top)
     private val paddingBottomActive: Int = resources.getDimensionPixelSize(R.dimen.bbn_shifting_item_padding_bottom_active)
@@ -67,7 +66,7 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
         super.setEnabled(enabled)
 
         textPaint.alpha =
-                ((if (isExpanded) if (enabled) alphaActive else alphaDisabled else 0f) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
+            ((if (isExpanded) if (enabled) alphaActive else alphaDisabled else 0f) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
 
         if (null != icon) {
             updateLayoutOnAnimation(layoutParams.width, 1f, isExpanded)
@@ -87,9 +86,12 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
         set.duration = animationDuration * 2
         set.interpolator = interpolator
         val animator1 = ValueAnimator.ofInt(layoutParams.width, size)
-        val animator2 = ObjectAnimator.ofInt(this, "centerY", if (expanded) paddingBottomInactive else paddingTopItem,
-                if (expanded) paddingTopItem else paddingBottomInactive
-                                            )
+        val animator2 = ObjectAnimator.ofInt(
+            this,
+            "centerY",
+            if (expanded) paddingBottomInactive else paddingTopItem,
+            if (expanded) paddingTopItem else paddingBottomInactive,
+        )
 
         animator1.addUpdateListener { animation ->
             val size = animation.animatedValue as Int
@@ -135,12 +137,17 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
             this.icon = item!!.getIcon(context)!!.mutate()
             icon?.setBounds(0, 0, iconSize, iconSize)
             icon?.setColorFilter(
-                    if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled, PorterDuff.Mode.SRC_ATOP)
+                if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled,
+                PorterDuff.Mode.SRC_ATOP,
+            )
 
-            icon?.alpha = (if (isExpanded)
-                (if (isEnabled) alphaActive else alphaDisabled) * BottomNavigationItemViewAbstract.ALPHA_MAX
-            else
-                (if (isEnabled) alphaInactive else alphaDisabled) * BottomNavigationItemViewAbstract.ALPHA_MAX).toInt()
+            icon?.alpha = (
+                if (isExpanded) {
+                    (if (isEnabled) alphaActive else alphaDisabled) * BottomNavigationItemViewAbstract.ALPHA_MAX
+                } else {
+                    (if (isEnabled) alphaInactive else alphaDisabled) * BottomNavigationItemViewAbstract.ALPHA_MAX
+                }
+                ).toInt()
         }
 
         if (textDirty) {
@@ -162,10 +169,11 @@ internal class BottomNavigationShiftingItemView(parent: BottomNavigation, expand
         super.onDraw(canvas)
         icon?.draw(canvas)
         canvas.drawText(
-                item!!.title,
-                textX,
-                textY.toFloat(),
-                textPaint)
+            item!!.title,
+            textX,
+            textY.toFloat(),
+            textPaint,
+        )
         drawBadge(canvas)
     }
 

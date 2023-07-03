@@ -22,12 +22,14 @@ class BottomNavigationItem(val id: Int, private val iconResource: Int, val title
     }
 
     override fun toString(): String {
-        return ("BottomNavigationItem{"
-                + "id=$id"
-                + ", iconResource=${String.format("%x", iconResource)}"
-                + ", title='$title'"
-                + ", color=${String.format("%x", color)}"
-                + ", enabled=$isEnabled"
-                + '}'.toString())
+        return (
+            "BottomNavigationItem{" +
+                "id=$id" +
+                ", iconResource=${String.format("%x", iconResource)}" +
+                ", title='$title'" +
+                ", color=${String.format("%x", color)}" +
+                ", enabled=$isEnabled" +
+                '}'.toString()
+            )
     }
 }

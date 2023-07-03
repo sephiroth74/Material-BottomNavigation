@@ -3,7 +3,6 @@ package it.sephiroth.android.library.bottomnavigation
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.annotation.IdRes
-import it.sephiroth.android.library.bottonnavigation.R
 import java.util.*
 
 /**
@@ -45,7 +44,9 @@ open class BadgeProvider(private val navigation: BottomNavigation) {
     internal fun getBadge(@IdRes itemId: Int): Drawable? {
         return if (map.contains(itemId)) {
             newDrawable(itemId, navigation.menu!!.badgeColor)
-        } else null
+        } else {
+            null
+        }
     }
 
     protected open fun newDrawable(@IdRes itemId: Int, preferredColor: Int): Drawable {

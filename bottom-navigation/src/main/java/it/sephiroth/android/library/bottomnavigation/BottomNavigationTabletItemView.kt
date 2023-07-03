@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat
-import it.sephiroth.android.library.bottonnavigation.R
 
 /**
  * Created by alessandro on 4/3/16 at 10:55 PM.
@@ -15,7 +14,7 @@ import it.sephiroth.android.library.bottonnavigation.R
  */
 @SuppressLint("ViewConstructor")
 internal class BottomNavigationTabletItemView(parent: BottomNavigation, expanded: Boolean, menu: MenuParser.Menu) :
-        BottomNavigationItemViewAbstract(parent, expanded, menu) {
+    BottomNavigationItemViewAbstract(parent, expanded, menu) {
     private val iconSize: Int
 
     private val interpolator = DecelerateInterpolator()
@@ -64,11 +63,11 @@ internal class BottomNavigationTabletItemView(parent: BottomNavigation, expanded
         if (null == this.icon) {
             this.icon = item?.getIcon(context)?.mutate()
             this.icon?.setColorFilter(
-                    if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled,
-                    PorterDuff.Mode.SRC_ATOP
-                                     )
+                if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled,
+                PorterDuff.Mode.SRC_ATOP,
+            )
             this.icon?.alpha =
-                    Color.alpha(if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled)
+                Color.alpha(if (isExpanded) if (isEnabled) colorActive else colorDisabled else if (isEnabled) colorInactive else colorDisabled)
             this.icon?.setBounds(0, 0, iconSize, iconSize)
         }
 

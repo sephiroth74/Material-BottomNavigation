@@ -45,18 +45,8 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        BottomNavigation.Companion.setDEBUG(BuildConfig.DEBUG);
-
         setContentView(getActivityLayoutResId());
         final ViewGroup root = findViewById(R.id.CoordinatorLayout01);
-        final CoordinatorLayout coordinatorLayout;
-        if (root instanceof CoordinatorLayout) {
-            coordinatorLayout = (CoordinatorLayout) root;
-        } else {
-            coordinatorLayout = null;
-        }
-
         final Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -156,43 +146,40 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final int id = item.getItemId();
-
-        switch (id) {
-            case R.id.item1:
-                return setMenuType(MENU_TYPE_3_ITEMS);
-            case R.id.item2:
-                return setMenuType(MENU_TYPE_3_ITEMS_NO_BACKGROUND);
-            case R.id.item3:
-                return setMenuType(MENU_TYPE_4_ITEMS);
-            case R.id.item4:
-                return setMenuType(MENU_TYPE_4_ITEMS_NO_BACKGROUND);
-            case R.id.item5:
-                return setMenuType(MENU_TYPE_5_ITEMS);
-            case R.id.item6:
-                return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
-            case R.id.item7:
-                startActivity(new Intent(this, MainActivityTablet.class));
-                return true;
-            case R.id.item8:
-                startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
-                return true;
-            case R.id.item9:
-                startActivity(new Intent(this, MainActivityCustomBehavior.class));
-                return true;
-            case R.id.item10:
-                startActivity(new Intent(this, MainActivityCustomBadge.class));
-                return true;
-            case R.id.item11:
-                startActivity(new Intent(this, MainActivityNoHide.class));
-                return true;
-            case R.id.item12:
-                startActivity(new Intent(this, EnableDisableItemsActivity.class));
-                return true;
-            case R.id.item13:
-                startActivity(new Intent(this, MainActivityNoCoordinator.class));
-                return true;
-
+        int itemId = item.getItemId();
+        if (itemId == R.id.item1) {
+            return setMenuType(MENU_TYPE_3_ITEMS);
+        } else if (itemId == R.id.item2) {
+            return setMenuType(MENU_TYPE_3_ITEMS_NO_BACKGROUND);
+        } else if (itemId == R.id.item3) {
+            return setMenuType(MENU_TYPE_4_ITEMS);
+        } else if (itemId == R.id.item4) {
+            return setMenuType(MENU_TYPE_4_ITEMS_NO_BACKGROUND);
+        } else if (itemId == R.id.item5) {
+            return setMenuType(MENU_TYPE_5_ITEMS);
+        } else if (itemId == R.id.item6) {
+            return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
+        } else if (itemId == R.id.item7) {
+            startActivity(new Intent(this, MainActivityTablet.class));
+            return true;
+        } else if (itemId == R.id.item8) {
+            startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
+            return true;
+        } else if (itemId == R.id.item9) {
+            startActivity(new Intent(this, MainActivityCustomBehavior.class));
+            return true;
+        } else if (itemId == R.id.item10) {
+            startActivity(new Intent(this, MainActivityCustomBadge.class));
+            return true;
+        } else if (itemId == R.id.item11) {
+            startActivity(new Intent(this, MainActivityNoHide.class));
+            return true;
+        } else if (itemId == R.id.item12) {
+            startActivity(new Intent(this, EnableDisableItemsActivity.class));
+            return true;
+        } else if (itemId == R.id.item13) {
+            startActivity(new Intent(this, MainActivityNoCoordinator.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

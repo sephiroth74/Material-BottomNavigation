@@ -1,15 +1,17 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
+    compileSdk 33
+    buildToolsVersion '33.0.1'
+
+    namespace "it.sephiroth.android.library.bottomnavigation"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
+        targetSdkVersion 33
         versionCode 1
-        versionName VERSION_NAME
+        versionName "3.0.1"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -30,25 +32,24 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation "androidx.appcompat:appcompat:1.6.0"
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.balysv:material-ripple:1.0.2'
 }
 
-
 apply from: '../checkstyle.gradle'
-apply from: 'https://raw.githubusercontent.com/sephiroth74/gradle-mvn-push/master/gradle-mvn-push.gradle'
-
-uploadArchives.dependsOn 'check'

@@ -14,8 +14,11 @@ import java.lang.ref.SoftReference
  * The MIT License
  */
 @Suppress("unused")
-internal abstract class BottomNavigationItemViewAbstract(parent: BottomNavigation, expanded: Boolean,
-                                                         menu: MenuParser.Menu) : View(parent.context) {
+internal abstract class BottomNavigationItemViewAbstract(
+    parent: BottomNavigation,
+    expanded: Boolean,
+    menu: MenuParser.Menu,
+) : View(parent.context) {
     // this.setBackground(drawable);
     var item: BottomNavigationItem? = null
         set(value) {
@@ -90,8 +93,12 @@ internal abstract class BottomNavigationItemViewAbstract(parent: BottomNavigatio
         if (null != icon) {
             badge?.let {
                 val bounds = icon!!.bounds
-                it.setBounds(bounds.right - it.intrinsicWidth, bounds.top, bounds.right,
-                        bounds.top + it.intrinsicHeight)
+                it.setBounds(
+                    bounds.right - it.intrinsicWidth,
+                    bounds.top,
+                    bounds.right,
+                    bounds.top + it.intrinsicHeight,
+                )
                 it.draw(canvas)
             }
         }
